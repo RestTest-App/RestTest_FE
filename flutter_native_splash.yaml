@@ -1,0 +1,11 @@
+flutter_native_splash :
+  # IOS 전용 설정
+  color_ios : "#0B60B0"
+  image_ios : "assets/images/splash_screen.png"
+
+  # 다른 플랫폼 비활성화
+  android: false
+  web: false
+
+  # iOS 콘텐츠 모드 설정 (이미지 위치 및 크기 조절)
+  ios_content_mode: scaleAspectFit
