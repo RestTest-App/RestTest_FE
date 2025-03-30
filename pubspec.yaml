@@ -84,5 +84,6 @@ flutter:
   assets:
     - assets/icons/
     - assets/icons/bottom_navigation/
+    - assets/icons/appbar/
     - assets/images/
     - assets/config/

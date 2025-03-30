@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../utility/system/color_system.dart';
@@ -75,7 +76,7 @@ abstract class BaseScreen<T extends GetxController> extends GetView<T> {
 
   /// SafeArea의 색상을 정의하는 메서드
   @protected
-  Color? get unSafeAreaColor => Colors.white;
+  Color? get unSafeAreaColor => ColorSystem.white;
 
   /// 키보드가 나타날 때 화면을 조절할지 여부를 정의하는 메서드
   @protected
