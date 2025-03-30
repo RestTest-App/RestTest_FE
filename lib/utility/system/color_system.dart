@@ -10,6 +10,9 @@ abstract class ColorSystem {
   // Black Color
   static Color black = const Color(0xFF181818);
 
+  // Background Color
+  static Color back = const Color(0xFFF5F5F5);
+
   // Light Color
   static Color lightBlue = const Color(0xFFEBF1F6);
   static Color lightGreen = const Color(0xFFEAF7ED);
