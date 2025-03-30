@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rest_test/view/base/base_screen.dart';
+import 'package:rest_test/view/book/book_screen.dart';
+import 'package:rest_test/view/mypage/mypage_screen.dart';
+import 'package:rest_test/view/review/review_screen.dart';
 import 'package:rest_test/viewmodel/root/root_view_model.dart';
 
+import '../home/home_screen.dart';
 import 'widget/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 
 class RootScreen extends BaseScreen<RootViewModel> {
@@ -23,10 +27,10 @@ class RootScreen extends BaseScreen<RootViewModel> {
       return IndexedStack(
         index: viewModel.selectedIndex,
         children: const [
-          // HomeScreen(),
-          // ChattingRoomListScreen(),
-          // StatisticsScreen(),
-          // SeeMoreScreen(),
+          HomeScreen(),
+          ReviewScreen(),
+          BookScreen(),
+          MyPageScreen(),
         ],
       );
     });

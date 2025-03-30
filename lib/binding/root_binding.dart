@@ -1,5 +1,9 @@
 import 'package:get/get.dart';
+import 'package:rest_test/viewmodel/mypage/mypage_view_model.dart';
+import 'package:rest_test/viewmodel/review/review_view_model.dart';
 
+import '../viewmodel/book/book_view_model.dart';
+import '../viewmodel/home/home_view_model.dart';
 import '../viewmodel/root/root_view_model.dart';
 
 class RootBinding extends Bindings {
@@ -7,9 +11,10 @@ class RootBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<RootViewModel>(() => RootViewModel(), fenix: true);
 
-    // HomeBinding().dependencies();
-    // ChattingListBinding().dependencies();
-    // StatisticsBinding().dependencies();
+    HomeBinding().dependencies();
+    ReviewBinding().dependencies();
+    BookBinding().dependencies();
+    MyPageBinding().dependencies();
     // StatisticsDetailBinding().dependencies();
     // ChattingRoomBinding().dependencies();
     // SeeMoreBinding().dependencies();
@@ -20,9 +25,30 @@ class RootBinding extends Bindings {
   }
 }
 
-// class HomeBinding extends Bindings {
-//   @override
-//   void dependencies() {
-//     Get.lazyPut<HomeViewModel>(() => HomeViewModel());
-//   }
-// }}
+class HomeBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<HomeViewModel>(() => HomeViewModel());
+  }
+}
+
+class ReviewBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<ReviewViewModel>(() => ReviewViewModel());
+  }
+}
+
+class BookBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<BookViewModel>(() => BookViewModel());
+  }
+}
+
+class MyPageBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<MyPageViewModel>(() => MyPageViewModel());
+  }
+}
