@@ -23,7 +23,7 @@ class MainApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'AppleSDGothicNeo',
         colorSchemeSeed: ColorSystem.blue, //
-        scaffoldBackgroundColor: const Color(0xFF2791EA),
+        scaffoldBackgroundColor: ColorSystem.blue,
       ),
 
       // initialRoute: Routes.LOGIN, // 로그인 화면으로 시작(TEST)
