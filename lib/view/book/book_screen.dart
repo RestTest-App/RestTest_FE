@@ -46,10 +46,6 @@ class BookScreen extends BaseScreen<BookViewModel> {
 
   @override
   Widget buildBody(BuildContext context) {
-    // 드롭다운 아이템 리스트
-    List<String> dropdownItems = ['최근 생성순', '가나다순', '최근 학습순'];
-    String selectedValue = dropdownItems[0]; // 초기 선택 값
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
@@ -62,7 +58,7 @@ class BookScreen extends BaseScreen<BookViewModel> {
             child: Center(
               child: Text(
                 '배너 광고 영역',
-                style: TextStyle(color: Colors.grey[700]),
+                style: TextStyle(color: ColorSystem.grey[700]),
               ),
             ),
           ),
@@ -77,38 +73,32 @@ class BookScreen extends BaseScreen<BookViewModel> {
                   height: 24,
                   width: 110,
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
+                    border: Border.all(color: ColorSystem.grey),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      isExpanded: true,
-                      value: selectedValue,
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        fontFamily: 'AppleSDGothicNeo',
-                        fontWeight: FontWeight.w600, // SemiBold
-                      ),
-                      items: dropdownItems.map((String item) {
-                        return DropdownMenuItem<String>(
-                          value: item,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(item),
+                    child: Obx(() => DropdownButton<String>(
+                          isExpanded: true,
+                          value: controller.selectedValue.value,
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            fontFamily: 'AppleSDGothicNeo',
+                            fontWeight: FontWeight.w600, // SemiBold
                           ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        // 드롭다운 값 변경 로직
-                        if (newValue != null) {
-                          // 상태를 업데이트하는 로직 필요
-                          selectedValue = newValue;
-                        }
-                      },
-                    ),
+                          items: controller.dropdownItems.map((String item) {
+                            return DropdownMenuItem<String>(
+                              value: item,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(item),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: controller.updateSelectedValue,
+                        )),
                   ),
                 ),
-                // 오른쪽 total 4 텍스트
+                // 오른쪽 total 텍스트
                 Container(
                   height: 24,
                   width: 55,
@@ -117,7 +107,7 @@ class BookScreen extends BaseScreen<BookViewModel> {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Center(
-                    child: RichText(
+                    child: Obx(() => RichText(
                       text: TextSpan(
                         children: <TextSpan>[
                           TextSpan(
@@ -126,21 +116,21 @@ class BookScreen extends BaseScreen<BookViewModel> {
                               fontSize: 12.0,
                               fontFamily: 'AppleSDGothicNeo',
                               fontWeight: FontWeight.w600, // SemiBold
-                              color: Colors.black,
+                              color: ColorSystem.grey[600],
                             ),
                           ),
                           TextSpan(
-                            text: '4',
+                            text: '${controller.total.value}',
                             style: TextStyle(
                               fontSize: 12.0,
                               fontFamily: 'AppleSDGothicNeo',
                               fontWeight: FontWeight.w600, // SemiBold
-                              color: Colors.black,
+                              color: ColorSystem.deepBlue, // DeepBlue 색상 적용
                             ),
                           ),
                         ],
                       ),
-                    ),
+                    )),
                   ),
                 ),
               ],
@@ -148,134 +138,146 @@ class BookScreen extends BaseScreen<BookViewModel> {
           ),
           // 파일 내용들 그리드
           Expanded(
-            child: GridView.builder(
+            child: Obx(() => GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3, // 한 줄에 3개 아이템
                 crossAxisSpacing: 10.0,
                 mainAxisSpacing: 10.0,
                 childAspectRatio: 93 / 101, // 파일 공간의 비율
               ),
-              itemCount: 20, // 총 파일의 수
+              itemCount: controller.files.length, // 총 파일의 수
               itemBuilder: (context, index) {
-                if (index == 19) { // 마지막 아이템에 점선 박스 추가
-                  return GestureDetector(
-                    onTap: () {
-                      // 생성박스 눌렀을 때 호출
-                      showModalBottomSheet(
-                        context: context,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                        ),
-                        builder: (BuildContext context) {
-                          return Container(
-                            padding: EdgeInsets.all(16.0),
-                            height: 393,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
+                if (index == controller.files.length - 1) { // 마지막 아이템에 점선 박스 추가
+                  return Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          // 생성박스 눌렀을 때 호출
+                          showModalBottomSheet(
+                            context: context,
+                            shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.vertical(
                                 top: Radius.circular(24),
                               ),
                             ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 28.0),
-                                  child: Image.asset(
-                                    'assets/images/logo.png', // 이미지 경로
-                                    height: 60,
-                                    fit: BoxFit.cover,
+                            builder: (BuildContext context) {
+                              return Container(
+                                padding: EdgeInsets.all(16.0),
+                                height: 393,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(24),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
-                                  child: Text(
-                                    '이번달 문제 만들기 1회 남았습니다',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontFamily: 'AppleSDGothicNeo',
-                                      fontWeight: FontWeight.bold, // Bold
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 38.0),
-                                  child: Text(
-                                    'pdf 업로드나 문제를 촬영하시면\n나의 문제집에 문제가 저장됩니다!',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'AppleSDGothicNeo',
-                                      fontWeight: FontWeight.w500, // Medium
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    SizedBox(
-                                      width: 174,
-                                      height: 60,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          // PDF 업로드 로직
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Color(0xFF0B60B0), // 버튼 색상
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(15),
-                                          ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 28.0),
+                                      child: Image.asset(
+                                        'assets/images/logo.png', // 이미지 경로
+                                        height: 60,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
+                                      child: Obx(() => Text(
+                                        '이번달 문제 만들기 ${controller.remainingCount.value}회 남았습니다',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontFamily: 'AppleSDGothicNeo',
+                                          fontWeight: FontWeight.bold, // Bold
                                         ),
-                                        child: Text(
-                                          'PDF 업로드',
-                                          style: TextStyle(color: Colors.white), // 글자 색상
+                                      )),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 38.0),
+                                      child: Text(
+                                        'pdf 업로드나 문제를 촬영하시면\n나의 문제집에 문제가 저장됩니다!',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontFamily: 'AppleSDGothicNeo',
+                                          fontWeight: FontWeight.w500, // Medium
+                                          color: Colors.grey,
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 6), // 버튼 사이의 패딩
-                                    SizedBox(
-                                      width: 174,
-                                      height: 60,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          // 촬영하기 로직
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Color(0xFF0B60B0), // 버튼 색상
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(15),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 174,
+                                          height: 60,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              // PDF 업로드 로직
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Color(0xFF0B60B0), // 버튼 색상
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(15),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'PDF 업로드',
+                                              style: TextStyle(color: Colors.white), // 글자 색상
+                                            ),
                                           ),
                                         ),
-                                        child: Text(
-                                          '촬영하기',
-                                          style: TextStyle(color: Colors.white), // 글자 색상
+                                        SizedBox(width: 6), // 버튼 사이의 패딩
+                                        SizedBox(
+                                          width: 174,
+                                          height: 60,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              // 촬영하기 로직
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Color(0xFF0B60B0), // 버튼 색상
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(15),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              '촬영하기',
+                                              style: TextStyle(color: Colors.white), // 글자 색상
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                    child: DottedBorder(
-                      color: Colors.grey,
-                      strokeWidth: 1,
-                      dashPattern: [4, 4],
-                      borderType: BorderType.RRect,
-                      radius: Radius.circular(16),
-                      child: Center(
-                        child: Text(
-                          '+',
-                          style: TextStyle(fontSize: 24.0, color: Colors.grey),
+                        child: Container(
+                          width: 100,
+                          height: 90,
+                          padding: const EdgeInsets.all(4.0),
+                          child: DottedBorder(
+                            color: ColorSystem.blue,
+                            strokeWidth: 1,
+                            dashPattern: [4, 4],
+                            borderType: BorderType.RRect,
+                            radius: Radius.circular(16),
+                            child: Center(
+                              child: Text(
+                                '+',
+                                style: TextStyle(fontSize: 24.0, color: ColorSystem.blue),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0), // 추가박스 아래의 여백
+                      ),
+                    ],
                   );
                 }
                 return Container(
@@ -293,27 +295,27 @@ class BookScreen extends BaseScreen<BookViewModel> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(4.0),
+                        padding: const EdgeInsets.only(bottom: 20.0),
                         child: Column(
                           children: [
-                            Text(
-                              '파일 이름 $index',
+                            Obx(() => Text(
+                              controller.files[index]['name'] ?? '',
                               style: TextStyle(
                                 fontSize: 12.0,
                                 fontFamily: 'AppleSDGothicNeo',
                                 fontWeight: FontWeight.w600, // SemiBold
                               ),
                               overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              '생성 날짜: 2023-10-01',
+                            )),
+                            Obx(() => Text(
+                              controller.files[index]['date'] ?? '',
                               style: TextStyle(
                                 fontSize: 8.0,
                                 fontFamily: 'AppleSDGothicNeo',
                                 fontWeight: FontWeight.normal, // Regular
                                 color: Colors.grey,
                               ),
-                            ),
+                            )),
                           ],
                         ),
                       ),  
@@ -321,7 +323,7 @@ class BookScreen extends BaseScreen<BookViewModel> {
                   ),
                 );
               },
-            ),
+            )),
           )
           // 네브바 자리
           // 네브바 구현 필요 시 여기에 추가
