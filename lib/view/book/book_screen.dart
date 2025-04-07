@@ -322,7 +322,7 @@ class BookScreen extends BaseScreen<BookViewModel> {
                 );
               },
             ),
-          ),
+          )
           // 네브바 자리
           // 네브바 구현 필요 시 여기에 추가
         ],
