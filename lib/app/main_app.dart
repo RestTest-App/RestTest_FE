@@ -21,7 +21,7 @@ class MainApp extends StatelessWidget {
       // Theme
       theme: ThemeData(
         useMaterial3: true,
-        fontFamily: 'AppleSDGothicNeo',
+        fontFamily: "AppleSDGothicNeo",
         colorSchemeSeed: ColorSystem.blue, //
         scaffoldBackgroundColor: ColorSystem.blue,
       ),
