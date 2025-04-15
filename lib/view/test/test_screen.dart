@@ -49,7 +49,7 @@ class TestScreen extends BaseScreen<TestViewModel>{
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 24),
-                  child: _buildInfo(),
+                  child: Obx(()=> _buildInfo(viewModel.state.year, viewModel.state.month),),
                 ),
                 SizedBox(height: 16,),
                 _buildTitle(),
@@ -85,26 +85,38 @@ class TestScreen extends BaseScreen<TestViewModel>{
     );
   }
 
-  Widget _buildInfo() {
-     return Text("2024년 7월", style: FontSystem.KR16B.copyWith(color: ColorSystem.blue),);
+  Widget _buildInfo(int year, int month) {
+     return Text("${year}년 ${month}월", style: FontSystem.KR16B.copyWith(color: ColorSystem.blue),);
   }
 
   Widget _buildTitle() {
-    return Text("2024년 3회 정보처리기사", style: FontSystem.KR24EB);
+    return Obx((){
+      return Text("${viewModel.state.name}", style: FontSystem.KR24EB);
+    });
   }
   
   Widget _buildTags() {
-    return Row(
+    return Obx(() => Row(
       children: [
-        CustomTag(text: "50문항", color: ColorSystem.lightBlue, textColor: ColorSystem.blue),
+        CustomTag(text: "${viewModel.state.question_count}문항", color: ColorSystem.lightBlue, textColor: ColorSystem.blue),
         const SizedBox(width: 4),
-        CustomTag(text: "80분", color: ColorSystem.lightBlue, textColor: ColorSystem.blue),
+        CustomTag(text: "${viewModel.state.time}분", color: ColorSystem.lightBlue, textColor: ColorSystem.blue),
         SizedBox(width: 4),
-        CustomTag(text: "1회독", color: ColorSystem.lightGreen, textColor: ColorSystem.green),
+        CustomTag(text: "${viewModel.state.exam_attempt}회독", color: ColorSystem.lightGreen, textColor: ColorSystem.green),
         SizedBox(width: 4),
-        CustomTag(text: "55.79%", color: ColorSystem.lightRed, textColor: ColorSystem.red),
+        CustomTag(text: "${viewModel.state.pass_rate}%", color:
+          viewModel.state.pass_rate >= 80.0
+            ? ColorSystem.lightBlue
+            : viewModel.state.pass_rate >= 60.0
+            ? ColorSystem.lightGreen
+            : ColorSystem.lightRed,
+            textColor: viewModel.state.pass_rate >= 80.0
+                ? ColorSystem.blue
+                : viewModel.state.pass_rate >= 60.0
+                ? ColorSystem.green
+                : ColorSystem.red),
       ],
-    );
+    ));
   }
 
   Widget _buildTestInfo() {
