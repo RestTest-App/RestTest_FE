@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:rest_test/utility/system/font_system.dart';
 import 'package:rest_test/view/base/base_screen.dart';
 import 'package:rest_test/view/home/home_screen.dart';
+import 'package:rest_test/view/test/test_exam_screen.dart';
 import 'package:rest_test/view/test/widget/random_banner.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
 import 'package:rest_test/widget/appbar/default_close_appbar.dart';
@@ -72,7 +73,7 @@ class TestScreen extends BaseScreen<TestViewModel>{
               textStyle: FontSystem.KR16SB.copyWith(color: ColorSystem.white),
               onPressed: (){
                 Get.to(
-                  ()=> const HomeScreen(),
+                  ()=> const TestExamScreen(),
                   transition: Transition.rightToLeft,
                   duration: const Duration(milliseconds: 300),
                 );
