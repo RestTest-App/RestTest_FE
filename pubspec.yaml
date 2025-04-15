@@ -79,7 +79,25 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-#   To add assets to your application, add an assets section, like this:
+  fonts:
+    - family: AppleSDGothicNeoExtraBold
+      fonts:
+        - asset: assets/fonts/AppleSDGothicNeo-ExtraBold.ttf
+    - family: AppleSDGothicNeoBold
+      fonts:
+        - asset: assets/fonts/AppleSDGothicNeo-Bold.ttf
+    - family: AppleSDGothicNeoSemiBold
+      fonts:
+        - asset: assets/fonts/AppleSDGothicNeo-SemiBold.ttf
+    - family: AppleSDGothicNeoMedium
+      fonts:
+        - asset: assets/fonts/AppleSDGothicNeo-Medium.ttf
+    - family: AppleSDGothicNeoRegular
+      fonts:
+        - asset: assets/fonts/AppleSDGothicNeo-Regular.ttf
+    - family: AppleSDGothicNeoLight
+      fonts:
+        - asset: assets/fonts/AppleSDGothicNeo-Light.ttf
 
   assets:
     - assets/icons/
@@ -87,3 +105,4 @@ flutter:
     - assets/icons/appbar/
     - assets/images/
     - assets/config/
+    - assets/fonts/
