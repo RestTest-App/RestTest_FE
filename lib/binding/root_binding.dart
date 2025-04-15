@@ -17,7 +17,7 @@ class RootBinding extends Bindings {
     BookBinding().dependencies();
     MyPageBinding().dependencies();
     TestBinding().dependencies();
-    // ChattingRoomBinding().dependencies();
+    TestExamBinding().dependencies();
     // SeeMoreBinding().dependencies();
     // OnboardingBinding().dependencies();
     // LoginBinding().dependencies();
@@ -55,6 +55,13 @@ class MyPageBinding extends Bindings {
 }
 
 class TestBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<TestViewModel>(() => TestViewModel());
+  }
+}
+
+class TestExamBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<TestViewModel>(() => TestViewModel());
