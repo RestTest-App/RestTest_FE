@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rest_test/view/onboarding/terms_page.dart';
 import 'package:rest_test/viewmodel/onboarding/onboarding_view_model.dart';
-import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
 
 class TermsStep extends StatelessWidget {
   final controller = Get.find<OnboardingViewModel>();

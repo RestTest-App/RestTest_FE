@@ -9,7 +9,7 @@ class UserInfoStep extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () {
-        final isValid = controller.isUserInfoValid;
+        // final isValid = controller.isUserInfoValid;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
