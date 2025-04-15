@@ -1,1 +1,0 @@
-class SplashScreen extends BaseScreen<>
