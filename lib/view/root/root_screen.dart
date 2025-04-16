@@ -27,12 +27,12 @@ class RootScreen extends BaseScreen<RootViewModel> {
     return Obx(() {
       return IndexedStack(
         index: viewModel.selectedIndex,
-        children: const [
+        children: [
           // HomeScreen(),
-          // ReviewScreen(),
-          // BookScreen(),
-          // // MyPageScreen(),
-          // TestScreen()
+          ReviewScreen(),
+          BookScreen(),
+          MyPageScreen(),
+          TestScreen()
         ],
       );
     });

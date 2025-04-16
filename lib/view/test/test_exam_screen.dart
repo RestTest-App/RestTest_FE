@@ -43,74 +43,7 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
       children: [
         _buildPaginationIndicator(viewModel.currentIndex,viewModel.questions.length),
         Expanded(child: ExamItem()),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: ColorSystem.white,
-            border: Border(top: BorderSide(color: ColorSystem.grey.shade300))
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12, bottom: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    viewModel.prevQuestion();
-                  },
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: ColorSystem.grey.shade100,
-                      border: Border.all(color: ColorSystem.grey.shade200),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Center(
-                      child: Transform.translate(
-                        offset: Offset(-1, 0),
-                        child: SvgPicture.asset(
-                          "assets/icons/test/arrowPrev.svg",
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 50,
-                  child: Text("${viewModel.currentIndex+1} / ${viewModel.questions.length}", style: FontSystem.KR24B,)
-                ),
-                Transform.translate(
-                    offset: Offset(0, 2),
-                    child: RoundedRectangleTextButton(text: "문제 선택",height : 48, padding: EdgeInsets.symmetric(horizontal: 28, vertical: 12),backgroundColor: ColorSystem.blue,textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),)),
-                GestureDetector(
-                  onTap: (){
-                    viewModel.nextQuestion();
-                  },
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: ColorSystem.grey.shade100,
-                      border: Border.all(color: ColorSystem.grey.shade200),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Center(
-                      child: Transform.translate(
-                        offset: Offset(1, 0),
-                        child: SvgPicture.asset(
-                          "assets/icons/test/arrowNext.svg",
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        )
+        _buildBottomBar(),
       ],
     ));
   }
@@ -125,5 +58,77 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
       minHeight: 5.0, // ProgressBar의 높이
       valueColor: AlwaysStoppedAnimation<Color>(ColorSystem.blue),
     );
+  }
+
+  Widget _buildBottomBar() {
+    return Obx(()=> Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      width: double.infinity,
+      decoration: BoxDecoration(
+          color: ColorSystem.white,
+          border: Border(top: BorderSide(color: ColorSystem.grey.shade300))
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 12, bottom: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: () {
+                viewModel.prevQuestion();
+              },
+              child: Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: ColorSystem.grey.shade100,
+                  border: Border.all(color: ColorSystem.grey.shade200),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Center(
+                  child: Transform.translate(
+                    offset: Offset(-1, 0),
+                    child: SvgPicture.asset(
+                      "assets/icons/test/arrowPrev.svg",
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+                width: 50,
+                child: Text("${viewModel.currentIndex+1} / ${viewModel.questions.length}", style: FontSystem.KR24B,)
+            ),
+            Transform.translate(
+                offset: Offset(0, 2),
+                child: RoundedRectangleTextButton(text: "문제 선택",height : 48, padding: EdgeInsets.symmetric(horizontal: 28, vertical: 12),backgroundColor: ColorSystem.blue,textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),)
+            ),
+            GestureDetector(
+              onTap: (){
+                viewModel.nextQuestion();
+              },
+              child: Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: ColorSystem.grey.shade100,
+                  border: Border.all(color: ColorSystem.grey.shade200),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Center(
+                  child: Transform.translate(
+                    offset: Offset(1, 0),
+                    child: SvgPicture.asset(
+                      "assets/icons/test/arrowNext.svg",
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    ));
   }
 }
