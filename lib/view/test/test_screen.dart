@@ -62,25 +62,7 @@ class TestScreen extends BaseScreen<TestViewModel>{
         RandomBanner(),
         _buildTestInfo(),
         Spacer(),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: SizedBox(
-            width: double.infinity,
-            height: 60,
-            child: RoundedRectangleTextButton(
-              text: "학습 시작",
-              backgroundColor: ColorSystem.blue,
-              textStyle: FontSystem.KR16SB.copyWith(color: ColorSystem.white),
-              onPressed: (){
-                Get.to(
-                  ()=> const TestExamScreen(),
-                  transition: Transition.rightToLeft,
-                  duration: const Duration(milliseconds: 300),
-                );
-              },
-            ),
-          ),
-        ),
+        _buildStartBtn(),
         SizedBox(height: 24),
       ],
     );
@@ -139,6 +121,28 @@ class TestScreen extends BaseScreen<TestViewModel>{
 
           )
         ],
+      ),
+    );
+  }
+
+  Widget _buildStartBtn() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: SizedBox(
+        width: double.infinity,
+        height: 60,
+        child: RoundedRectangleTextButton(
+          text: "학습 시작",
+          backgroundColor: ColorSystem.blue,
+          textStyle: FontSystem.KR16SB.copyWith(color: ColorSystem.white),
+          onPressed: (){
+            Get.to(
+                  ()=> const TestExamScreen(),
+              transition: Transition.rightToLeft,
+              duration: const Duration(milliseconds: 300),
+            );
+          },
+        ),
       ),
     );
   }
