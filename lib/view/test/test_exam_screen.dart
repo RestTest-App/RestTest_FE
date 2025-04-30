@@ -1,9 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
+import 'package:logger/logger.dart';
+import 'package:rest_test/utility/function/log_util.dart';
 import 'package:rest_test/view/base/base_screen.dart';
+import 'package:rest_test/view/home/home_screen.dart';
+import 'package:rest_test/view/test/widget/exam_select_dialog.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
 import 'package:rest_test/widget/appbar/default_close_appbar.dart';
 
@@ -100,10 +107,9 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
                 width: 50,
                 child: Text("${viewModel.currentIndex+1} / ${viewModel.questions.length}", style: FontSystem.KR24B,)
             ),
-            Transform.translate(
-                offset: Offset(0, 2),
-                child: RoundedRectangleTextButton(text: "문제 선택",height : 48, padding: EdgeInsets.symmetric(horizontal: 28, vertical: 12),backgroundColor: ColorSystem.blue,textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),)
-            ),
+            viewModel.canSubmit
+                ? _buildConfrimBtn()
+                : const ExamSelectDialog(),
             GestureDetector(
               onTap: (){
                 viewModel.nextQuestion();
@@ -131,4 +137,25 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
       ),
     ));
   }
+
+  Widget _buildConfrimBtn() {
+    return Transform.translate(
+        offset: Offset(0, 2),
+        child: RoundedRectangleTextButton(
+          text: "제출하기",
+          height : 48,
+          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+          backgroundColor: ColorSystem.blue,
+          textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),
+          onPressed: () {
+            Get.to(
+                  ()=> const HomeScreen(),
+              transition: Transition.rightToLeft,
+              duration: const Duration(milliseconds: 300),
+            );
+          },
+        )
+    );
+  }
 }
+
