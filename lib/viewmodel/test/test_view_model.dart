@@ -27,6 +27,13 @@ class TestViewModel extends GetxController {
   int get currentIndex => _currentIndex.value;
   Question get currentQuestion => _questions[_currentIndex.value];
   int? get selectedOption => _selectedOptions[_currentIndex.value];
+  List<int?> get selectedOptions => _selectedOptions;
+
+  bool get isLastQuestion => _currentIndex.value == _questions.length - 1;
+  bool get allAnswered => !_selectedOptions.contains(null);
+
+  bool get canSubmit => isLastQuestion && allAnswered;
+
   /* ------------------------------------------------------ */
   /* ----------------- Public Fields ---------------------- */
   /* ------------------------------------------------------ */
@@ -63,6 +70,25 @@ class TestViewModel extends GetxController {
         "금관이 출토된 고분에 대해 조사한다.",
         "비파형 동검의 형태적 특징을 분석한다.",
         "어쩌구 저쩌구 솔라솰라",
+      ]),
+      Question(answer_rate: 50.25, seciton: "2과목", description: "TCP 프로토콜과 관련한 설명으로 틀린 것은?", options: [
+        "인접한 노드 사이의 프레임 전송 및 오류를 제어한다.",
+        "흐름 제어(Flow Control)의 기능을 수행한다.",
+        "전이중(Full Duplex) 방식의 양방향 가상회선을 제공한다.",
+        "전송 데이터와 응답 데이터를 함께 전송할 수 있다.",
+      ]),
+      Question(answer_rate: 95.33, seciton: "석기시대", description: "(가) 시대에 대한 탐구 활동으로 가장 적절한 것은?", description_image: "assets/images/exampleQ.png", options: [
+        "주먹도끼의 용도를 알아본다.",
+        "철제 갑옷의 제작 기법을 살펴본다.",
+        "금관이 출토된 고분에 대해 조사한다.",
+        "비파형 동검의 형태적 특징을 분석한다.",
+        "어쩌구 저쩌구 솔라솰라",
+      ]),
+      Question(answer_rate: 89.23, seciton: "1과목", description: "다음 중 수의 표현에 있어 진법에 대한 설명으로 옳지 않은 것은?", options: [
+        "16진수(Hexadecimal)는 0~9까지의 숫자와 A~F까지 문자로 표현하는 진법으로 한 자리수를 표현하는데 4개의 비트가 필요하다",
+        "16진수(Hexadecimal)는 0~9까지의 숫자와 A~F까지 문자로 표현하는 진법으로 한 자리수를 표현하는데 4개의 비트가 필요하다",
+        "16진수(Hexadecimal)는 0~9까지의 숫자와 A~F까지 문자로 표현하는 진법으로 한 자리수를 표현하는데 4개의 비트가 필요하다",
+        "16진수(Hexadecimal)는 0~9까지의 숫자와 A~F까지 문자로 표현하는 진법으로 한 자리수를 표현하는데 4개의 비트가 필요하다",
       ]),
       Question(answer_rate: 50.25, seciton: "2과목", description: "TCP 프로토콜과 관련한 설명으로 틀린 것은?", options: [
         "인접한 노드 사이의 프레임 전송 및 오류를 제어한다.",
