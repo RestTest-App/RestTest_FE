@@ -27,7 +27,7 @@ abstract class ColorSystem {
   static const int _greyPrimaryValue = 0xFF949494;
 
   // Secondary Color
-  static Color deepBlut = const Color(0xFF0B2447);
+  static Color deepBlue = const Color(0xFF0B2447);
   static Color brown = const Color(0xFFA27B5B);
   static Color red = const Color(0xFFF05454);
   static Color green = const Color(0xFF5DB177);
