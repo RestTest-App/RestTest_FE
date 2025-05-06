@@ -43,33 +43,63 @@ class CertificateStep extends StatelessWidget {
     return Obx(
       () {
         final isSelected = controller.certificates.contains(id);
-        return ChoiceChip(
-          selected: isSelected,
-          showCheckmark: false,
-          labelPadding: EdgeInsets.zero,
-          label: Container(
-            width: double.infinity,
-            height: double.infinity,
-            alignment: Alignment.center,
-            child: Text(label, textAlign: TextAlign.center),
-          ),
-          backgroundColor: Colors.white,
-          selectedColor: const Color(0xFFEAF2FF),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: BorderSide(
-              width: 1,
-              color: isSelected ? const Color(0xFF0B60B0) : Colors.grey,
-            ),
-          ),
-          onSelected: (_) {
+        return GestureDetector(
+          onTap: () {
             if (isSelected) {
               controller.certificates.remove(id);
             } else if (controller.certificates.length < 3) {
               controller.certificates.add(id);
             }
           },
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: isSelected ? const Color(0xFFEAF2FF) : Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                width: 1,
+                color: isSelected ? const Color(0xFF0B60B0) : Colors.grey,
+              ),
+            ),
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: isSelected
+                    ? const Color(0xFF0B60B0)
+                    : const Color(0xFF3F3F3F),
+              ),
+            ),
+          ),
         );
+        // return ChoiceChip(
+        //   selected: isSelected,
+        //   showCheckmark: false,
+        //   labelPadding: EdgeInsets.zero,
+        //   label: Container(
+        //     width: double.infinity,
+        //     height: double.infinity,
+        //     alignment: Alignment.center,
+        //     child: Text(label, textAlign: TextAlign.center),
+        //   ),
+        //   backgroundColor: Colors.white,
+        //   selectedColor: const Color(0xFFEAF2FF),
+        //   shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.circular(12),
+        //     side: BorderSide(
+        //       width: 1,
+        //       color: isSelected ? const Color(0xFF0B60B0) : Colors.grey,
+        //     ),
+        //   ),
+        //   onSelected: (_) {
+        //     if (isSelected) {
+        //       controller.certificates.remove(id);
+        //     } else if (controller.certificates.length < 3) {
+        //       controller.certificates.add(id);
+        //     }
+        //   },
+        // );
       },
     );
   }

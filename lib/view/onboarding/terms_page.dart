@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
 
 class TermsPage extends StatelessWidget {
   final VoidCallback onAgree;
@@ -29,13 +30,20 @@ class TermsPage extends StatelessWidget {
           ),
           // 맨 아래 "동의하기" 버튼
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
             child: SizedBox(
               width: double.infinity,
               height: 48,
-              child: ElevatedButton(
+              child: RoundedRectangleTextButton(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                height: 48,
+                text: "동의하기",
+                backgroundColor: const Color(0xFF0B60B0),
+                textStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
                 onPressed: onAgree,
-                child: const Text("동의하기"),
               ),
             ),
           ),
