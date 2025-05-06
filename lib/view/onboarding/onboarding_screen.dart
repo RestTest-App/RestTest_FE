@@ -46,8 +46,7 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
         ),
       ),
       body: SafeArea(
-        child: Obx(
-          () => Column(
+        child: Column(
             children: [
               Obx(() => Container(
                     height: 4,
@@ -91,7 +90,7 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
               buildBottomButtons(),
             ],
           ),
-        ),
+        
       ),
     );
   }

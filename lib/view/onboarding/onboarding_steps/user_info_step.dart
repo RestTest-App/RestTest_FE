@@ -5,6 +5,8 @@ import 'package:rest_test/viewmodel/onboarding/onboarding_view_model.dart';
 class UserInfoStep extends StatelessWidget {
   final controller = Get.find<OnboardingViewModel>();
 
+  UserInfoStep({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -37,43 +39,71 @@ class UserInfoStep extends StatelessWidget {
                 return Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(right: index < 2 ? 8.0 : 0),
-                    child: SizedBox(
-                      height: 60,
-                      child: ChoiceChip(
-                        selected: isSelected,
-                        showCheckmark: false,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        labelPadding: EdgeInsets.zero,
-                        label: Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          alignment: Alignment.center,
-                          child: Text(
-                            gender,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16,
-                              height: 1.0,
-                              color: isSelected
-                                  ? const Color(0xFF0B60B0)
-                                  : const Color(0xFF676767),
-                            ),
+                    child: GestureDetector(
+                      onTap: () => controller.gender.value = gender,
+                      child: Container(
+                        height: 60,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? const Color(0xFFEAF2FF)
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isSelected
+                                ? const Color(0xFF0B60B0)
+                                : const Color(0xFFB5B5B5),
+                            width: 1,
                           ),
                         ),
-                        backgroundColor: const Color(0xFFFFFFFF),
-                        selectedColor: const Color(0xFFEAF2FF),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(
-                            width: 0.5,
+                        child: Text(
+                          gender,
+                          style: TextStyle(
+                            fontSize: 16,
                             color: isSelected
                                 ? const Color(0xFF0B60B0)
                                 : const Color(0xFF676767),
                           ),
                         ),
-                        onSelected: (_) => controller.gender.value = gender,
                       ),
                     ),
+                    // child: SizedBox(
+                    //   height: 60,
+                    //   child: ChoiceChip(
+                    //     selected: isSelected,
+                    //     showCheckmark: false,
+                    //     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    //     labelPadding: EdgeInsets.zero,
+                    //     label: Container(
+                    //       width: double.infinity,
+                    //       height: double.infinity,
+                    //       alignment: Alignment.center,
+                    //       child: Text(
+                    //         gender,
+                    //         textAlign: TextAlign.center,
+                    //         style: TextStyle(
+                    //           fontSize: 16,
+                    //           height: 1.0,
+                    //           color: isSelected
+                    //               ? const Color(0xFF0B60B0)
+                    //               : const Color(0xFF676767),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     backgroundColor: const Color(0xFFFFFFFF),
+                    //     selectedColor: const Color(0xFFEAF2FF),
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(12),
+                    //       side: BorderSide(
+                    //         width: 0.5,
+                    //         color: isSelected
+                    //             ? const Color(0xFF0B60B0)
+                    //             : const Color(0xFF676767),
+                    //       ),
+                    //     ),
+                    //     onSelected: (_) => controller.gender.value = gender,
+                    //   ),
+                    // ),
                   ),
                 );
               }).toList(),

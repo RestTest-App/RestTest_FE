@@ -76,7 +76,8 @@ class OnboardingViewModel extends GetxController {
     nickNameError.value = '';
   }
 
-  bool get isNickNameValid => nickNameError.value.isEmpty;
+  bool get isNickNameValid =>
+    nickName.value.isNotEmpty && nickNameError.value.isEmpty;
 
   bool get isUserInfoValid =>
       gender.value.isNotEmpty &&
