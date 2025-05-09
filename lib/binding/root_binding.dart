@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:rest_test/viewmodel/mypage/mypage_view_model.dart';
+import 'package:rest_test/viewmodel/onboarding/onboarding_view_model.dart';
 import 'package:rest_test/viewmodel/review/review_view_model.dart';
 
 import '../viewmodel/book/book_view_model.dart';
@@ -22,6 +23,7 @@ class RootBinding extends Bindings {
     // LoginBinding().dependencies();
     // RegisterBinding().dependencies();
     // EndingBinding().dependencies();
+    OnboardingBinding().dependencies();
   }
 }
 
@@ -50,5 +52,12 @@ class MyPageBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<MyPageViewModel>(() => MyPageViewModel());
+  }
+}
+
+class OnboardingBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<OnboardingViewModel>(() => OnboardingViewModel());
   }
 }
