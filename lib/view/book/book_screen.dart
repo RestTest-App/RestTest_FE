@@ -328,25 +328,27 @@ class _FileTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(color: ColorSystem.back),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Image.asset('assets/images/book_file.png', fit: BoxFit.cover, width: double.infinity),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            file['name'] ?? '',
-            style: const TextStyle(fontSize: 12.0, fontFamily: 'AppleSDGothicNeo', fontWeight: FontWeight.w600),
-            overflow: TextOverflow.ellipsis,
-          ),
-          Text(
-            file['date'] ?? '',
-            style: const TextStyle(fontSize: 8.0, fontFamily: 'AppleSDGothicNeo', color: Colors.grey),
-          ),
-        ],
+    return GestureDetector(
+      child: Container(
+        decoration: BoxDecoration(color: ColorSystem.back),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Image.asset('assets/images/book_file.png', fit: BoxFit.cover, width: double.infinity),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              file['name'] ?? '',
+              style: const TextStyle(fontSize: 12.0, fontFamily: 'AppleSDGothicNeo', fontWeight: FontWeight.w600),
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              file['date'] ?? '',
+              style: const TextStyle(fontSize: 8.0, fontFamily: 'AppleSDGothicNeo', color: Colors.grey),
+            ),
+          ],
+        ),
       ),
     );
   }
