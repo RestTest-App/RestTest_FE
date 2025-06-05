@@ -11,7 +11,7 @@ import 'package:rest_test/viewmodel/review/review_view_model.dart';
 import 'package:rest_test/widget/appbar/default_appbar.dart';
 
 class ReviewScreen extends BaseScreen<ReviewViewModel> {
-  const ReviewScreen({super.key});
+  ReviewScreen({super.key});
 
   final ScrollController _scrollController = ScrollController();
   final Map<String, GlobalKey> _categoryKeys = {};
