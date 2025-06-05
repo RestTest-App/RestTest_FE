@@ -28,8 +28,8 @@ class RootScreen extends BaseScreen<RootViewModel> {
       return IndexedStack(
         index: viewModel.selectedIndex,
         children: [
-          // HomeScreen(),
-          ReviewScreen(),
+          HomeScreen(),
+          // ReviewScreen(),
           BookScreen(),
           MyPageScreen(),
           TestScreen()

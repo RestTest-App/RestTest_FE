@@ -4,6 +4,8 @@ import 'package:rest_test/model/test/SectionResult.dart';
 import 'package:rest_test/model/test/TestInfoState.dart';
 import 'package:rest_test/model/test/TestResult.dart';
 
+import '../../model/test/TestAnswer.dart';
+
 class TestViewModel extends GetxController {
   /* ------------------------------------------------------ */
   /* -------------------- DI Fields ----------------------- */
@@ -24,6 +26,21 @@ class TestViewModel extends GetxController {
   final RxList<SectionResult> _sectionResults = <SectionResult>[].obs;
   final RxBool _isPassed = false.obs;
   final RxInt _totalScore = 0.obs;
+
+  // 시험 해설
+  final RxList<int> _correctAnswers = <int>[].obs;
+  final RxList<AnswerExplanation> _answerExplanations = <AnswerExplanation>[].obs;
+
+  List<int> get correctAnswers => _correctAnswers;
+  List<AnswerExplanation> get answerExplanations => _answerExplanations;
+  AnswerExplanation get currentExplanation => _answerExplanations[_currentIndex.value];
+  int get correctAnswer => _correctAnswers[_currentIndex.value];
+
+  // 복습노트 추가
+  final RxMap<int, bool> starredQuestions = <int, bool>{}.obs;
+
+
+
 
   /* ------------------------------------------------------ */
   /* ----------------- Private Fields --------------------- */
@@ -54,7 +71,6 @@ class TestViewModel extends GetxController {
     super.onInit();
     _loadTestInfo();
     _loadQuestions();
-    _loadResults();
   }
 
   void _loadTestInfo() {
@@ -148,8 +164,17 @@ class TestViewModel extends GetxController {
     return _selectedOptions[index] != null;
   }
 
+  // 복습노트 추가
+  void toggleStarForQuestion(int index) {
+    starredQuestions[index] = !(starredQuestions[index] ?? false);
+  }
+
+  bool isStarred(int index) {
+    return starredQuestions[index] ?? false;
+  }
+
   // 시험 결과
-  void _loadResults() {
+  void loadResults() {
     final resultData = TestResult(
         testTrackerId: 8431,
         isPassed: true,
@@ -167,5 +192,104 @@ class TestViewModel extends GetxController {
     _sectionResults.assignAll(resultData.sections);
     _isPassed.value = resultData.isPassed;
     _totalScore.value = resultData.correctCount;
+  }
+
+  // 시험 해설
+  void loadAnswers() {
+    final answerData = TestSubmitResponse(
+      testLog: TestResult(
+          testTrackerId: 8431,
+          isPassed: true,
+          solvedAt:DateTime.parse("2025-03-30T10:52:00"),
+          correctCount: 440,
+          totalCount: 500,
+          sections: [
+            SectionResult(name: "소프트웨어설계", correctCount: 17, totalCount: 20, score: 85),
+            SectionResult(name: "소프트웨어개발", correctCount: 20, totalCount: 20, score: 100),
+            SectionResult(name: "데이터베이스구축", correctCount: 19, totalCount: 20, score: 95),
+            SectionResult(name: "프로그래밍언어", correctCount: 18, totalCount: 20, score: 90),
+            SectionResult(name: "정보시스템관리및구축", correctCount: 14, totalCount: 20, score: 70),
+          ]),
+      correctAnswers: [1, 5, 3, 3, 2, 4],
+      correctAnswerInfo: [
+        AnswerExplanation(
+          answer: 1,
+          optionExplanations: OptionExplanations(
+              options: {
+                "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+              }
+          ),
+          description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
+        ),
+        AnswerExplanation(
+          answer: 5,
+          optionExplanations: OptionExplanations(
+              options: {
+                "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no5" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+              }
+          ),
+          description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
+        ),
+        AnswerExplanation(
+          answer: 3,
+          optionExplanations: OptionExplanations(
+              options: {
+                "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+              }
+          ),
+          description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
+        ),
+        AnswerExplanation(
+          answer: 3,
+          optionExplanations: OptionExplanations(
+              options: {
+                "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no5" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+              }
+          ),
+          description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
+        ),
+        AnswerExplanation(
+          answer: 2,
+          optionExplanations: OptionExplanations(
+              options: {
+                "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+              }
+          ),
+          description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
+        ),
+        AnswerExplanation(
+          answer: 4,
+          optionExplanations: OptionExplanations(
+              options: {
+                "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+                "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+              }
+          ),
+          description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
+        ),
+      ],
+    );
+
+    _correctAnswers.assignAll(answerData.correctAnswers);
+    _answerExplanations.assignAll(answerData.correctAnswerInfo);
   }
 }

@@ -1,27 +1,24 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
-import 'package:logger/logger.dart';
-import 'package:rest_test/utility/function/log_util.dart';
 import 'package:rest_test/view/base/base_screen.dart';
-import 'package:rest_test/view/home/home_screen.dart';
-import 'package:rest_test/view/test/test_result_screen.dart';
-import 'package:rest_test/view/test/widget/exam_select_dialog.dart';
+import 'package:rest_test/view/test/component/exam_result_item.dart';
+import 'package:rest_test/view/test/widget/comment_select_dialog.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
-import 'package:rest_test/widget/appbar/default_close_appbar.dart';
-
 import '../../utility/system/color_system.dart';
 import '../../utility/system/font_system.dart';
+import '../../widget/appbar/default_close_appbar.dart';
 import '../../widget/button/rounded_rectangle_text_button.dart';
-import 'component/exam_item.dart';
+import '../root/root_screen.dart';
 
-class TestExamScreen extends BaseScreen<TestViewModel> {
-  const TestExamScreen({super.key});
+class TestCommentScreen extends BaseScreen<TestViewModel> {
+  const TestCommentScreen({super.key});
 
   @override
   bool get wrapWithInnerSafeArea => true;
@@ -45,17 +42,19 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
         ));
   }
 
+
   @override
   Widget buildBody(BuildContext context) {
     return Obx (() => Column(
       children: [
-        _buildPaginationIndicator(viewModel.currentIndex,viewModel.questions.length),
-        Expanded(child: ExamItem()),
+        _buildPaginationIndicator(viewModel.currentIndex, viewModel.correctAnswers.length),
+        Expanded(child: ExamResultItem()),
         _buildBottomBar(),
       ],
     ));
   }
 
+  // 인디케이터
   Widget _buildPaginationIndicator(int step, int total) {
     int totalSteps = total; // 총 단계 수
     return LinearProgressBar(
@@ -108,9 +107,9 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
                 width: 50,
                 child: Text("${viewModel.currentIndex+1} / ${viewModel.questions.length}", style: FontSystem.KR24B,)
             ),
-            viewModel.canSubmit
-                ? _buildConfrimBtn()
-                : const ExamSelectDialog(),
+            viewModel.currentIndex == viewModel.questions.length - 1
+                ? _buildConfirmBtn()
+                : const CommentSelectDialog(),
             GestureDetector(
               onTap: (){
                 viewModel.nextQuestion();
@@ -139,25 +138,21 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
     ));
   }
 
-  Widget _buildConfrimBtn() {
+  Widget _buildConfirmBtn() {
     return Transform.translate(
         offset: Offset(0, 2),
         child: RoundedRectangleTextButton(
-          text: "제출하기",
+          text: "종료하기",
           height : 48,
           padding: EdgeInsets.symmetric(horizontal: 28, vertical: 12),
           backgroundColor: ColorSystem.blue,
           textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),
           onPressed: () {
-            viewModel.loadResults();
-            Get.to(
-                  ()=> const TestResultScreen(),
-              transition: Transition.rightToLeft,
-              duration: const Duration(milliseconds: 300),
-            );
+            Get.to(() => const RootScreen());
           },
         )
     );
   }
-}
 
+
+}
