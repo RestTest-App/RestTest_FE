@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
 abstract class FontSystem {
+  /* ----------------------- 36 ----------------------- */
+  static const TextStyle KR36EB = TextStyle(
+    fontSize: 36,
+    fontFamily: 'AppleSDGothicNeoExtraBold',
+    color: Color(0xFF181818),
+    letterSpacing: -0.6,
+    height : 1.0,
+  );
   /* ----------------------- 28 ----------------------- */
   static const TextStyle KR28EB = TextStyle(
     fontSize: 28,
