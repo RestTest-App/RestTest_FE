@@ -10,6 +10,7 @@ import 'package:logger/logger.dart';
 import 'package:rest_test/utility/function/log_util.dart';
 import 'package:rest_test/view/base/base_screen.dart';
 import 'package:rest_test/view/home/home_screen.dart';
+import 'package:rest_test/view/test/test_result_screen.dart';
 import 'package:rest_test/view/test/widget/exam_select_dialog.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
 import 'package:rest_test/widget/appbar/default_close_appbar.dart';
@@ -149,7 +150,7 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
           textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),
           onPressed: () {
             Get.to(
-                  ()=> const HomeScreen(),
+                  ()=> const TestResultScreen(),
               transition: Transition.rightToLeft,
               duration: const Duration(milliseconds: 300),
             );

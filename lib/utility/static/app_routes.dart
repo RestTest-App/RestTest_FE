@@ -5,6 +5,7 @@ abstract class Routes {
   static const String ROOT = "/";
   static const String TEST = "/test/info/:testId";
   static const String TEST_EXAM = "/test/exam/:testId";
+  static const String TEST_RESULT = "/test/result/:testId";
   static const String REVIEW_ITEM = "/review/:reviewId";
   static const String UPDATE_NICKNAME = "/update_nickname";
 }

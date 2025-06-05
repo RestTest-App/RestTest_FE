@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:rest_test/model/test/Question.dart';
+import 'package:rest_test/model/test/SectionResult.dart';
 import 'package:rest_test/model/test/TestInfoState.dart';
+import 'package:rest_test/model/test/TestResult.dart';
 
 class TestViewModel extends GetxController {
   /* ------------------------------------------------------ */
@@ -18,6 +20,11 @@ class TestViewModel extends GetxController {
   // 각 문제에 대한 선택된 보기 인덱스를 저장 (index: 선택한 보기 번호)
   final RxList<int?> _selectedOptions = <int?>[].obs;
 
+  // 시험 결과
+  final RxList<SectionResult> _sectionResults = <SectionResult>[].obs;
+  final RxBool _isPassed = false.obs;
+  final RxInt _totalScore = 0.obs;
+
   /* ------------------------------------------------------ */
   /* ----------------- Private Fields --------------------- */
   /* ------------------------------------------------------ */
@@ -34,6 +41,11 @@ class TestViewModel extends GetxController {
 
   bool get canSubmit => isLastQuestion && allAnswered;
 
+  // 시험 결과
+  List<SectionResult> get sectionResults => _sectionResults;
+  bool get isPassed => _isPassed.value;
+  int get totalScore => _totalScore.value;
+
   /* ------------------------------------------------------ */
   /* ----------------- Public Fields ---------------------- */
   /* ------------------------------------------------------ */
@@ -42,6 +54,7 @@ class TestViewModel extends GetxController {
     super.onInit();
     _loadTestInfo();
     _loadQuestions();
+    _loadResults();
   }
 
   void _loadTestInfo() {
@@ -135,4 +148,24 @@ class TestViewModel extends GetxController {
     return _selectedOptions[index] != null;
   }
 
+  // 시험 결과
+  void _loadResults() {
+    final resultData = TestResult(
+        testTrackerId: 8431,
+        isPassed: true,
+        solvedAt:DateTime.parse("2025-03-30T10:52:00"),
+        correctCount: 440,
+        totalCount: 500,
+        sections: [
+          SectionResult(name: "소프트웨어설계", correctCount: 17, totalCount: 20, score: 85),
+          SectionResult(name: "소프트웨어개발", correctCount: 20, totalCount: 20, score: 100),
+          SectionResult(name: "데이터베이스구축", correctCount: 19, totalCount: 20, score: 95),
+          SectionResult(name: "프로그래밍언어", correctCount: 18, totalCount: 20, score: 90),
+          SectionResult(name: "정보시스템관리및구축", correctCount: 14, totalCount: 20, score: 70),
+        ]);
+
+    _sectionResults.assignAll(resultData.sections);
+    _isPassed.value = resultData.isPassed;
+    _totalScore.value = resultData.correctCount;
+  }
 }
