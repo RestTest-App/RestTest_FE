@@ -16,17 +16,14 @@ class ArrowButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 기본 자산은 왼쪽 화살표
     Widget arrow = SvgPicture.asset(
       'icons/common/arrow.svg',
-      // color 대신 colorFilter 사용
       colorFilter: ColorFilter.mode(
         enabled ? ColorSystem.blue : ColorSystem.grey[400]!,
         BlendMode.srcIn,
       ),
     );
 
-    // 오른쪽 버튼인 경우 좌우 반전
     if (!isLeft) {
       arrow = Transform(
         alignment: Alignment.center,

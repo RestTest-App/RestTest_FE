@@ -10,6 +10,7 @@ import 'package:rest_test/view/home/widget/today_question_card.dart';
 import 'package:rest_test/view/home/widget/goal_card.dart';
 import 'package:rest_test/view/home/widget/exam_type_selector.dart';
 import 'package:rest_test/model/home/exam_model.dart';
+import 'package:rest_test/view/test/learn_intro_screen.dart'; // 임시 화면
 
 class HomeScreen extends BaseScreen<HomeViewModel> {
   const HomeScreen({super.key});
@@ -50,6 +51,13 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
         examTime: 80,
         passRate: 62.82,
       ),
+      Exam(
+        examId: '92774282362',
+        examName: '2024년 2회 정보처리기사',
+        questionCount: 50,
+        examTime: 80,
+        passRate: 62.82,
+      ),
     ];
 
     return Obx(() {
@@ -77,12 +85,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Row(
-                    children: [
-                      _buildModeButton("쉬엄 모드", true, isRestMode),
-                      _buildModeButton("시험 모드", false, isRestMode),
-                    ],
-                  ),
+                  _buildModeSelector(isRestMode),
                   const SizedBox(height: 24),
                   isRestMode.value
                       ? _buildRestMode(questionCount)
@@ -96,49 +99,70 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
     });
   }
 
-  Widget _buildModeButton(String text, bool value, RxBool group) {
-    final isSelected = group.value == value;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => group.value = value,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            color: isSelected ? ColorSystem.white : ColorSystem.back,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            text,
-            style: FontSystem.KR18B.copyWith(
-              color: isSelected ? ColorSystem.deepBlue : ColorSystem.grey[600],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _iconCounterButton(IconData icon, VoidCallback onPressed) {
-    return CupertinoButton(
-      padding: EdgeInsets.zero,
-      minSize: 32,
-      onPressed: onPressed,
-      child: Container(
-        width: 36,
-        height: 36,
-        alignment: Alignment.center,
+  Widget _buildModeSelector(RxBool isRestMode) {
+    return Obx(() {
+      return Container(
+        height: 48,
         decoration: BoxDecoration(
           color: ColorSystem.grey[200],
-          shape: BoxShape.circle,
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: ColorSystem.black,
+        child: Stack(
+          children: [
+            AnimatedAlign(
+              duration: const Duration(milliseconds: 200),
+              alignment: isRestMode.value
+                  ? Alignment.centerLeft
+                  : Alignment.centerRight,
+              child: Container(
+                width: MediaQuery.of(Get.context!).size.width / 2 - 32,
+                margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                decoration: BoxDecoration(
+                  color: ColorSystem.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => isRestMode.value = true,
+                    behavior: HitTestBehavior.translucent,
+                    child: Center(
+                      child: Text(
+                        "쉬엄 모드",
+                        style: FontSystem.KR18B.copyWith(
+                          color: isRestMode.value
+                              ? ColorSystem.deepBlue
+                              : ColorSystem.grey[600],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => isRestMode.value = false,
+                    behavior: HitTestBehavior.translucent,
+                    child: Center(
+                      child: Text(
+                        "시험 모드",
+                        style: FontSystem.KR18B.copyWith(
+                          color: !isRestMode.value
+                              ? ColorSystem.deepBlue
+                              : ColorSystem.grey[600],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildRestMode(RxInt count) {
@@ -176,18 +200,15 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
                     style: FontSystem.KR24B,
                   )),
             ),
-            // 수정 끝
-
             const SizedBox(width: 16),
-
             IconButton(
               onPressed: count.value < 20 ? () => count.value += 5 : null,
               icon: const Icon(Icons.arrow_right),
               color:
                   count.value < 20 ? ColorSystem.blue : ColorSystem.grey[400],
               iconSize: 28,
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
+              splashColor: ColorSystem.transparent,
+              highlightColor: ColorSystem.transparent,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             ),
@@ -201,10 +222,20 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
             child: CupertinoButton(
               color: ColorSystem.blue,
               borderRadius: BorderRadius.circular(10),
-              child: const Text("학습 시작", style: TextStyle(color: Colors.white)),
+              child: Text("학습 시작", style: TextStyle(color: ColorSystem.white)),
               onPressed: () {
-                Get.snackbar("시작", "${count.value}문제 학습 시작!",
-                    snackPosition: SnackPosition.BOTTOM);
+                Get.to(() => LearnIntroScreen(
+                      isRestMode: true,
+                      isTodayQuestion: false, // ✅ 수정
+                      questionCount: count.value,
+                      exam: Exam(
+                        examId: 'REST_MODE', // 수정
+                        examName: '쉬엄 모드', // 수정
+                        questionCount: count.value,
+                        examTime: 0,
+                        passRate: 0,
+                      ),
+                    ));
               },
             ),
           ),
@@ -218,8 +249,14 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
       children: exams
           .map((exam) => ExamCard(
                 exam: exam,
-                onTap: () => Get.snackbar("시험 선택됨", exam.examName,
-                    snackPosition: SnackPosition.BOTTOM),
+                onTap: () {
+                  Get.to(() => LearnIntroScreen(
+                        isRestMode: false,
+                        isTodayQuestion: false, // ✅ 수정
+                        exam: exam,
+                        questionCount: null,
+                      ));
+                },
               ))
           .toList(),
     );
