@@ -12,7 +12,7 @@ class DefaultCloseAppbar extends StatelessWidget {
     this.actions = const <CustomIconButton>[],
     this.onBackPress,
     this.showBackButton = true, // 기본값을 true로 설정
-    this.centerTitle = false,
+    this.centerTitle = true,
     this.backColor,
   });
 
@@ -26,11 +26,8 @@ class DefaultCloseAppbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Padding(
-        padding: const EdgeInsets.only(right: 16),
-        child: Text(title,
-            style: FontSystem.KR16M.copyWith(color: ColorSystem.grey.shade800)),
-      ),
+      title: Text(title,
+          style: FontSystem.KR20SB.copyWith(color: ColorSystem.black)),
       centerTitle: centerTitle,
       surfaceTintColor: Colors.white,
       backgroundColor: Colors.white,

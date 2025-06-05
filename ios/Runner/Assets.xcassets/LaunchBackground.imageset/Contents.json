@@ -2,7 +2,17 @@
   "images" : [
     {
       "filename" : "background.png",
-      "idiom" : "universal",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "darkbackground.png",
+      "idiom" : "universal"
       "scale" : "1x"
     },
     {
