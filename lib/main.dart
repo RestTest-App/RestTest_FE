@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -15,7 +16,7 @@ Future<void> onSystemInit() async{
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
   // Environment
-  // await dotenv.load(fileName: "assets/config/.env");
+  await dotenv.load(fileName: "assets/config/.env");
   // KakaoSdk.init(nativeAppKey: "${dotenv.env['KAKAO_APP_KEY']}");
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
