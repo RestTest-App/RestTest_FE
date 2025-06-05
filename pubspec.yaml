@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  dotted_border: ^2.0.0
   # Splash Screen
   flutter_native_splash: ^2.4.0
   # Dotenv
