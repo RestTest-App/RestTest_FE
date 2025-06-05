@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  dotted_border: ^2.0.0
   # Splash Screen
   flutter_native_splash: ^2.4.0
   # Dotenv
@@ -48,6 +49,11 @@ dependencies:
   # Cached Network Image
   cached_network_image: ^3.3.1
 
+  # progress_bar
+  linear_progress_bar: ^1.1.3
+
+  # fl_chart
+  fl_chart: ^0.66.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -81,11 +87,31 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-#   To add assets to your application, add an assets section, like this:
+  fonts:
+    - family: AppleSDGothicNeoExtraBold
+      fonts:
+        - asset: assets/fonts/AppleSDGothicNeo-ExtraBold.ttf
+    - family: AppleSDGothicNeoBold
+      fonts:
+        - asset: assets/fonts/AppleSDGothicNeo-Bold.ttf
+    - family: AppleSDGothicNeoSemiBold
+      fonts:
+        - asset: assets/fonts/AppleSDGothicNeo-SemiBold.ttf
+    - family: AppleSDGothicNeoMedium
+      fonts:
+        - asset: assets/fonts/AppleSDGothicNeo-Medium.ttf
+    - family: AppleSDGothicNeoRegular
+      fonts:
+        - asset: assets/fonts/AppleSDGothicNeo-Regular.ttf
+    - family: AppleSDGothicNeoLight
+      fonts:
+        - asset: assets/fonts/AppleSDGothicNeo-Light.ttf
 
   assets:
     - assets/icons/
     - assets/icons/bottom_navigation/
     - assets/icons/appbar/
+    - assets/icons/test/
     - assets/images/
     - assets/config/
+    - assets/fonts/

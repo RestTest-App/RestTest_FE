@@ -4,6 +4,7 @@ import 'package:rest_test/view/base/base_screen.dart';
 import 'package:rest_test/view/book/book_screen.dart';
 import 'package:rest_test/view/mypage/mypage_screen.dart';
 import 'package:rest_test/view/review/review_screen.dart';
+import 'package:rest_test/view/test/test_screen.dart';
 import 'package:rest_test/viewmodel/root/root_view_model.dart';
 
 import '../home/home_screen.dart';
@@ -26,11 +27,12 @@ class RootScreen extends BaseScreen<RootViewModel> {
     return Obx(() {
       return IndexedStack(
         index: viewModel.selectedIndex,
-        children: const [
+        children:  [
           HomeScreen(),
           ReviewScreen(),
           BookScreen(),
           MyPageScreen(),
+//           TestScreen()
         ],
       );
     });
