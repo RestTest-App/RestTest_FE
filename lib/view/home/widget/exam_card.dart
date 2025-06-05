@@ -19,9 +19,10 @@ class ExamCard extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.translucent,
       child: Container(
+        width: double.infinity,
         padding: const EdgeInsets.all(20),
         constraints: const BoxConstraints(minHeight: 100),
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        margin: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           color: ColorSystem.white,
           borderRadius: BorderRadius.circular(10),
@@ -54,10 +55,6 @@ class ExamCard extends StatelessWidget {
                           text: '${exam.passRate.toStringAsFixed(2)}%',
                           color: ColorSystem.lightRed,
                           textColor: ColorSystem.red),
-                      _infoBadge(
-                          text: '1회독', // 수정해야함
-                          color: ColorSystem.lightGreen,
-                          textColor: ColorSystem.green),
                     ],
                   ),
                 ],
@@ -89,7 +86,7 @@ class ExamCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         text,

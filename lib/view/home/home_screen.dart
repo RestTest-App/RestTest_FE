@@ -10,7 +10,6 @@ import 'package:rest_test/view/home/widget/today_question_card.dart';
 import 'package:rest_test/view/home/widget/goal_card.dart';
 import 'package:rest_test/view/home/widget/exam_type_selector.dart';
 import 'package:rest_test/model/home/exam_model.dart';
-import 'package:rest_test/view/test/learn_intro_screen.dart'; // 임시 화면
 
 class HomeScreen extends BaseScreen<HomeViewModel> {
   const HomeScreen({super.key});
@@ -224,18 +223,6 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
               borderRadius: BorderRadius.circular(10),
               child: Text("학습 시작", style: TextStyle(color: ColorSystem.white)),
               onPressed: () {
-                Get.to(() => LearnIntroScreen(
-                      isRestMode: true,
-                      isTodayQuestion: false, // ✅ 수정
-                      questionCount: count.value,
-                      exam: Exam(
-                        examId: 'REST_MODE', // 수정
-                        examName: '쉬엄 모드', // 수정
-                        questionCount: count.value,
-                        examTime: 0,
-                        passRate: 0,
-                      ),
-                    ));
               },
             ),
           ),
@@ -250,12 +237,6 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
           .map((exam) => ExamCard(
                 exam: exam,
                 onTap: () {
-                  Get.to(() => LearnIntroScreen(
-                        isRestMode: false,
-                        isTodayQuestion: false, // ✅ 수정
-                        exam: exam,
-                        questionCount: null,
-                      ));
                 },
               ))
           .toList(),
