@@ -17,6 +17,7 @@ class ExamCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.translucent,
       child: Container(
         padding: const EdgeInsets.all(20),
         constraints: const BoxConstraints(minHeight: 100),
