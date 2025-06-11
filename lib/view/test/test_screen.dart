@@ -140,6 +140,7 @@ class TestScreen extends BaseScreen<TestViewModel>{
           backgroundColor: ColorSystem.blue,
           textStyle: FontSystem.KR16SB.copyWith(color: ColorSystem.white),
           onPressed: (){
+            viewModel.resetExamState();
             Get.toNamed(
               Routes.TEST_EXAM
             );
