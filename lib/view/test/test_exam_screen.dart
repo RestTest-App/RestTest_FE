@@ -15,6 +15,7 @@ import 'package:rest_test/view/test/widget/exam_select_dialog.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
 import 'package:rest_test/widget/appbar/default_close_appbar.dart';
 
+import '../../utility/static/app_routes.dart';
 import '../../utility/system/color_system.dart';
 import '../../utility/system/font_system.dart';
 import '../../widget/button/rounded_rectangle_text_button.dart';
@@ -42,6 +43,9 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
         child: DefaultCloseAppbar(
           title: '',
           backColor : ColorSystem.white,
+          onBackPress: (){
+            Get.back();
+          },
         ));
   }
 
@@ -150,11 +154,7 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
           textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),
           onPressed: () {
             viewModel.loadResults();
-            Get.to(
-                  ()=> const TestResultScreen(),
-              transition: Transition.rightToLeft,
-              duration: const Duration(milliseconds: 300),
-            );
+            Get.toNamed(Routes.TEST_RESULT);
           },
         )
     );

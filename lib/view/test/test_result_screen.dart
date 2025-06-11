@@ -4,15 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/routes/transitions_type.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:rest_test/utility/system/font_system.dart';
 import 'package:rest_test/view/base/base_screen.dart';
-import 'package:rest_test/view/test/test_comment_screen.dart';
 import 'package:rest_test/view/test/widget/donut_chart.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
 import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
 
+import '../../utility/static/app_routes.dart';
 import '../../utility/system/color_system.dart';
 import '../../widget/appbar/default_close_appbar.dart';
 
@@ -38,6 +36,9 @@ class TestResultScreen extends BaseScreen<TestViewModel> {
         child: DefaultCloseAppbar(
           title: '시험 결과',
           backColor : ColorSystem.white,
+          onBackPress: (){
+            Get.toNamed(Routes.ROOT);
+          },
         ));
   }
 
@@ -146,6 +147,9 @@ class TestResultScreen extends BaseScreen<TestViewModel> {
           height: 60,
           padding: EdgeInsets.symmetric(horizontal: 28, vertical: 12),
           backgroundColor: ColorSystem.grey.shade200,
+          onPressed: (){
+            Get.toNamed(Routes.ROOT);
+          },
         ),
         RoundedRectangleTextButton(
           text: '해설 보러가기',
@@ -157,11 +161,7 @@ class TestResultScreen extends BaseScreen<TestViewModel> {
           onPressed: (){
             viewModel.loadAnswers();
             viewModel.goToQuestion(0);
-            Get.to(
-                  ()=> const TestCommentScreen(),
-              transition: Transition.rightToLeft,
-              duration: const Duration(milliseconds: 300),
-            );
+            Get.toNamed(Routes.TEST_COMMENT);
           },
         )
       ],

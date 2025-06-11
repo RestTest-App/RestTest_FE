@@ -10,6 +10,9 @@ import 'package:rest_test/view/home/widget/today_question_card.dart';
 import 'package:rest_test/view/home/widget/goal_card.dart';
 import 'package:rest_test/view/home/widget/exam_type_selector.dart';
 import 'package:rest_test/model/home/exam_model.dart';
+import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
+
+import '../../utility/static/app_routes.dart';
 
 class HomeScreen extends BaseScreen<HomeViewModel> {
   const HomeScreen({super.key});
@@ -101,7 +104,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
   Widget _buildModeSelector(RxBool isRestMode) {
     return Obx(() {
       return Container(
-        height: 48,
+        height: 56,
         decoration: BoxDecoration(
           color: ColorSystem.grey[200],
           borderRadius: BorderRadius.circular(12),
@@ -213,20 +216,20 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SizedBox(
+        const SizedBox(height: 36),
+        Container(
             width: double.infinity,
-            child: CupertinoButton(
-              color: ColorSystem.blue,
-              borderRadius: BorderRadius.circular(10),
-              child: Text("학습 시작", style: TextStyle(color: ColorSystem.white)),
-              onPressed: () {
+            child: RoundedRectangleTextButton(
+              text: '학습 시작',
+              width: double.infinity,
+              height: 60,
+              backgroundColor: ColorSystem.blue,
+              textStyle: FontSystem.KR16SB.copyWith(color: ColorSystem.white ),
+              onPressed: (){
+                Get.toNamed(Routes.TEST);
               },
             ),
           ),
-        ),
       ],
     );
   }
@@ -237,6 +240,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
           .map((exam) => ExamCard(
                 exam: exam,
                 onTap: () {
+                  Get.toNamed(Routes.TEST);
                 },
               ))
           .toList(),
