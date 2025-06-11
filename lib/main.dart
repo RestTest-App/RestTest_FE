@@ -8,7 +8,10 @@ import 'app/main_app.dart';
 Future<void> main() async {
   await onSystemInit();
 
-  runApp(const MainApp());
+  const bool hasRefreshToken = false;
+  runApp(const MainApp(
+    hasRefreshToken: hasRefreshToken,
+  ));
 }
 
 Future<void> onSystemInit() async {
