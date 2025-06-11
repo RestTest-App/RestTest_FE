@@ -11,13 +11,13 @@ Future<void> main() async {
   runApp(const MainApp());
 }
 
-Future<void> onSystemInit() async{
+Future<void> onSystemInit() async {
   // WidgetsBinding
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
   // Environment
   await dotenv.load(fileName: "assets/config/.env");
-  // KakaoSdk.init(nativeAppKey: "${dotenv.env['KAKAO_APP_KEY']}");
+  // KakaoSdk.init(nativeAppKey: "${dotenv..env['KAKAO_APP_KEY']}");
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   // 스플래시 스크린 제거
