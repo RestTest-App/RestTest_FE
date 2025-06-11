@@ -11,7 +11,7 @@ Future<void> main() async {
   runApp(const MainApp());
 }
 
-Future<void> onSystemInit() async{
+Future<void> onSystemInit() async {
   // WidgetsBinding
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 

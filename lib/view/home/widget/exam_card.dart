@@ -68,8 +68,11 @@ class ExamCard extends StatelessWidget {
                 color: ColorSystem.grey[200],
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.arrow_forward_ios_rounded,
-                  size: 15, color: ColorSystem.grey[400]),
+              child: Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 15,
+                color: ColorSystem.grey[400],
+              ),
             ),
           ],
         ),
