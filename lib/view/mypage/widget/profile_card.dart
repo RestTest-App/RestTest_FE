@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:rest_test/utility/system/color_system.dart';
 import 'package:rest_test/utility/system/font_system.dart';
-import 'package:rest_test/view/mypage/nickname_change_screen.dart';
+import 'package:rest_test/view/mypage/profile_change_screen.dart';
 import 'package:rest_test/viewmodel/mypage/mypage_view_model.dart';
 
 class ProfileSection extends StatelessWidget {
@@ -13,13 +12,13 @@ class ProfileSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.to(() => NicknameChangeScreen()),
+      onTap: () => Get.to(() => const ProfileChangeScreen()),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
           color: ColorSystem.white,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -48,10 +47,10 @@ class ProfileSection extends StatelessWidget {
                 ],
               ),
             ),
-            SvgPicture.asset(
-              'icons/mypage/right_arrow.svg',
-              width: 24,
-              height: 24,
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 15,
+              color: ColorSystem.grey[600],
             ),
           ],
         ),

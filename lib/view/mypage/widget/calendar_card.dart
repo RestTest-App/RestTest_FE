@@ -18,9 +18,11 @@ class CalendarSection extends StatelessWidget {
       children: [
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding:
+              const EdgeInsets.only(left: 20, right: 20, top: 24, bottom: 16),
           decoration: BoxDecoration(
-              color: ColorSystem.white, borderRadius: BorderRadius.circular(8)),
+              color: ColorSystem.white,
+              borderRadius: BorderRadius.circular(12)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -33,14 +35,16 @@ class CalendarSection extends StatelessWidget {
         ),
         Positioned(
           top: -8,
-          child:
-              Image.asset('assets/images/spring.png', width: width, height: 16),
+          child: SvgPicture.asset(
+            'assets/images/spring.svg',
+          ),
         ),
       ],
     );
   }
 }
 
+// 캘린더 헤더
 class _CalendarHeader extends StatelessWidget {
   final MyPageViewModel controller;
   const _CalendarHeader({super.key, required this.controller});
@@ -86,6 +90,7 @@ class _CalendarHeader extends StatelessWidget {
       );
 }
 
+// 캘린더 그리드
 class _CalendarGrid extends StatelessWidget {
   final MyPageViewModel controller;
   const _CalendarGrid({super.key, required this.controller});
@@ -93,77 +98,130 @@ class _CalendarGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final today = DateTime.now();
+
     return Obx(() => GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 7, crossAxisSpacing: 6, mainAxisSpacing: 6),
-          itemCount: controller.calendarDays.length,
+          itemCount: controller.calendarDates.length,
           itemBuilder: (_, i) {
-            final day = controller.calendarDays[i];
-            if (day.isAttended) return const _AttendedDay();
-            if (day.isInCurrentMonth && day.date.isBefore(today)) {
-              return const _MissedDay();
+            final date = controller.calendarDates[i];
+
+            final isInCurrentMonth =
+                date.month == controller.currentMonth.value;
+            final isAttended = isInCurrentMonth &&
+                controller.monthlyStudyDate.contains(date.day);
+            final isPastDay = date.isBefore(today);
+            final isToday = date.year == today.year &&
+                date.month == today.month &&
+                date.day == today.day;
+
+            if (isInCurrentMonth) {
+              if (isAttended && !isToday) {
+                return const _AttendanceCheckedDay();
+              } else if (isPastDay && !isToday) {
+                return const _AttendanceUncheckedDay();
+              }
             }
-            final isToday = day.date.year == today.year &&
-                day.date.month == today.month &&
-                day.date.day == today.day;
-            return _NormalDay(day: day, isToday: isToday);
+
+            return _NormalDay(
+                date: date,
+                isInCurrentMonth: isInCurrentMonth,
+                isToday: isToday);
           },
         ));
   }
 }
 
-class _AttendedDay extends StatelessWidget {
-  const _AttendedDay({super.key});
+// ✅ 출석한 날
+class _AttendanceCheckedDay extends StatelessWidget {
+  const _AttendanceCheckedDay({super.key});
 
   @override
   Widget build(BuildContext context) => Container(
+        constraints: const BoxConstraints.tightFor(width: 34, height: 34),
         decoration: BoxDecoration(
-            color: ColorSystem.blue, borderRadius: BorderRadius.circular(12)),
-        child: Center(
-            child: Image.asset('assets/images/logo_white.png',
-                width: 20, height: 20)),
-      );
-}
-
-class _MissedDay extends StatelessWidget {
-  const _MissedDay({super.key});
-
-  @override
-  Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-            color: ColorSystem.white,
-            border: Border.all(color: ColorSystem.red, width: 1.5),
-            borderRadius: BorderRadius.circular(12)),
-        child: Center(
-            child:
-                SvgPicture.asset('icons/mypage/x.svg', width: 16, height: 16)),
-      );
-}
-
-class _NormalDay extends StatelessWidget {
-  final dynamic day;
-  final bool isToday;
-  const _NormalDay({super.key, required this.day, required this.isToday});
-
-  @override
-  Widget build(BuildContext context) => Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: day.isInCurrentMonth ? Colors.white : ColorSystem.white,
-          border: isToday
-              ? Border.all(color: ColorSystem.grey[600]!, width: 1.5)
-              : Border.all(color: ColorSystem.grey[200]!, width: 1),
+          color: ColorSystem.blue,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Text(
-          '${day.date.day}',
-          style: FontSystem.KR14SB.copyWith(
-            color: day.isInCurrentMonth
-                ? ColorSystem.black
-                : ColorSystem.grey[200]!,
-          ),
+        padding: const EdgeInsets.all(7),
+        child: SvgPicture.asset(
+          'assets/icons/mypage/check_yes.svg',
+          fit: BoxFit.contain,
         ),
       );
+}
+
+// ❌ 미출석한 날
+class _AttendanceUncheckedDay extends StatelessWidget {
+  const _AttendanceUncheckedDay({super.key});
+
+  @override
+  Widget build(BuildContext context) => Container(
+        constraints: const BoxConstraints.tightFor(width: 34, height: 34),
+        decoration: BoxDecoration(
+          color: ColorSystem.white,
+          border: Border.all(color: ColorSystem.red, width: 1.5),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.all(7),
+        child: SvgPicture.asset(
+          'assets/icons/mypage/check_no.svg',
+          fit: BoxFit.contain,
+        ),
+      );
+}
+
+// 📅 일반 날짜
+class _NormalDay extends StatelessWidget {
+  final DateTime date;
+  final bool isInCurrentMonth;
+  final bool isToday;
+
+  const _NormalDay({
+    super.key,
+    required this.date,
+    required this.isInCurrentMonth,
+    required this.isToday,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final now = DateTime.now();
+
+    Color borderColor;
+    if (isToday) {
+      borderColor = ColorSystem.grey[600]!;
+    } else if (isInCurrentMonth) {
+      borderColor =
+          date.isAfter(now) ? ColorSystem.grey[400]! : ColorSystem.grey[200]!;
+    } else {
+      borderColor = ColorSystem.grey[200]!;
+    }
+
+    Color textColor;
+    if (isToday) {
+      textColor = ColorSystem.grey[600]!;
+    } else if (!isInCurrentMonth) {
+      textColor = ColorSystem.grey[200]!;
+    } else {
+      textColor = ColorSystem.grey[400]!;
+    }
+
+    return Container(
+      constraints: const BoxConstraints.tightFor(width: 34, height: 34),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: ColorSystem.white,
+        border: Border.all(color: borderColor, width: 1.5),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.all(7),
+      child: Text(
+        '${date.day}',
+        style: FontSystem.KR14SB.copyWith(color: textColor),
+      ),
+    );
+  }
 }
