@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class ReviewListModel {
   final String review_note_id;
   final String exam_id;
