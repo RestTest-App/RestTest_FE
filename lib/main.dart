@@ -9,8 +9,14 @@ import 'app/main_app.dart';
 Future<void> main() async {
   await onSystemInit();
 
-  const bool hasRefreshToken = false;
-  runApp(const MainApp(
+  late bool hasRefreshToken;
+  if (SecureStorageFactory.tokenProvider.refreshToken != null) {
+    hasRefreshToken = true;
+  } else {
+    hasRefreshToken = false;
+  }
+
+  runApp(MainApp(
     hasRefreshToken: hasRefreshToken,
   ));
 }
