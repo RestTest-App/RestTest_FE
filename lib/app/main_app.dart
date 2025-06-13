@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:rest_test/binding/init_binding.dart';
 import 'package:rest_test/utility/static/app_pages.dart';
 import 'package:rest_test/utility/static/app_routes.dart';
 import 'package:rest_test/utility/system/color_system.dart';
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  final bool hasRefreshToken;
+
+  const MainApp({Key? key, required this.hasRefreshToken}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +29,12 @@ class MainApp extends StatelessWidget {
         scaffoldBackgroundColor: ColorSystem.blue,
       ),
 
-      initialRoute: Routes.LOGIN, // 로그인 화면으로 시작(TEST)
+      initialRoute: hasRefreshToken ? Routes.ROOT : Routes.LOGIN,
+      // initialRoute: Routes.LOGIN, // 로그인 화면으로 시작(TEST)
       // initialRoute: Routes.ROOT,
-      // initialBinding: InitBinding(),
+      initialBinding: BindingsBuilder(() {
+        InitBinding().dependencies();
+      }),
       getPages: appPages,
     );
   }
