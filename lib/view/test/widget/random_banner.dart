@@ -20,35 +20,42 @@ class RandomBanner extends StatelessWidget {
         child: Stack(
           children: [
             Transform.translate(
-            offset: Offset(-60, -50), // 위로 이동 → 위쪽 잘리게
-            child: Container(
-              width: 200,
-              height: 200,
-              decoration: BoxDecoration(
-                color: Colors.white10,
-                shape: BoxShape.circle,
-              ),
-            ),),
-            Transform.translate(
-              offset: Offset(250, 70), // 위로 이동 → 위쪽 잘리게
+              offset: const Offset(-60, -50), // 위로 이동 → 위쪽 잘리게
               child: Container(
                 width: 200,
                 height: 200,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white10,
                   shape: BoxShape.circle,
                 ),
-              ),),
+              ),
+            ),
+            Transform.translate(
+              offset: const Offset(250, 70), // 위로 이동 → 위쪽 잘리게
+              child: Container(
+                width: 200,
+                height: 200,
+                decoration: const BoxDecoration(
+                  color: Colors.white10,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("오늘도 힘내서 좋은 결과가 있기를!", style: FontSystem.KR16B.copyWith(color: ColorSystem.white),),
+                    Text(
+                      "오늘도 힘내서 좋은 결과가 있기를!",
+                      style:
+                          FontSystem.KR16B.copyWith(color: ColorSystem.white),
+                    ),
                     SvgPicture.asset(
                       "assets/icons/bottom_navigation/mypage.svg",
-                        width: 88,)
+                      width: 88,
+                    )
                   ],
                 ),
               ),
@@ -58,5 +65,4 @@ class RandomBanner extends StatelessWidget {
       ),
     );
   }
-
 }

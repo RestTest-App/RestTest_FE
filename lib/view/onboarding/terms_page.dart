@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
+import 'package:rest_test/utility/system/color_system.dart';
 
 class TermsPage extends StatelessWidget {
   final VoidCallback onAgree;
@@ -12,10 +13,10 @@ class TermsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorSystem.white,
       appBar: AppBar(
         title: const Text("이용약관 상세"),
-        backgroundColor: const Color(0xFFFFFFFF),
+        backgroundColor: ColorSystem.white,
       ),
       body: Column(
         children: [
@@ -38,9 +39,9 @@ class TermsPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 height: 48,
                 text: "동의하기",
-                backgroundColor: const Color(0xFF0B60B0),
-                textStyle: const TextStyle(
-                  color: Colors.white,
+                backgroundColor: ColorSystem.blue,
+                textStyle: TextStyle(
+                  color: ColorSystem.white,
                   fontSize: 16,
                 ),
                 onPressed: onAgree,

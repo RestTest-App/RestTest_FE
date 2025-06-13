@@ -83,12 +83,12 @@ class _ProfileChangeScreenState extends State<ProfileChangeScreen> {
                   controller: _textController,
                   focusNode: _focusNode,
                   onChanged: (value) => controller.newNickname.value = value,
-                  style: FontSystem.KR16M.copyWith(color: Colors.black),
+                  style: FontSystem.KR16M.copyWith(color: ColorSystem.black),
                   decoration: InputDecoration(
                     hintText: '닉네임 입력',
                     filled: true,
                     fillColor:
-                        _isFocused ? const Color(0xFFE7EFF7) : ColorSystem.back, // color system에 이 컬러가 없삼
+                        _isFocused ? ColorSystem.lightBlue : ColorSystem.back,
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 20),
                     enabledBorder: OutlineInputBorder(

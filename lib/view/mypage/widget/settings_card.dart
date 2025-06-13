@@ -113,6 +113,7 @@ class SettingsSection extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
+                            elevation: 0,
                           ),
                           child: Text(
                             '유지하기',
@@ -168,6 +169,7 @@ class SettingsSection extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
+                        elevation: 0,
                       ),
                       child: Text(
                         '확인',

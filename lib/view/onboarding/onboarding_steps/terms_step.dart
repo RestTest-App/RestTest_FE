@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rest_test/utility/system/color_system.dart';
+import 'package:rest_test/utility/system/font_system.dart';
 import 'package:rest_test/view/onboarding/terms_page.dart';
 import 'package:rest_test/viewmodel/onboarding/onboarding_view_model.dart';
 
@@ -17,12 +19,7 @@ class TermsStep extends StatelessWidget {
         children: [
           const Text(
             "쉬엄시험 서비스 이용약관에\n동의해주세요.",
-            style: TextStyle(
-              fontFamily: 'AppleSDGothicNeo-Bold',
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              height: 1.5,
-            ),
+            style: FontSystem.KR28B,
           ),
           const SizedBox(height: 24),
           GestureDetector(
@@ -44,12 +41,12 @@ class TermsStep extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
-                color: isAgree ? const Color(0xFFEAF2FF) : Colors.white,
+                color: isAgree
+                    ? const Color(0xFFEAF2FF) // ColorSystem에 없음
+                    : ColorSystem.white,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isAgree
-                      ? const Color(0xFF0B60B0)
-                      : const Color(0xFFB5B5B5),
+                  color: isAgree ? ColorSystem.blue : ColorSystem.grey[400]!,
                   width: 1,
                 ),
               ),
@@ -60,18 +57,14 @@ class TermsStep extends StatelessWidget {
                 children: [
                   Icon(
                     isAgree ? Icons.check : Icons.check,
-                    color: isAgree
-                        ? const Color(0xFF0B60B0)
-                        : const Color(0xFFB5B5B5),
+                    color: isAgree ? ColorSystem.blue : ColorSystem.grey[400]!,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     "서비스 이용약관 전체 동의",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: isAgree
-                          ? const Color(0xFF0B60B0)
-                          : const Color(0xFFB5B5B5),
+                    style: FontSystem.KR16M.copyWith(
+                      color:
+                          isAgree ? ColorSystem.blue : ColorSystem.grey[400]!,
                     ),
                   ),
                 ],

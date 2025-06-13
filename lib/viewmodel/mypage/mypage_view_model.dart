@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 class MyPageViewModel extends GetxController {
-  var nickname = '시엄시험해'.obs;
+  var nickname = '쉬엄시험해'.obs;
 
   var currentYear = DateTime.now().year.obs;
   var currentMonth = DateTime.now().month.obs;
@@ -19,8 +19,8 @@ class MyPageViewModel extends GetxController {
   }
 
   void loadMockData() {
-    // 실제론 API 응답 기반
-    monthlyStudyDate.value = [1, 2, 3, 4, 5, 7, 9, 11];
+    // API 응답 기반
+    monthlyStudyDate.value = [1, 2, 3, 4, 5, 7, 9, 11, 13];
   }
 
   void generateCalendar(int year, int month) {

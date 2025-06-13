@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileChangeViewModel extends GetxController {
-  var currentNickname = '시엄시험해'.obs;
+  var currentNickname = '쉬엄시험해'.obs;
   var newNickname = ''.obs;
 
   var profileImage = Rxn<File>();
