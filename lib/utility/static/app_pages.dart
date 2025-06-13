@@ -1,5 +1,7 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:rest_test/view/onboarding/onboarding_screen.dart';
+import 'package:rest_test/view/review/review_content_screen.dart';
+import 'package:rest_test/view/review/review_screen.dart';
 import 'package:rest_test/view/test/test_comment_screen.dart';
 import 'package:rest_test/view/test/test_exam_screen.dart';
 import 'package:rest_test/view/test/test_result_screen.dart';
@@ -43,5 +45,15 @@ List<GetPage> appPages = [
       name: Routes.TEST_COMMENT,
       page: () => TestCommentScreen(),
       binding: TestCommentBinding()
+  ),
+  GetPage(
+      name: Routes.REVIEW_ITEM,
+      page: ()=> ReviewContentScreen(),
+      binding: ReviewContentBinding(),
+  ),
+  GetPage(
+    name: Routes.REVIEW,
+    page: ()=> ReviewScreen(),
+    binding: ReviewBinding(),
   )
 ];
