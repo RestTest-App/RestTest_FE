@@ -23,6 +23,6 @@ List<GetPage> appPages = [
   GetPage(
     name: Routes.LOGIN,
     page: () => LoginScreen(),
-    binding: OnboardingBinding(),
+    binding: AuthBinding(),
   )
 ];
