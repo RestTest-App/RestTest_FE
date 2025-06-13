@@ -11,33 +11,39 @@ abstract class BaseConnect extends GetConnect {
   void onInit() {
     super.onInit();
     httpClient
-      ..baseUrl = dotenv.env['SERVER_HOST']
+      ..baseUrl = "${dotenv.env['LOCAL_HOST']}:${dotenv.env['SERVER_PORT']}"
       ..timeout = const Duration(seconds: 30)
       ..addRequestModifier<dynamic>((request) {
         if (tokenProvider.accessToken != null) {
           request.headers['Authorization'] =
-          'Bearer ${tokenProvider.accessToken}';
+              'Bearer ${tokenProvider.accessToken}';
         }
-
-        LogUtil.info(
-          "🛫 [${request.method}] ${request.url}",
-        );
-
+        LogUtil.info("🛫 [${request.method}] ${request.url}");
         return request;
       })
-      ..addResponseModifier((request, Response response) {
+      ..addResponseModifier((request, response) {
+        final body = response.body;
+
         if (response.status.hasError) {
+          String code = response.statusCode.toString();
+          String message = response.statusText ?? '';
+
+          if (body is Map<String, dynamic> && body['error'] is Map) {
+            final err = body['error'] as Map;
+            code = err['code']?.toString() ?? code;
+            message = err['message']?.toString() ?? message;
+          }
+
           LogUtil.error(
-            "🚨 [${request.method}] ${request.url} | FAILED (${response.body['error']['code']}, ${response.body['error']['message']})",
+            "🚨 [${request.method}] ${request.url} | FAILED ($code, $message)",
           );
         } else {
           LogUtil.info(
             "🛬 [${request.method}] ${request.url} | SUCCESS (${response.statusCode})",
           );
-          LogUtil.info(
-            "🛬 [${request.method}] ${request.url} | BODY ${response.body}",
-          );
+          LogUtil.info("🛬 BODY ${body}");
         }
+
         return response;
       });
   }
