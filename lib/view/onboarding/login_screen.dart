@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:rest_test/view/base/base_screen.dart';
-import 'package:rest_test/viewmodel/onboarding/onboarding_view_model.dart';
+import 'package:rest_test/viewmodel/auth/auth_view_model.dart';
 
-class LoginScreen extends BaseScreen<OnboardingViewModel> {
+class LoginScreen extends BaseScreen<AuthViewModel> {
   LoginScreen({super.key});
 
   @override
@@ -27,7 +27,13 @@ class LoginScreen extends BaseScreen<OnboardingViewModel> {
               child: FractionallySizedBox(
                 widthFactor: 0.9,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () async {
+                    bool ok = await viewModel.loginWithKakao();
+                    if (!ok) {
+                      Get.snackbar("로그인 실패", "카카오 로그인에 실패했습니다.\n다시 시도해주세요.",
+                          snackPosition: SnackPosition.BOTTOM);
+                    }
+                  },
                   child: Image.asset(
                     'assets/images/kakao_login_button.png',
                     fit: BoxFit.contain,
