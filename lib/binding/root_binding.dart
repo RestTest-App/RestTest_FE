@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:rest_test/viewmodel/auth/auth_view_model.dart';
 import 'package:rest_test/viewmodel/mypage/mypage_view_model.dart';
 import 'package:rest_test/viewmodel/onboarding/onboarding_view_model.dart';
 import 'package:rest_test/viewmodel/review/review_view_model.dart';
@@ -49,6 +50,13 @@ class MyPageBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<MyPageViewModel>(() => MyPageViewModel());
+  }
+}
+
+class AuthBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<AuthViewModel>(() => AuthViewModel());
   }
 }
 
