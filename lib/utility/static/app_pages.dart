@@ -55,6 +55,8 @@ List<GetPage> appPages = [
     name: Routes.REVIEW,
     page: ()=> ReviewScreen(),
     binding: ReviewBinding(),
+),
+GetPage(
     name: Routes.LOGIN,
     page: () => LoginScreen(),
     binding: AuthBinding(),
