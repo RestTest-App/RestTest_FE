@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rest_test/viewmodel/onboarding/onboarding_view_model.dart';
+import 'package:rest_test/utility/system/font_system.dart';
+import 'package:rest_test/utility/system/color_system.dart';
 
 class CertificateStep extends StatelessWidget {
   final controller = Get.find<OnboardingViewModel>();
@@ -12,15 +14,7 @@ class CertificateStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          '자격증을 선택해주세요.\n(최대 3개)',
-          style: TextStyle(
-            fontFamily: 'AppleSDGothicNeo-Bold',
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            height: 1.5,
-          ),
-        ),
+        const Text('자격증을 선택해주세요.\n(최대 3개)', style: FontSystem.KR28B),
         const SizedBox(height: 16),
         GridView.count(
           crossAxisCount: 2,
@@ -54,11 +48,11 @@ class CertificateStep extends StatelessWidget {
           child: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: isSelected ? const Color(0xFFEAF2FF) : Colors.white,
+              color: isSelected ? ColorSystem.blue[500] : ColorSystem.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 width: 1,
-                color: isSelected ? const Color(0xFF0B60B0) : Colors.grey,
+                color: isSelected ? ColorSystem.blue : ColorSystem.grey[400]!,
               ),
             ),
             child: Text(
@@ -66,9 +60,8 @@ class CertificateStep extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
-                color: isSelected
-                    ? const Color(0xFF0B60B0)
-                    : const Color(0xFF3F3F3F),
+                color:
+                    isSelected ? ColorSystem.blue[500] : ColorSystem.grey[400],
               ),
             ),
           ),
@@ -83,13 +76,13 @@ class CertificateStep extends StatelessWidget {
         //     alignment: Alignment.center,
         //     child: Text(label, textAlign: TextAlign.center),
         //   ),
-        //   backgroundColor: Colors.white,
-        //   selectedColor: const Color(0xFFEAF2FF),
+        //   backgroundColor: ColorSystem.white,
+        //   selectedColor: ColorSystem.blue[500],
         //   shape: RoundedRectangleBorder(
         //     borderRadius: BorderRadius.circular(12),
         //     side: BorderSide(
         //       width: 1,
-        //       color: isSelected ? const Color(0xFF0B60B0) : Colors.grey,
+        //       color: isSelected ? ColorSystem.blue[500] : ColorSystem.grey[400],
         //     ),
         //   ),
         //   onSelected: (_) {

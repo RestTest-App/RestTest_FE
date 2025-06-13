@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rest_test/utility/system/color_system.dart';
 
 class CustomIconButton extends StatelessWidget {
   const CustomIconButton({
@@ -18,7 +19,7 @@ class CustomIconButton extends StatelessWidget {
     return IconButton(
       style: IconButton.styleFrom(
         splashFactory: NoSplash.splashFactory,
-        foregroundColor: Colors.white,
+        foregroundColor: ColorSystem.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),

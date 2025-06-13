@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../utility/system/color_system.dart';
+import 'package:rest_test/utility/system/color_system.dart';
 
 @immutable
 abstract class BaseScreen<T extends GetxController> extends GetView<T> {
@@ -26,18 +25,18 @@ abstract class BaseScreen<T extends GetxController> extends GetView<T> {
         /// 그라데이션 사용 여부
         gradient: useGradientBackground
             ? LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.center,
-          colors: [ColorSystem.blue[300]!, Colors.white],
-        )
+                begin: Alignment.topCenter,
+                end: Alignment.center,
+                colors: [ColorSystem.blue[300]!, ColorSystem.white],
+              )
             : null,
       ),
       child: wrapWithOuterSafeArea
           ? SafeArea(
-        top: setTopOuterSafeArea,
-        bottom: setBottomOuterSafeArea,
-        child: _buildScaffold(context),
-      )
+              top: setTopOuterSafeArea,
+              bottom: setBottomOuterSafeArea,
+              child: _buildScaffold(context),
+            )
           : _buildScaffold(context),
     );
   }
@@ -53,10 +52,10 @@ abstract class BaseScreen<T extends GetxController> extends GetView<T> {
       appBar: buildAppBar(context),
       body: wrapWithInnerSafeArea
           ? SafeArea(
-        top: setTopInnerSafeArea,
-        bottom: setBottomInnerSafeArea,
-        child: buildBody(context),
-      )
+              top: setTopInnerSafeArea,
+              bottom: setBottomInnerSafeArea,
+              child: buildBody(context),
+            )
           : buildBody(context),
       bottomNavigationBar: buildBottomNavigationBar(context),
     );
@@ -74,7 +73,7 @@ abstract class BaseScreen<T extends GetxController> extends GetView<T> {
 
   /// SafeArea의 색상을 정의하는 메서드
   @protected
-  Color? get unSafeAreaColor => Colors.white;
+  Color? get unSafeAreaColor => ColorSystem.white;
 
   /// 키보드가 나타날 때 화면을 조절할지 여부를 정의하는 메서드
   @protected
@@ -94,7 +93,7 @@ abstract class BaseScreen<T extends GetxController> extends GetView<T> {
 
   /// 화면의 배경 색상을 정의하는 메서드
   @protected
-  Color? get screenBackgroundColor => Colors.transparent;
+  Color? get screenBackgroundColor => ColorSystem.transparent;
 
   /// Scaffold 외부를 SafeArea로 감싸는지 여부를 정의하는 메서드
   @protected

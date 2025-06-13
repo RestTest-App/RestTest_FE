@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rest_test/utility/system/color_system.dart';
-
-import '../../utility/system/font_system.dart';
+import 'package:rest_test/utility/system/font_system.dart';
 import '../button/custom_icon_button.dart';
 
 class DefaultCloseAppbar extends StatelessWidget {
@@ -29,15 +28,15 @@ class DefaultCloseAppbar extends StatelessWidget {
       title: Text(title,
           style: FontSystem.KR20SB.copyWith(color: ColorSystem.black)),
       centerTitle: centerTitle,
-      surfaceTintColor: Colors.white,
-      backgroundColor: Colors.white,
+      surfaceTintColor: ColorSystem.white,
+      backgroundColor: ColorSystem.white,
       automaticallyImplyLeading: true,
       titleSpacing: 0,
       leadingWidth: 50,
       leading: IconButton(
         style: TextButton.styleFrom(
           splashFactory: NoSplash.splashFactory,
-          foregroundColor: Colors.white,
+          foregroundColor: ColorSystem.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
           ),
