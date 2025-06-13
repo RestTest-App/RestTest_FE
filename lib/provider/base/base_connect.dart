@@ -11,7 +11,7 @@ abstract class BaseConnect extends GetConnect {
   void onInit() {
     super.onInit();
     httpClient
-      ..baseUrl = "${dotenv.env['LOCAL_HOST']}:${dotenv.env['SERVER_PORT']}"
+      ..baseUrl = "${dotenv.env['SERVER_HOST']}:${dotenv.env['SERVER_PORT']}"
       ..timeout = const Duration(seconds: 30)
       ..addRequestModifier<dynamic>((request) {
         if (tokenProvider.accessToken != null) {
