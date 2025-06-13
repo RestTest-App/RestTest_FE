@@ -1,24 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:rest_test/app/factory/secure_storage_factory.dart';
 
 import 'app/main_app.dart';
 
 Future<void> main() async {
   await onSystemInit();
 
-  runApp(const MainApp());
+  late bool hasRefreshToken;
+  if (SecureStorageFactory.tokenProvider.refreshToken != null) {
+    hasRefreshToken = true;
+  } else {
+    hasRefreshToken = false;
+  }
+
+  runApp(MainApp(
+    hasRefreshToken: hasRefreshToken,
+  ));
 }
 
 Future<void> onSystemInit() async {
   // WidgetsBinding
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
+  // 스플래시
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  // SecureStorageFactory 초기화
+  await SecureStorageFactory().onInit();
+
   // Environment
   await dotenv.load(fileName: "assets/config/.env");
-  // KakaoSdk.init(nativeAppKey: "${dotenv..env['KAKAO_APP_KEY']}");
+  KakaoSdk.init(nativeAppKey: "${dotenv.env['KAKAO_NATIVE_APP_KEY']}");
 
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   // 스플래시 스크린 제거
   FlutterNativeSplash.remove();
 }
