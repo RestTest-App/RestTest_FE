@@ -79,19 +79,21 @@ class AuthViewModel extends GetxController {
       required String job,
       required List<int> certificates,
       required bool agreeToTerms}) async {
-    try {
-      await _authProvider.signUpWithKakao(
-          kakaoToken: kakaoToken,
-          email: email,
-          nickname: nickname,
-          gender: gender,
-          birthday: birthday,
-          job: job,
-          certificates: certificates,
-          agreeToTerms: agreeToTerms);
+    bool result = await _authProvider.signUpWithKakao(
+      kakaoToken: kakaoToken,
+      email: email,
+      nickname: nickname,
+      gender: gender,
+      birthday: birthday,
+      job: job,
+      certificates: certificates,
+      agreeToTerms: agreeToTerms,
+    );
+
+    if (result) {
       Get.offAllNamed(Routes.ROOT);
-    } catch (error) {
-      Get.snackbar('회원가입 실패', error.toString());
+    } else {
+      Get.snackbar("회원가입 실패", "회원가입에 실패했습니다.");
     }
   }
 }

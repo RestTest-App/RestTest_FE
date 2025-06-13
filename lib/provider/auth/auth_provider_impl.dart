@@ -57,7 +57,7 @@ class AuthProviderImpl extends BaseConnect implements AuthProvider {
 
   // sign-up repo
   @override
-  Future<void> signUpWithKakao(
+  Future<bool> signUpWithKakao(
       {required String kakaoToken,
       required String email,
       required String nickname,
@@ -68,6 +68,7 @@ class AuthProviderImpl extends BaseConnect implements AuthProvider {
       required bool agreeToTerms}) async {
     final body = {
       'kakao_token': kakaoToken,
+      'email': email,
       'nickname': nickname,
       'gender': gender,
       'birthday': birthday,
@@ -76,9 +77,25 @@ class AuthProviderImpl extends BaseConnect implements AuthProvider {
       'agree_to_terms': agreeToTerms,
     };
 
-    final response = await post("/api/v1/auth/sign-up", body);
-    final data = response.body as Map<String, dynamic>;
-    await _tokenProvider.setAccessToken(data["access_token"] as String);
-    await _tokenProvider.setRefreshToken(data["refresh_token"] as String);
+    final response =
+        await post<Map<String, dynamic>>("/api/v1/auth/sign-up", body);
+
+    if (response.status.hasError) {
+      return false;
+    }
+
+    final Map<String, dynamic> resBody = response.body!;
+
+    final tokenMap = resBody["data"] as Map<String, dynamic>?;
+    if (tokenMap == null) return false;
+
+    final access = tokenMap["access_token"] as String?;
+    final refresh = tokenMap["refresh_token"] as String?;
+    if (access == null || refresh == null) return false;
+
+    await _tokenProvider.setAccessToken(access);
+    await _tokenProvider.setRefreshToken(refresh);
+
+    return true;
   }
 }

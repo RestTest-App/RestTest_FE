@@ -1,7 +1,7 @@
 abstract class AuthProvider {
   Future<bool> signInWithKakao(String kakaoToken);
 
-  Future<void> signUpWithKakao(
+  Future<bool> signUpWithKakao(
       {required String kakaoToken,
       required String email,
       required String nickname,
