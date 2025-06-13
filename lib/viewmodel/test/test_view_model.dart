@@ -31,6 +31,11 @@ class TestViewModel extends GetxController {
   final RxList<int> _correctAnswers = <int>[].obs;
   final RxList<AnswerExplanation> _answerExplanations = <AnswerExplanation>[].obs;
 
+  // 신고
+  final RxString selectedReportOption = "".obs;
+  final RxString etcText = "".obs;
+
+
   List<int> get correctAnswers => _correctAnswers;
   List<AnswerExplanation> get answerExplanations => _answerExplanations;
   AnswerExplanation get currentExplanation => _answerExplanations[_currentIndex.value];
@@ -291,5 +296,30 @@ class TestViewModel extends GetxController {
 
     _correctAnswers.assignAll(answerData.correctAnswers);
     _answerExplanations.assignAll(answerData.correctAnswerInfo);
+  }
+
+  void resetExamState() {
+    _questions.clear();
+    _selectedOptions.clear();
+    _currentIndex.value = 0;
+    _correctAnswers.clear();
+    _answerExplanations.clear();
+    starredQuestions.clear();
+    _sectionResults.clear();
+    _isPassed.value = false;
+    _totalScore.value = 0;
+
+    _loadQuestions(); // 문제 다시 불러오기
+  }
+
+  void resetReportOption() {
+    selectedReportOption.value = "";
+  }
+
+  void onEtcTextChanged(String value) {
+    etcText.value = value;
+    if (value.trim().isNotEmpty) {
+      selectedReportOption.value = "기타";
+    }
   }
 }
