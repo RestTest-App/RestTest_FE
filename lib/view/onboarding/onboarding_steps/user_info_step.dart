@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rest_test/viewmodel/onboarding/onboarding_view_model.dart';
+import 'package:rest_test/utility/system/font_system.dart';
+import 'package:rest_test/utility/system/color_system.dart';
 
 class UserInfoStep extends StatelessWidget {
   final controller = Get.find<OnboardingViewModel>();
@@ -18,12 +20,7 @@ class UserInfoStep extends StatelessWidget {
           children: [
             const Text(
               '당신이 궁금해요!\n필요한 정보를 입력해주세요.',
-              style: TextStyle(
-                fontFamily: 'AppleSDGothicNeo-Bold',
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                height: 1.5,
-              ),
+              style: FontSystem.KR28B,
             ),
             const SizedBox(height: 24),
 
@@ -46,13 +43,13 @@ class UserInfoStep extends StatelessWidget {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? const Color(0xFFEAF2FF)
-                              : Colors.white,
+                              ? const Color(0xFFEAF2FF) // ColorSystem에 없음
+                              : ColorSystem.white,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: isSelected
-                                ? const Color(0xFF0B60B0)
-                                : const Color(0xFFB5B5B5),
+                                ? ColorSystem.blue
+                                : ColorSystem.grey[400]!,
                             width: 1,
                           ),
                         ),
@@ -61,8 +58,8 @@ class UserInfoStep extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             color: isSelected
-                                ? const Color(0xFF0B60B0)
-                                : const Color(0xFF676767),
+                                ? ColorSystem.blue
+                                : ColorSystem.grey[600]!,
                           ),
                         ),
                       ),
@@ -111,7 +108,7 @@ class UserInfoStep extends StatelessWidget {
             const SizedBox(height: 28),
 
             // 생년월일
-            const Text("생년월일"),
+            const Text("생년월일", style: FontSystem.KR28B),
             const SizedBox(height: 8),
             GestureDetector(
               onTap: () async {
@@ -132,21 +129,21 @@ class UserInfoStep extends StatelessWidget {
                   controller:
                       TextEditingController(text: controller.birth.value),
                   readOnly: true,
-                  style: const TextStyle(
-                    color: Color(0xFF3F3F3F),
+                  style: TextStyle(
+                    color: ColorSystem.grey[800],
                   ),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: "YYYY.MM.DD",
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
                       borderSide: BorderSide(
-                        color: Color(0xFFB5B5B5),
+                        color: ColorSystem.grey[400]!,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
                       borderSide: BorderSide(
-                        color: Color(0xFFB5B5B5),
+                        color: ColorSystem.grey[400]!,
                       ),
                     ),
                   ),
@@ -156,18 +153,22 @@ class UserInfoStep extends StatelessWidget {
             const SizedBox(height: 28),
 
             // 직업 입력
-            const Text("직업"),
+            Text(
+              "직업",
+              style: FontSystem.KR28B.copyWith(
+                color: ColorSystem.grey[600],
+              ),
+            ),
             const SizedBox(height: 8),
             TextField(
-              style: const TextStyle(
-                color: Color(0xFF3F3F3F),
-                fontSize: 16,
+              style: FontSystem.KR16M.copyWith(
+                color: ColorSystem.grey[800],
               ),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: "직업을 적어주세요 (ex - 학생, 무직, 공시생 등)",
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                    borderSide: BorderSide(color: Color(0xFFB5B5B5))),
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    borderSide: BorderSide(color: ColorSystem.grey[400]!)),
               ),
               onChanged: (val) => controller.job.value = val,
             ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rest_test/utility/system/color_system.dart';
 import 'package:rest_test/utility/system/font_system.dart';
 import 'package:rest_test/viewmodel/mypage/mypage_view_model.dart';
@@ -54,7 +53,11 @@ class SettingsSection extends StatelessWidget {
             color: ColorSystem.grey[800],
           ),
         ),
-        SvgPicture.asset('icons/mypage/right_arrow.svg', width: 20, height: 20),
+        Icon(
+          Icons.arrow_forward_ios_rounded,
+          size: 12,
+          color: ColorSystem.grey[400],
+        ),
       ],
     );
   }
@@ -110,11 +113,12 @@ class SettingsSection extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
+                            elevation: 0,
                           ),
                           child: Text(
                             '유지하기',
                             style: FontSystem.KR16B.copyWith(
-                              color: ColorSystem.grey[800],
+                              color: ColorSystem.white,
                             ),
                           ),
                         ),
@@ -165,6 +169,7 @@ class SettingsSection extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
+                        elevation: 0,
                       ),
                       child: Text(
                         '확인',

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rest_test/utility/system/color_system.dart';
+import 'package:rest_test/utility/system/font_system.dart';
 import 'package:rest_test/view/base/base_screen.dart';
 import 'package:rest_test/view/onboarding/onboarding_steps/certificate_step.dart';
 import 'package:rest_test/view/onboarding/onboarding_steps/nickname_step.dart';
@@ -34,9 +35,9 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorSystem.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: ColorSystem.white,
         toolbarHeight: 58,
         leading: IconButton(
           icon: const Icon(Icons.close),
@@ -47,50 +48,49 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
       ),
       body: SafeArea(
         child: Column(
-            children: [
-              Obx(() => Container(
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE8E8E8),
-                      borderRadius: BorderRadius.circular(1),
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: FractionallySizedBox(
-                        widthFactor:
-                            (viewModel.currentStep.value + 1) / steps.length,
-                        child: Container(
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF0B60B0),
-                            borderRadius: BorderRadius.circular(1),
-                          ),
+          children: [
+            Obx(() => Container(
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: ColorSystem.grey[200],
+                    borderRadius: BorderRadius.circular(1),
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: FractionallySizedBox(
+                      widthFactor:
+                          (viewModel.currentStep.value + 1) / steps.length,
+                      child: Container(
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: ColorSystem.blue,
+                          borderRadius: BorderRadius.circular(1),
                         ),
                       ),
                     ),
-                  )),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 32,
                   ),
-                  child: PageView(
-                    controller: viewModel.pageController,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      NicknameStep(),
-                      UserInfoStep(),
-                      CertificateStep(),
-                      TermsStep(),
-                    ],
-                  ),
+                )),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 32,
+                ),
+                child: PageView(
+                  controller: viewModel.pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    NicknameStep(),
+                    UserInfoStep(),
+                    CertificateStep(),
+                    TermsStep(),
+                  ],
                 ),
               ),
-              buildBottomButtons(),
-            ],
-          ),
-        
+            ),
+            buildBottomButtons(),
+          ],
+        ),
       ),
     );
   }
@@ -109,11 +109,10 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
             Expanded(
               child: RoundedRectangleTextButton(
                 text: '이전',
-                textStyle: const TextStyle(
-                  color: Color(0xFFB5B5B5),
-                  fontSize: 16,
+                textStyle: FontSystem.KR16SB.copyWith(
+                  color: ColorSystem.grey[400],
                 ),
-                backgroundColor: const Color(0xFFE8E8E8),
+                backgroundColor: ColorSystem.grey[200],
                 onPressed: viewModel.previousStep,
               ),
             ),
@@ -129,12 +128,11 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
           Expanded(
             child: RoundedRectangleTextButton(
               text: isLastStep ? '제출' : '다음',
-              textStyle: TextStyle(
-                color: isValid ? Colors.white : const Color(0xFFB5B5B5),
-                fontSize: 16,
+              textStyle: FontSystem.KR16SB.copyWith(
+                color: isValid ? ColorSystem.white : ColorSystem.grey[400],
               ),
               backgroundColor:
-                  isValid ? const Color(0xFF0B60B0) : const Color(0xFFE8E8E8),
+                  isValid ? ColorSystem.blue : ColorSystem.grey[200],
               onPressed: isValid
                   ? (isLastStep ? viewModel.submit : viewModel.nextStep)
                   : null,

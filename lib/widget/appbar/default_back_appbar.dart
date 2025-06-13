@@ -33,14 +33,14 @@ class DefaultBackAppBar extends StatelessWidget {
       ),
       centerTitle: centerTitle,
       surfaceTintColor: backColor,
-      backgroundColor: backColor,
+      backgroundColor: backColor ?? ColorSystem.white,
       automaticallyImplyLeading: true,
       titleSpacing: 0,
       leadingWidth: 50,
       leading: IconButton(
         style: TextButton.styleFrom(
           splashFactory: NoSplash.splashFactory,
-          foregroundColor: backColor,
+          foregroundColor: backColor ?? ColorSystem.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
           ),

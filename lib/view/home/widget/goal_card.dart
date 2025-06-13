@@ -26,7 +26,7 @@ class GoalCard extends StatelessWidget {
                     style: FontSystem.KR18B,
                     children: [
                       TextSpan(
-                        text: '아하라라라',
+                        text: '쉬엄시험해',
                         style:
                             FontSystem.KR18B.copyWith(color: ColorSystem.blue),
                       ),
