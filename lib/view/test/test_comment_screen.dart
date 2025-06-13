@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
+import 'package:rest_test/utility/static/app_routes.dart';
 import 'package:rest_test/view/base/base_screen.dart';
 import 'package:rest_test/view/test/component/exam_result_item.dart';
 import 'package:rest_test/view/test/widget/comment_select_dialog.dart';
@@ -39,6 +40,9 @@ class TestCommentScreen extends BaseScreen<TestViewModel> {
         child: DefaultCloseAppbar(
           title: '',
           backColor : ColorSystem.white,
+          onBackPress: (){
+            Get.toNamed(Routes.ROOT);
+          },
         ));
   }
 

@@ -1,10 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:rest_test/view/base/base_widget.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
+import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
 
+import '../../../utility/static/app_routes.dart';
 import '../../../utility/system/color_system.dart';
 import '../../../utility/system/font_system.dart';
 
@@ -23,7 +28,7 @@ class ExamResultItem extends BaseWidget<TestViewModel> {
             child: Column(
               children: [
                 Text(viewModel.currentQuestion.description, style: FontSystem.KR22B.copyWith(height: 1.3),),
-                _buildStarAndReport(),
+                _buildStarAndReport(context),
               ],
             )
           ),
@@ -162,7 +167,7 @@ class ExamResultItem extends BaseWidget<TestViewModel> {
   }
 
   // 복습노트 저장 및 신고
-  Widget _buildStarAndReport() {
+  Widget _buildStarAndReport(BuildContext context) {
     final currentIndex = viewModel.currentIndex;
 
     return Container(
@@ -183,7 +188,9 @@ class ExamResultItem extends BaseWidget<TestViewModel> {
             ),
             SizedBox(width: 4,),
             GestureDetector(
-              onTap: (){},
+              onTap: (){
+                _showReportBottomSheet(context);
+              },
               child: SvgPicture.asset("assets/icons/test/reportIcon.svg")
             ),
           ],
@@ -191,5 +198,246 @@ class ExamResultItem extends BaseWidget<TestViewModel> {
     );
   }
 
+  void _showReportBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      backgroundColor: ColorSystem.white,
+      builder: (context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 34),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 10),
+                    width: 50,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: ColorSystem.grey.shade200,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min, // Row 크기를 내용에 맞게
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset("assets/icons/bottom_navigation/mypage.svg", colorFilter: ColorFilter.mode(ColorSystem.blue, BlendMode.srcIn), width: 44,),
+                      SizedBox(width: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "불편을 드려서 죄송합니다.",
+                            style: FontSystem.KR10M.copyWith(color: ColorSystem.grey.shade600),
+                          ),
+                          SizedBox(height: 4,),
+                          Text(
+                            "어떤 내용이 문제인가요?",
+                            style: FontSystem.KR20B,
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _buildReportOption("잘못된 정보를 알려주고 있어요."),
+                _buildReportOption("설명이 너무 모호해요."),
+                _buildReportOption("설명이 너무 어려워요."),
+                Obx(() {
+                  final isSelected = viewModel.selectedReportOption.value == "기타";
+                  return Container(
+                    height: 56,
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    decoration: BoxDecoration(
+                      color: isSelected ? ColorSystem.lightBlue : ColorSystem.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isSelected ? ColorSystem.blue : ColorSystem.grey.shade300,
+                        width: 1,
+                      ),
+                    ),
+                    child: Center(
+                      child: TextField(
+                        onChanged: viewModel.onEtcTextChanged,
+                        decoration: InputDecoration(
+                          hintText: "기타 : ",
+                          hintStyle: FontSystem.KR16SB.copyWith(color: ColorSystem.grey.shade600),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                          border: InputBorder.none,
+                        ),
+                        style: FontSystem.KR16SB.copyWith(
+                          color: ColorSystem.blue,
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: RoundedRectangleTextButton(
+                            text: "돌아가기",
+                            width: double.infinity,
+                            height: 60,
+                            backgroundColor: ColorSystem.grey.shade200,
+                            textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.grey.shade400,),
+                            onPressed: () {
+                              viewModel.resetReportOption();
+                              Get.back();
+                            }
+                        ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child:
+                          Obx(() {
+                            final isDisabled = viewModel.selectedReportOption.value.isEmpty &&
+                                viewModel.etcText.value.trim().isEmpty;
 
+                            return RoundedRectangleTextButton(
+                                text: "문의하기",
+                                width: double.infinity,
+                                height: 60,
+                                backgroundColor: ColorSystem.blue,
+                                textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white,),
+                                onPressed: isDisabled
+                                  ? null
+                                      : () {
+                                  Get.back();
+                                  Future.delayed(Duration(milliseconds: 200), () {
+                                  _showConfirmBottomSheet(context);
+                                  });
+                                },
+                            );
+                          })
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((_) {
+      // 바텀시트가 닫히면 호출됨 (뒤로가기, 바깥 터치, Get.back 등 모든 경우)
+      viewModel.resetReportOption();
+    });
+  }
+
+  Widget _buildReportOption(String text) {
+    return Obx(() {
+      final isSelected = viewModel.selectedReportOption.value == text;
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        width: double.infinity,
+        child: RoundedRectangleTextButton(
+          text: text,
+          backgroundColor: isSelected ? ColorSystem.lightBlue : ColorSystem.white,
+          textStyle: FontSystem.KR16SB.copyWith(
+            color: isSelected ? ColorSystem.blue : ColorSystem.grey.shade600,
+          ),
+          borderSide: BorderSide(
+            color: isSelected ? ColorSystem.blue : ColorSystem.grey.shade300,
+            width: 1,
+          ),
+          onPressed: () {
+            viewModel.selectedReportOption.value = text;
+          },
+        ),
+      );
+    });
+  }
+
+
+  void _showConfirmBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      backgroundColor: ColorSystem.white,
+      builder: (context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 34),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    width: 50,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: ColorSystem.grey.shade200,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Container(
+                    padding: EdgeInsets.only(top:40, bottom: 48),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset("assets/icons/bottom_navigation/mypage.svg", colorFilter: ColorFilter.mode(ColorSystem.blue, BlendMode.srcIn), width: 66,),
+                        SizedBox(height: 36),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "문의 완료",
+                              style: FontSystem.KR24EB,
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                              "문의해주셔서 감사합니다.\n빠른 시일 내로 반영되도록 노력하겠습니다.",
+                              style: FontSystem.KR16M.copyWith(color: ColorSystem.grey.shade600),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  child: RoundedRectangleTextButton(
+                          text: "확인",
+                          width: double.infinity,
+                          height: 60,
+                          backgroundColor: ColorSystem.blue,
+                          textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white,),
+                          onPressed: () {
+                              Get.back();
+                          },
+                        ),
+                ),
+                  ],
+                )
+            ),
+        );
+      },
+    ).then((_) {
+      // 바텀시트가 닫히면 호출됨 (뒤로가기, 바깥 터치, Get.back 등 모든 경우)
+      viewModel.resetReportOption();
+    });
+  }
 }
