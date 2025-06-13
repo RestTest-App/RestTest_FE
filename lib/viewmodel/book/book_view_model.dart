@@ -1,6 +1,4 @@
-import 'dart:ui';
 import 'package:get/get.dart';
-import 'package:rest_test/utility/system/color_system.dart';
 
 class BookViewModel extends GetxController {
   /* ------------------------------------------------------ */

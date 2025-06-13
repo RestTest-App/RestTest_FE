@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rest_test/model/review/ReviewListModel.dart';
+import 'package:rest_test/utility/static/app_routes.dart';
 import 'package:rest_test/utility/system/color_system.dart';
 import 'package:rest_test/utility/system/font_system.dart';
 import 'package:rest_test/view/base/base_widget.dart';
@@ -16,6 +17,9 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
   @override
   Widget buildView(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        Get.toNamed(Routes.REVIEW_ITEM);
+      },
       child: Container(
         margin:const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -39,7 +43,6 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 _buildTagWrap(),
-                _buildButton(),
               ],
             ),
           ],
@@ -113,24 +116,6 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildButton() {
-    return GestureDetector(
-      onTap: () {
-        //분석보기
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(color: ColorSystem.grey.shade300, width: 1.0)
-        ),
-        child: Center(
-          child: Text("분석보기", style: FontSystem.KR12M.copyWith(color: ColorSystem.grey.shade600),),
-        ),
-      )
     );
   }
 

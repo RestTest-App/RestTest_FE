@@ -8,8 +8,6 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:rest_test/view/base/base_widget.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
 import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
-
-import '../../../utility/static/app_routes.dart';
 import '../../../utility/system/color_system.dart';
 import '../../../utility/system/font_system.dart';
 
@@ -54,16 +52,16 @@ class ExamResultItem extends BaseWidget<TestViewModel> {
                     final userAnswer = viewModel.selectedOption;
                     final explanation = viewModel.answerExplanations[viewModel.currentIndex];
                     final optionExplanations = explanation.optionExplanations.options;
-            
+
                     final explanationText = optionExplanations["no${index + 1}"];
                     final isCorrect = (index + 1) == correctAnswer;
                     final isSelected = userAnswer == index;
-            
+
                     // 색상 로직
                     Color bgColor;
                     Color borderColor;
                     Color textColor;
-            
+
                     if (isSelected && isCorrect) {
                       // 정답이고 선택한 보기
                       bgColor = ColorSystem.lightGreen;
@@ -84,7 +82,7 @@ class ExamResultItem extends BaseWidget<TestViewModel> {
                       borderColor = ColorSystem.grey.shade300;
                       textColor = ColorSystem.grey.shade800;
                     }
-            
+
                     return Container(
                       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                       margin: const EdgeInsets.symmetric(vertical: 6),

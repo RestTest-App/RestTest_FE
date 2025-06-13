@@ -22,6 +22,7 @@ class RootBinding extends Bindings {
     TestResultBinding().dependencies();
     TestCommentBinding().dependencies();
     OnboardingBinding().dependencies();
+    ReviewContentBinding().dependencies();
   }
 }
 
@@ -33,6 +34,13 @@ class HomeBinding extends Bindings {
 }
 
 class ReviewBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<ReviewViewModel>(() => ReviewViewModel());
+  }
+}
+
+class ReviewContentBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<ReviewViewModel>(() => ReviewViewModel());

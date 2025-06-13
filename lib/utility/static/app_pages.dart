@@ -1,6 +1,12 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:rest_test/view/onboarding/login_screen.dart';
 import 'package:rest_test/view/onboarding/onboarding_screen.dart';
+import 'package:rest_test/view/review/review_content_screen.dart';
+import 'package:rest_test/view/review/review_screen.dart';
+import 'package:rest_test/view/test/test_comment_screen.dart';
+import 'package:rest_test/view/test/test_exam_screen.dart';
+import 'package:rest_test/view/test/test_result_screen.dart';
+import 'package:rest_test/view/test/test_screen.dart';
 import '../../binding/root_binding.dart';
 import '../../view/root/root_screen.dart';
 import 'app_routes.dart';
@@ -21,6 +27,34 @@ List<GetPage> appPages = [
     // ],
   ),
   GetPage(
+      name: Routes.TEST,
+      page: () => TestScreen(),
+      binding: TestBinding()
+  ),
+  GetPage(
+      name: Routes.TEST_EXAM,
+      page: () => TestExamScreen(),
+      binding: TestExamBinding()
+  ),
+  GetPage(
+      name: Routes.TEST_RESULT,
+      page: () => TestResultScreen(),
+      binding: TestResultBinding()
+  ),
+  GetPage(
+      name: Routes.TEST_COMMENT,
+      page: () => TestCommentScreen(),
+      binding: TestCommentBinding()
+  ),
+  GetPage(
+      name: Routes.REVIEW_ITEM,
+      page: ()=> ReviewContentScreen(),
+      binding: ReviewContentBinding(),
+  ),
+  GetPage(
+    name: Routes.REVIEW,
+    page: ()=> ReviewScreen(),
+    binding: ReviewBinding(),
     name: Routes.LOGIN,
     page: () => LoginScreen(),
     binding: AuthBinding(),
