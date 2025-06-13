@@ -11,6 +11,7 @@ import 'package:rest_test/viewmodel/test/test_view_model.dart';
 import 'package:rest_test/widget/appbar/default_close_appbar.dart';
 import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
 import 'package:rest_test/widget/tag/custom_tag.dart';
+import '../../utility/static/app_routes.dart';
 import '../../utility/system/color_system.dart';
 
 class TestScreen extends BaseScreen<TestViewModel>{
@@ -35,6 +36,9 @@ class TestScreen extends BaseScreen<TestViewModel>{
         child: DefaultCloseAppbar(
           title: '',
           backColor : ColorSystem.white,
+          onBackPress: (){
+            Get.back();
+          },
         ));
   }
 
@@ -136,10 +140,9 @@ class TestScreen extends BaseScreen<TestViewModel>{
           backgroundColor: ColorSystem.blue,
           textStyle: FontSystem.KR16SB.copyWith(color: ColorSystem.white),
           onPressed: (){
-            Get.to(
-                  ()=> const TestExamScreen(),
-              transition: Transition.rightToLeft,
-              duration: const Duration(milliseconds: 300),
+            viewModel.resetExamState();
+            Get.toNamed(
+              Routes.TEST_EXAM
             );
           },
         ),
