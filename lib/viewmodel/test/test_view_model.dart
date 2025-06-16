@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:rest_test/model/test/Question.dart';
 import 'package:rest_test/model/test/SectionResult.dart';
 import 'package:rest_test/model/test/TestInfoState.dart';
-import 'package:rest_test/model/test/TestResult.dart';
 
 import '../../model/test/ReportRequest.dart';
 import '../../model/test/TestSubmitResponse.dart';
@@ -142,27 +141,6 @@ class TestViewModel extends GetxController {
   bool isStarred(int index) {
     return starredQuestions[index] ?? false;
   }
-
-  // 시험 결과
-  // void loadResults() {
-  //   final resultData = TestResult(
-  //       testTrackerId: 8431,
-  //       isPassed: true,
-  //       solvedAt:DateTime.parse("2025-03-30T10:52:00"),
-  //       correctCount: 440,
-  //       totalCount: 500,
-  //       sections: [
-  //         SectionResult(name: "소프트웨어설계", correctCount: 17, totalCount: 20, score: 85),
-  //         SectionResult(name: "소프트웨어개발", correctCount: 20, totalCount: 20, score: 100),
-  //         SectionResult(name: "데이터베이스구축", correctCount: 19, totalCount: 20, score: 95),
-  //         SectionResult(name: "프로그래밍언어", correctCount: 18, totalCount: 20, score: 90),
-  //         SectionResult(name: "정보시스템관리및구축", correctCount: 14, totalCount: 20, score: 70),
-  //       ]);
-  //
-  //   _sectionResults.assignAll(resultData.sections);
-  //   _isPassed.value = resultData.isPassed;
-  //   _totalScore.value = resultData.correctCount;
-  // }
 
   Future<void> submitTest(int examId) async {
     try {

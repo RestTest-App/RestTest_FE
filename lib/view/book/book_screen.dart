@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:rest_test/utility/system/color_system.dart';
 import 'package:rest_test/view/base/base_screen.dart';
 import 'package:rest_test/viewmodel/book/book_view_model.dart';
@@ -43,15 +44,21 @@ class BookScreen extends BaseScreen<BookViewModel> {
   @override
   Widget buildBody(BuildContext context) {
     final controller = this.controller;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(
-        children: [
-          const BookBanner(),
-          FilterRow(controller: controller),
-          Expanded(child: FileGrid(controller: controller)),
-        ],
-      ),
-    );
-  }
+
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      };
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          children: [
+            const BookBanner(),
+            FilterRow(controller: controller),
+            Expanded(child: FileGrid(controller: controller)),
+          ],
+        ),
+      );
+    });
+}
 }
