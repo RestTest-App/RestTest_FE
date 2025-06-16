@@ -24,6 +24,7 @@ class ExamResultItem extends BaseWidget<TestViewModel> {
           Padding(
             padding: const EdgeInsets.only(top: 30, bottom: 20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(viewModel.currentQuestion.description, style: FontSystem.KR22B.copyWith(height: 1.3),),
                 _buildStarAndReport(context),

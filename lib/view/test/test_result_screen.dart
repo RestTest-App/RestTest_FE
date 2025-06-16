@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -44,6 +45,14 @@ class TestResultScreen extends BaseScreen<TestViewModel> {
 
   @override
   Widget buildBody(BuildContext context) {
+    final sectionScores = viewModel.sectionResults;
+
+    // sectionScores가 아직 비어 있으면 로딩 중으로 판단
+    if (sectionScores.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -159,7 +168,6 @@ class TestResultScreen extends BaseScreen<TestViewModel> {
           height: 60,
           backgroundColor: ColorSystem.blue,
           onPressed: (){
-            viewModel.loadAnswers();
             viewModel.goToQuestion(0);
             Get.toNamed(Routes.TEST_COMMENT);
           },

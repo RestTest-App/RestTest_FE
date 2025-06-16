@@ -4,7 +4,7 @@ import 'package:rest_test/model/test/SectionResult.dart';
 import 'package:rest_test/model/test/TestInfoState.dart';
 import 'package:rest_test/model/test/TestResult.dart';
 
-import '../../model/test/TestAnswer.dart';
+import '../../model/test/TestSubmitResponse.dart';
 import '../../repository/test/test_repository.dart';
 import '../root/root_view_model.dart';
 
@@ -91,53 +91,6 @@ class TestViewModel extends GetxController {
     }
   }
 
-  // void _loadQuestions() {
-  //   final data = [
-  //     Question(answerRate: 89.23, seciton: "1과목", description: "다음 중 수의 표현에 있어 진법에 대한 설명으로 옳지 않은 것은?", options: [
-  //       "16진수(Hexadecimal)는 0~9까지의 숫자와 A~F까지 문자로 표현하는 진법으로 한 자리수를 표현하는데 4개의 비트가 필요하다",
-  //       "16진수(Hexadecimal)는 0~9까지의 숫자와 A~F까지 문자로 표현하는 진법으로 한 자리수를 표현하는데 4개의 비트가 필요하다",
-  //       "16진수(Hexadecimal)는 0~9까지의 숫자와 A~F까지 문자로 표현하는 진법으로 한 자리수를 표현하는데 4개의 비트가 필요하다",
-  //       "16진수(Hexadecimal)는 0~9까지의 숫자와 A~F까지 문자로 표현하는 진법으로 한 자리수를 표현하는데 4개의 비트가 필요하다",
-  //     ]),
-  //     Question(answerRate: 95.33, seciton: "석기시대", description: "(가) 시대에 대한 탐구 활동으로 가장 적절한 것은?", descriptionImage: "assets/images/exampleQ.png", options: [
-  //       "주먹도끼의 용도를 알아본다.",
-  //       "철제 갑옷의 제작 기법을 살펴본다.",
-  //       "금관이 출토된 고분에 대해 조사한다.",
-  //       "비파형 동검의 형태적 특징을 분석한다.",
-  //       "어쩌구 저쩌구 솔라솰라",
-  //     ]),
-  //     Question(answerRate: 50.25, seciton: "2과목", description: "TCP 프로토콜과 관련한 설명으로 틀린 것은?", options: [
-  //       "인접한 노드 사이의 프레임 전송 및 오류를 제어한다.",
-  //       "흐름 제어(Flow Control)의 기능을 수행한다.",
-  //       "전이중(Full Duplex) 방식의 양방향 가상회선을 제공한다.",
-  //       "전송 데이터와 응답 데이터를 함께 전송할 수 있다.",
-  //     ]),
-  //     Question(answerRate: 95.33, seciton: "석기시대", description: "(가) 시대에 대한 탐구 활동으로 가장 적절한 것은?", descriptionImage: "assets/images/exampleQ.png", options: [
-  //       "주먹도끼의 용도를 알아본다.",
-  //       "철제 갑옷의 제작 기법을 살펴본다.",
-  //       "금관이 출토된 고분에 대해 조사한다.",
-  //       "비파형 동검의 형태적 특징을 분석한다.",
-  //       "어쩌구 저쩌구 솔라솰라",
-  //     ]),
-  //     Question(answerRate: 89.23, seciton: "1과목", description: "다음 중 수의 표현에 있어 진법에 대한 설명으로 옳지 않은 것은?", options: [
-  //       "16진수(Hexadecimal)는 0~9까지의 숫자와 A~F까지 문자로 표현하는 진법으로 한 자리수를 표현하는데 4개의 비트가 필요하다",
-  //       "16진수(Hexadecimal)는 0~9까지의 숫자와 A~F까지 문자로 표현하는 진법으로 한 자리수를 표현하는데 4개의 비트가 필요하다",
-  //       "16진수(Hexadecimal)는 0~9까지의 숫자와 A~F까지 문자로 표현하는 진법으로 한 자리수를 표현하는데 4개의 비트가 필요하다",
-  //       "16진수(Hexadecimal)는 0~9까지의 숫자와 A~F까지 문자로 표현하는 진법으로 한 자리수를 표현하는데 4개의 비트가 필요하다",
-  //     ]),
-  //     Question(answerRate: 50.25, seciton: "2과목", description: "TCP 프로토콜과 관련한 설명으로 틀린 것은?", options: [
-  //       "인접한 노드 사이의 프레임 전송 및 오류를 제어한다.",
-  //       "흐름 제어(Flow Control)의 기능을 수행한다.",
-  //       "전이중(Full Duplex) 방식의 양방향 가상회선을 제공한다.",
-  //       "전송 데이터와 응답 데이터를 함께 전송할 수 있다.",
-  //     ]),
-  //
-  //   ];
-  //
-  //   _questions.assignAll(data);
-  //   _selectedOptions.assignAll(List<int?>.filled(data.length, null)); // 초기값 null
-  // }
-
   Future<void> loadQuestions(int examId) async {
     try {
       final data = await _testRepository.readQuestionList(examId);
@@ -190,124 +143,143 @@ class TestViewModel extends GetxController {
   }
 
   // 시험 결과
-  void loadResults() {
-    final resultData = TestResult(
-        testTrackerId: 8431,
-        isPassed: true,
-        solvedAt:DateTime.parse("2025-03-30T10:52:00"),
-        correctCount: 440,
-        totalCount: 500,
-        sections: [
-          SectionResult(name: "소프트웨어설계", correctCount: 17, totalCount: 20, score: 85),
-          SectionResult(name: "소프트웨어개발", correctCount: 20, totalCount: 20, score: 100),
-          SectionResult(name: "데이터베이스구축", correctCount: 19, totalCount: 20, score: 95),
-          SectionResult(name: "프로그래밍언어", correctCount: 18, totalCount: 20, score: 90),
-          SectionResult(name: "정보시스템관리및구축", correctCount: 14, totalCount: 20, score: 70),
-        ]);
+  // void loadResults() {
+  //   final resultData = TestResult(
+  //       testTrackerId: 8431,
+  //       isPassed: true,
+  //       solvedAt:DateTime.parse("2025-03-30T10:52:00"),
+  //       correctCount: 440,
+  //       totalCount: 500,
+  //       sections: [
+  //         SectionResult(name: "소프트웨어설계", correctCount: 17, totalCount: 20, score: 85),
+  //         SectionResult(name: "소프트웨어개발", correctCount: 20, totalCount: 20, score: 100),
+  //         SectionResult(name: "데이터베이스구축", correctCount: 19, totalCount: 20, score: 95),
+  //         SectionResult(name: "프로그래밍언어", correctCount: 18, totalCount: 20, score: 90),
+  //         SectionResult(name: "정보시스템관리및구축", correctCount: 14, totalCount: 20, score: 70),
+  //       ]);
+  //
+  //   _sectionResults.assignAll(resultData.sections);
+  //   _isPassed.value = resultData.isPassed;
+  //   _totalScore.value = resultData.correctCount;
+  // }
 
-    _sectionResults.assignAll(resultData.sections);
-    _isPassed.value = resultData.isPassed;
-    _totalScore.value = resultData.correctCount;
+  Future<void> submitTest(int examId) async {
+    try {
+      // null인 항목이 없다고 가정. 만약 있을 경우 0 등으로 기본 처리 가능
+      final answers = _selectedOptions.map((e) => (e ?? 0) + 1).toList();
+
+      final TestSubmitResponse response = await _testRepository.sendTestResult(examId, answers);
+
+      // 시험 결과 반영
+      _correctAnswers.assignAll(response.correctAnswers);
+      _answerExplanations.assignAll(response.correctAnswerInfo);
+      _sectionResults.assignAll(response.section_info);
+      _isPassed.value = response.testLog.isPassed;
+      _totalScore.value = response.testLog.correctCount;
+    } catch (e) {
+      print("시험 제출 실패: $e");
+    }
   }
+
 
   // 시험 해설
-  void loadAnswers() {
-    final answerData = TestSubmitResponse(
-      testLog: TestResult(
-          testTrackerId: 8431,
-          isPassed: true,
-          solvedAt:DateTime.parse("2025-03-30T10:52:00"),
-          correctCount: 440,
-          totalCount: 500,
-          sections: [
-            SectionResult(name: "소프트웨어설계", correctCount: 17, totalCount: 20, score: 85),
-            SectionResult(name: "소프트웨어개발", correctCount: 20, totalCount: 20, score: 100),
-            SectionResult(name: "데이터베이스구축", correctCount: 19, totalCount: 20, score: 95),
-            SectionResult(name: "프로그래밍언어", correctCount: 18, totalCount: 20, score: 90),
-            SectionResult(name: "정보시스템관리및구축", correctCount: 14, totalCount: 20, score: 70),
-          ]),
-      correctAnswers: [1, 5, 3, 3, 2, 4],
-      correctAnswerInfo: [
-        AnswerExplanation(
-          answer: 1,
-          optionExplanations: OptionExplanations(
-              options: {
-                "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-              }
-          ),
-          description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
-        ),
-        AnswerExplanation(
-          answer: 5,
-          optionExplanations: OptionExplanations(
-              options: {
-                "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no5" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-              }
-          ),
-          description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
-        ),
-        AnswerExplanation(
-          answer: 3,
-          optionExplanations: OptionExplanations(
-              options: {
-                "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-              }
-          ),
-          description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
-        ),
-        AnswerExplanation(
-          answer: 3,
-          optionExplanations: OptionExplanations(
-              options: {
-                "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no5" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-              }
-          ),
-          description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
-        ),
-        AnswerExplanation(
-          answer: 2,
-          optionExplanations: OptionExplanations(
-              options: {
-                "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-              }
-          ),
-          description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
-        ),
-        AnswerExplanation(
-          answer: 4,
-          optionExplanations: OptionExplanations(
-              options: {
-                "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-                "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-              }
-          ),
-          description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
-        ),
-      ],
-    );
-
-    _correctAnswers.assignAll(answerData.correctAnswers);
-    _answerExplanations.assignAll(answerData.correctAnswerInfo);
-  }
+  // void loadAnswers() {
+  //   final answerData = TestSubmitResponse(
+  //     testLog: TestResult(
+  //         testTrackerId: 8431,
+  //         isPassed: true,
+  //         solvedAt:DateTime.parse("2025-03-30T10:52:00"),
+  //         correctCount: 440,
+  //         totalCount: 500,
+  //         sections: [
+  //           SectionResult(name: "소프트웨어설계", correctCount: 17, totalCount: 20, score: 85),
+  //           SectionResult(name: "소프트웨어개발", correctCount: 20, totalCount: 20, score: 100),
+  //           SectionResult(name: "데이터베이스구축", correctCount: 19, totalCount: 20, score: 95),
+  //           SectionResult(name: "프로그래밍언어", correctCount: 18, totalCount: 20, score: 90),
+  //           SectionResult(name: "정보시스템관리및구축", correctCount: 14, totalCount: 20, score: 70),
+  //         ]),
+  //     correctAnswers: [1, 5, 3, 3, 2, 4],
+  //     correctAnswerInfo: [
+  //       AnswerExplanation(
+  //         answer: 1,
+  //         optionExplanations: OptionExplanations(
+  //             options: {
+  //               "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //             }
+  //         ),
+  //         description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
+  //       ),
+  //       AnswerExplanation(
+  //         answer: 5,
+  //         optionExplanations: OptionExplanations(
+  //             options: {
+  //               "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no5" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //             }
+  //         ),
+  //         description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
+  //       ),
+  //       AnswerExplanation(
+  //         answer: 3,
+  //         optionExplanations: OptionExplanations(
+  //             options: {
+  //               "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //             }
+  //         ),
+  //         description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
+  //       ),
+  //       AnswerExplanation(
+  //         answer: 3,
+  //         optionExplanations: OptionExplanations(
+  //             options: {
+  //               "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no5" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //             }
+  //         ),
+  //         description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
+  //       ),
+  //       AnswerExplanation(
+  //         answer: 2,
+  //         optionExplanations: OptionExplanations(
+  //             options: {
+  //               "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //             }
+  //         ),
+  //         description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
+  //       ),
+  //       AnswerExplanation(
+  //         answer: 4,
+  //         optionExplanations: OptionExplanations(
+  //             options: {
+  //               "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //               "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
+  //             }
+  //         ),
+  //         description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
+  //       ),
+  //     ],
+  //   );
+  //
+  //   _correctAnswers.assignAll(answerData.correctAnswers);
+  //   _answerExplanations.assignAll(answerData.correctAnswerInfo);
+  // }
 
   Future<void> resetExamState() async {
     _questions.clear();

@@ -160,8 +160,8 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
           padding: EdgeInsets.symmetric(horizontal: 28, vertical: 12),
           backgroundColor: ColorSystem.blue,
           textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),
-          onPressed: () {
-            viewModel.loadResults();
+          onPressed: () async {
+            await viewModel.submitTest(1);
             Get.toNamed(Routes.TEST_RESULT);
           },
         )

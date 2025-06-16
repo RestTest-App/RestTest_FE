@@ -108,7 +108,7 @@ class TestCommentScreen extends BaseScreen<TestViewModel> {
               ),
             ),
             SizedBox(
-                width: 50,
+                width: 68,
                 child: Text("${viewModel.currentIndex+1} / ${viewModel.questions.length}", style: FontSystem.KR24B,)
             ),
             viewModel.currentIndex == viewModel.questions.length - 1

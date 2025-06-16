@@ -1,4 +1,3 @@
-import 'SectionResult.dart';
 
 class TestResult {
   final int testTrackerId;
@@ -6,7 +5,6 @@ class TestResult {
   final DateTime solvedAt;
   final int correctCount;
   final int totalCount;
-  final List<SectionResult> sections;
 
   TestResult({
     required this.testTrackerId,
@@ -14,6 +12,15 @@ class TestResult {
     required this.solvedAt,
     required this.correctCount,
     required this.totalCount,
-    required this.sections,
   });
+
+  factory TestResult.fromJson(Map<String, dynamic> json) {
+    return TestResult(
+      testTrackerId: json['test_tracker_id'],
+      isPassed: json['is_passed'],
+      solvedAt: DateTime.parse(json['solved_at']),
+      correctCount: json['correct_count'],
+      totalCount: json['total_count'],
+    );
+  }
 }
