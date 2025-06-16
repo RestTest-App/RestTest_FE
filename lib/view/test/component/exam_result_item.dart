@@ -35,12 +35,12 @@ class ExamResultItem extends BaseWidget<TestViewModel> {
             child: SingleChildScrollView(
               child: Column(
                 children : [
-                  if (viewModel.currentQuestion.description_image != null &&
-                      viewModel.currentQuestion.description_image!.isNotEmpty)
+                  if (viewModel.currentQuestion.descriptionImage != null &&
+                      viewModel.currentQuestion.descriptionImage!.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 20),
                       child: Image.asset(
-                        viewModel.currentQuestion.description_image!,
+                        viewModel.currentQuestion.descriptionImage!,
                         width: double.infinity,
                       ),
                     ),

@@ -148,8 +148,8 @@ class TestScreen extends BaseScreen<TestViewModel>{
           text: "학습 시작",
           backgroundColor: ColorSystem.blue,
           textStyle: FontSystem.KR16SB.copyWith(color: ColorSystem.white),
-          onPressed: (){
-            viewModel.resetExamState();
+          onPressed: () async{
+            await viewModel.resetExamState(); // 내부에서 questions도 다시 불러옴
             Get.toNamed(
               Routes.TEST_EXAM
             );
