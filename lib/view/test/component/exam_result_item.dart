@@ -314,10 +314,19 @@ class ExamResultItem extends BaseWidget<TestViewModel> {
                                 textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white,),
                                 onPressed: isDisabled
                                   ? null
-                                      : () {
+                                  : () async {
+                                  final questionId = viewModel.currentIndex;
+
+                                  await viewModel.sendReport(1, questionId);
+
                                   Get.back();
-                                  Future.delayed(Duration(milliseconds: 200), () {
-                                  _showConfirmBottomSheet(context);
+                                  // 바텀시트가 닫힌 뒤 다음 프레임에서 모달 띄우기
+                                  Future.microtask(() {
+                                    Future.delayed(Duration(milliseconds: 200), () {
+                                      if (context.mounted) {
+                                        _showConfirmBottomSheet(context);
+                                      }
+                                    });
                                   });
                                 },
                             );

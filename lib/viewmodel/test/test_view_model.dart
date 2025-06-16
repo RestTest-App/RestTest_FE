@@ -4,6 +4,7 @@ import 'package:rest_test/model/test/SectionResult.dart';
 import 'package:rest_test/model/test/TestInfoState.dart';
 import 'package:rest_test/model/test/TestResult.dart';
 
+import '../../model/test/ReportRequest.dart';
 import '../../model/test/TestSubmitResponse.dart';
 import '../../repository/test/test_repository.dart';
 import '../root/root_view_model.dart';
@@ -181,106 +182,6 @@ class TestViewModel extends GetxController {
     }
   }
 
-
-  // 시험 해설
-  // void loadAnswers() {
-  //   final answerData = TestSubmitResponse(
-  //     testLog: TestResult(
-  //         testTrackerId: 8431,
-  //         isPassed: true,
-  //         solvedAt:DateTime.parse("2025-03-30T10:52:00"),
-  //         correctCount: 440,
-  //         totalCount: 500,
-  //         sections: [
-  //           SectionResult(name: "소프트웨어설계", correctCount: 17, totalCount: 20, score: 85),
-  //           SectionResult(name: "소프트웨어개발", correctCount: 20, totalCount: 20, score: 100),
-  //           SectionResult(name: "데이터베이스구축", correctCount: 19, totalCount: 20, score: 95),
-  //           SectionResult(name: "프로그래밍언어", correctCount: 18, totalCount: 20, score: 90),
-  //           SectionResult(name: "정보시스템관리및구축", correctCount: 14, totalCount: 20, score: 70),
-  //         ]),
-  //     correctAnswers: [1, 5, 3, 3, 2, 4],
-  //     correctAnswerInfo: [
-  //       AnswerExplanation(
-  //         answer: 1,
-  //         optionExplanations: OptionExplanations(
-  //             options: {
-  //               "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //             }
-  //         ),
-  //         description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
-  //       ),
-  //       AnswerExplanation(
-  //         answer: 5,
-  //         optionExplanations: OptionExplanations(
-  //             options: {
-  //               "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no5" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //             }
-  //         ),
-  //         description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
-  //       ),
-  //       AnswerExplanation(
-  //         answer: 3,
-  //         optionExplanations: OptionExplanations(
-  //             options: {
-  //               "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //             }
-  //         ),
-  //         description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
-  //       ),
-  //       AnswerExplanation(
-  //         answer: 3,
-  //         optionExplanations: OptionExplanations(
-  //             options: {
-  //               "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no5" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //             }
-  //         ),
-  //         description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
-  //       ),
-  //       AnswerExplanation(
-  //         answer: 2,
-  //         optionExplanations: OptionExplanations(
-  //             options: {
-  //               "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //             }
-  //         ),
-  //         description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
-  //       ),
-  //       AnswerExplanation(
-  //         answer: 4,
-  //         optionExplanations: OptionExplanations(
-  //             options: {
-  //               "no1" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no2" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no3" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //               "no4" : "16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다.",
-  //             }
-  //         ),
-  //         description: '16진수는 09, AF를 사용하며 한 자리 표현에 4비트가 필요하다. (✅) \n 예를 들어 8진수 345(8)를 16진수로 변환하면, 2진수(011 100 101)로 바꾼 후 4비트씩 묶어 195(16)가 된다.',
-  //       ),
-  //     ],
-  //   );
-  //
-  //   _correctAnswers.assignAll(answerData.correctAnswers);
-  //   _answerExplanations.assignAll(answerData.correctAnswerInfo);
-  // }
-
   Future<void> resetExamState() async {
     _questions.clear();
     _selectedOptions.clear();
@@ -293,6 +194,30 @@ class TestViewModel extends GetxController {
     _totalScore.value = 0;
 
     await loadQuestions(1); // ✅ 여기도 수정됨
+  }
+
+  Future<void> sendReport(int testId, int questionId) async {
+    final feedbackText = selectedReportOption.value == "기타"
+        ? etcText.value.trim()
+        : selectedReportOption.value;
+
+    final aiExplanation = currentExplanation.optionExplanations.options.entries.map(
+          (entry) => entry.value,
+    ).toList();
+
+    final request = ReportRequest(
+      testId: testId.toString(),
+      questionId: questionId.toString(),
+      aiExplanation: aiExplanation,
+      feedback: feedbackText,
+    );
+
+    try {
+      await _testRepository.sendExplanationReport(request);  // ← Map<String, dynamic>을 넘기도록 정의
+      print("신고 완료");
+    } catch (e) {
+      print("신고 실패: $e");
+    }
   }
 
   void resetReportOption() {
