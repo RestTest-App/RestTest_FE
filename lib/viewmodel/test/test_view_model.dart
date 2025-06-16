@@ -5,13 +5,19 @@ import 'package:rest_test/model/test/TestInfoState.dart';
 import 'package:rest_test/model/test/TestResult.dart';
 
 import '../../model/test/TestAnswer.dart';
+import '../../repository/test/test_repository.dart';
+import '../root/root_view_model.dart';
 
 class TestViewModel extends GetxController {
   /* ------------------------------------------------------ */
   /* -------------------- DI Fields ----------------------- */
   /* ------------------------------------------------------ */
+  late final RootViewModel _rootViewModel;
+  late final TestRepository _testRepository;
+
   // text Info
-  final Rx<TestInfoState> _state = TestInfoState.empty().obs;
+  late final Rx<TestInfoState> _testInfoState = TestInfoState.empty().obs;
+  TestInfoState get testInfoState => _testInfoState.value;
 
   // test Exam
   // 변수 : 문제리스트, 페이지컨트롤러, 선택한 문제, 현재 문제 번호
@@ -50,7 +56,6 @@ class TestViewModel extends GetxController {
   /* ------------------------------------------------------ */
   /* ----------------- Private Fields --------------------- */
   /* ------------------------------------------------------ */
-  TestInfoState get state => _state.value;
 
   List<Question> get questions => _questions;
   int get currentIndex => _currentIndex.value;
@@ -74,20 +79,19 @@ class TestViewModel extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _loadTestInfo();
-    _loadQuestions();
+    _rootViewModel = Get.find<RootViewModel>();
+    _testRepository = Get.find<TestRepository>();
+    loadTestInfo(1);
+    // _loadQuestions();
   }
 
-  void _loadTestInfo() {
-    _state.value = TestInfoState(
-      year: 2024,
-      month: 7,
-      name: "2024년 3회 정보처리기사",
-      question_count: 10,
-      time: 80,
-      exam_attempt: 1,
-      pass_rate: 55.79
-    );
+  Future<void> loadTestInfo(int examId) async {
+    try {
+      final info = await _testRepository.readTestInfo(examId);
+      _testInfoState.value = info;
+    } catch (e) {
+      print("시험 데이터 로딩 실패: $e");
+    }
   }
 
   void _loadQuestions() {

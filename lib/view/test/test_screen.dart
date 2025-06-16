@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:rest_test/utility/system/font_system.dart';
 import 'package:rest_test/view/base/base_screen.dart';
-import 'package:rest_test/view/home/home_screen.dart';
-import 'package:rest_test/view/test/test_exam_screen.dart';
 import 'package:rest_test/view/test/widget/random_banner.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
 import 'package:rest_test/widget/appbar/default_close_appbar.dart';
 import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
 import 'package:rest_test/widget/tag/custom_tag.dart';
+import '../../model/test/TestInfoState.dart';
 import '../../utility/static/app_routes.dart';
 import '../../utility/system/color_system.dart';
 
@@ -44,66 +44,75 @@ class TestScreen extends BaseScreen<TestViewModel>{
 
   @override
   Widget buildBody(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
+    return Obx(() {
+      final testInfo = viewModel.testInfoState;
+
+      // 데이터가 아직 로딩 중일 경우
+      if (testInfo.year == 0) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 24),
-                  child: Obx(()=> _buildInfo(viewModel.state.year, viewModel.state.month),),
+                  child: _buildInfo(testInfo.year, testInfo.month),
                 ),
                 SizedBox(height: 16,),
-                _buildTitle(),
+                _buildTitle(testInfo.name),
                 SizedBox(height: 8,),
-                _buildTags(),
+                _buildTags(testInfo),
               ],
             ),
-        ),
-        RandomBanner(),
-        _buildTestInfo(),
-        Spacer(),
-        _buildStartBtn(),
-        SizedBox(height: 24),
-      ],
-    );
+          ),
+          RandomBanner(),
+          _buildTestInfo(),
+          Spacer(),
+          _buildStartBtn(),
+          SizedBox(height: 24),
+        ],
+      );
+    });
+
+
   }
 
   Widget _buildInfo(int year, int month) {
      return Text("${year}년 ${month}월", style: FontSystem.KR16B.copyWith(color: ColorSystem.blue),);
   }
 
-  Widget _buildTitle() {
-    return Obx((){
-      return Text("${viewModel.state.name}", style: FontSystem.KR24EB);
-    });
+  Widget _buildTitle(String name) {
+    return Text("${name}", style: FontSystem.KR24EB);
   }
   
-  Widget _buildTags() {
-    return Obx(() => Row(
+  Widget _buildTags(TestInfoState testInfo) {
+    return Row(
       children: [
-        CustomTag(text: "${viewModel.state.question_count}문항", color: ColorSystem.lightBlue, textColor: ColorSystem.blue),
+        CustomTag(text: "${testInfo.question_count}문항", color: ColorSystem.lightBlue, textColor: ColorSystem.blue),
         const SizedBox(width: 4),
-        CustomTag(text: "${viewModel.state.time}분", color: ColorSystem.lightBlue, textColor: ColorSystem.blue),
+        CustomTag(text: "${testInfo.time}분", color: ColorSystem.lightBlue, textColor: ColorSystem.blue),
         SizedBox(width: 4),
-        CustomTag(text: "${viewModel.state.exam_attempt}회독", color: ColorSystem.lightGreen, textColor: ColorSystem.green),
+        CustomTag(text: "${testInfo.exam_attempt}회독", color: ColorSystem.lightGreen, textColor: ColorSystem.green),
         SizedBox(width: 4),
-        CustomTag(text: "${viewModel.state.pass_rate}%", color:
-          viewModel.state.pass_rate >= 80.0
+        CustomTag(text: "${testInfo.pass_rate}%", color:
+        testInfo.pass_rate >= 80.0
             ? ColorSystem.lightBlue
-            : viewModel.state.pass_rate >= 60.0
+            : testInfo.pass_rate >= 60.0
             ? ColorSystem.lightGreen
             : ColorSystem.lightRed,
-            textColor: viewModel.state.pass_rate >= 80.0
+            textColor: testInfo.pass_rate >= 80.0
                 ? ColorSystem.blue
-                : viewModel.state.pass_rate >= 60.0
+                : testInfo.pass_rate >= 60.0
                 ? ColorSystem.green
                 : ColorSystem.red),
       ],
-    ));
+    );
   }
 
   Widget _buildTestInfo() {
