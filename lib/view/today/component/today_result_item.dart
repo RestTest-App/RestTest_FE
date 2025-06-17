@@ -7,11 +7,12 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:rest_test/view/base/base_widget.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
+import 'package:rest_test/viewmodel/today/today_test_view_model.dart';
 import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
 import '../../../utility/system/color_system.dart';
 import '../../../utility/system/font_system.dart';
 
-class TodayResultItem extends BaseWidget<TestViewModel> {
+class TodayResultItem extends BaseWidget<TodayTestViewModel> {
   const TodayResultItem({super.key});
 
   @override
@@ -31,25 +32,15 @@ class TodayResultItem extends BaseWidget<TestViewModel> {
             child: SingleChildScrollView(
               child: Column(
                 children : [
-                  if (viewModel.currentQuestion.descriptionImage != null &&
-                      viewModel.currentQuestion.descriptionImage!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Image.asset(
-                        viewModel.currentQuestion.descriptionImage!,
-                        width: double.infinity,
-                      ),
-                    ),
                   // 보기 (옵션 리스트)
                   ...viewModel.currentQuestion.options.asMap().entries.map((entry) {
                     final index = entry.key;
                     final option = entry.value;
                     final correctAnswer = viewModel.correctAnswers[viewModel.currentIndex]; // 1~4
                     final userAnswer = viewModel.selectedOption;
-                    final explanation = viewModel.answerExplanations[viewModel.currentIndex];
-                    final optionExplanations = explanation.optionExplanations.options;
+                    final optionExplanations = viewModel.currentQuestion.optionExplanations;
+                    final explanationText = optionExplanations[index];
 
-                    final explanationText = optionExplanations["no${index + 1}"];
                     final isCorrect = (index + 1) == correctAnswer;
                     final isSelected = userAnswer == index;
 

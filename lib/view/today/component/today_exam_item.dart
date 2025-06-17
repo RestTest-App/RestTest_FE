@@ -7,8 +7,9 @@ import 'package:rest_test/utility/system/color_system.dart';
 import 'package:rest_test/utility/system/font_system.dart';
 import 'package:rest_test/view/base/base_widget.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
+import 'package:rest_test/viewmodel/today/today_test_view_model.dart';
 
-class TodayExamItem extends BaseWidget<TestViewModel>{
+class TodayExamItem extends BaseWidget<TodayTestViewModel>{
   const TodayExamItem ({
     super.key
   });
@@ -30,15 +31,6 @@ class TodayExamItem extends BaseWidget<TestViewModel>{
             child: SingleChildScrollView(
               child: Column(
                 children : [
-                  if (viewModel.currentQuestion.descriptionImage != null &&
-                      viewModel.currentQuestion.descriptionImage!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Image.asset(
-                        viewModel.currentQuestion.descriptionImage!,
-                        width: double.infinity,
-                      ),
-                    ),
                   // 보기 (옵션 리스트)
                   ...viewModel.currentQuestion.options.asMap().entries.map((entry) {
                     final index = entry.key;

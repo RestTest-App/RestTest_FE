@@ -4,26 +4,22 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
-import 'package:logger/logger.dart';
-import 'package:rest_test/utility/function/log_util.dart';
 import 'package:rest_test/view/base/base_screen.dart';
-import 'package:rest_test/view/home/home_screen.dart';
-import 'package:rest_test/view/test/test_result_screen.dart';
 import 'package:rest_test/view/test/widget/exam_select_dialog.dart';
 import 'package:rest_test/view/today/component/today_exam_item.dart';
+import 'package:rest_test/view/today/widget/today_exam_select_dialog.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
+import 'package:rest_test/viewmodel/today/today_test_view_model.dart';
 import 'package:rest_test/widget/appbar/default_close_appbar.dart';
 
 import '../../utility/static/app_routes.dart';
 import '../../utility/system/color_system.dart';
 import '../../utility/system/font_system.dart';
 import '../../widget/button/rounded_rectangle_text_button.dart';
-import '../test/component/exam_item.dart';
 
-class TodayTestExamScreen extends BaseScreen<TestViewModel> {
+class TodayTestExamScreen extends BaseScreen<TodayTestViewModel> {
   const TodayTestExamScreen({super.key});
 
   @override
@@ -54,13 +50,13 @@ class TodayTestExamScreen extends BaseScreen<TestViewModel> {
   @override
   Widget buildBody(BuildContext context) {
     return Obx (() {
-      if (viewModel.questions.isEmpty) {
+      if (viewModel.todayTestState!.questions.isEmpty) {
         return const Center(child: CircularProgressIndicator());
       }
 
       return Column(
         children: [
-          _buildPaginationIndicator(viewModel.currentIndex, viewModel.questions.length),
+          _buildPaginationIndicator(viewModel.currentIndex, viewModel.todayTestState!.questionCount),
           Expanded(child: TodayExamItem()),
           _buildBottomBar(),
         ],
@@ -97,7 +93,7 @@ class TodayTestExamScreen extends BaseScreen<TestViewModel> {
           children: [
             GestureDetector(
               onTap: () {
-                viewModel.prevQuestion();
+                viewModel.prev();
               },
               child: Container(
                 width: 36,
@@ -119,14 +115,14 @@ class TodayTestExamScreen extends BaseScreen<TestViewModel> {
             ),
             SizedBox(
                 width: 68,
-                child: Text("${viewModel.currentIndex+1}/${viewModel.questions.length}", style: FontSystem.KR24B,)
+                child: Text("${viewModel.currentIndex+1}/${viewModel.todayTestState!.questionCount}", style: FontSystem.KR24B,)
             ),
             viewModel.canSubmit
                 ? _buildConfrimBtn()
-                : const ExamSelectDialog(),
+                : const TodayExamSelectDialog(),
             GestureDetector(
               onTap: (){
-                viewModel.nextQuestion();
+                viewModel.next();
               },
               child: Container(
                 width: 36,
@@ -162,9 +158,8 @@ class TodayTestExamScreen extends BaseScreen<TestViewModel> {
           backgroundColor: ColorSystem.blue,
           textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),
           onPressed: () async {
-            // TODO : 오늘의 문제 제출로 수정
-            await viewModel.submitTest(1);
-            Get.toNamed(Routes.TEST_COMMENT);
+            await viewModel.submitTodayTest();
+            Get.toNamed(Routes.TODAY_COMMENT);
           },
         )
     );
