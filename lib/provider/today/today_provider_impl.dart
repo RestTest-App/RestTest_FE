@@ -37,7 +37,7 @@ class TodayProviderImpl extends BaseConnect implements TodayProvider{
   Future sendTodayTest() async{
     try {
       final response = await post(
-        '/api/v1/test/submit-today-questions',
+        '/api/v1/test/submit-today-test',
         {}
       );
 

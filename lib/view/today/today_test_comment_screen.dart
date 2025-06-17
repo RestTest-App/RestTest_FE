@@ -151,7 +151,7 @@ class TodayTestCommentScreen extends BaseScreen<TodayTestViewModel> {
           backgroundColor: ColorSystem.blue,
           textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),
           onPressed: () {
-            Get.to(() => const RootScreen());
+            Get.offAllNamed(Routes.ROOT, arguments: 'refresh');
           },
         )
     );

@@ -40,6 +40,10 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
     final selectedExamType = '정처기'.obs;
 
     final todayViewModel = Get.find<TodayTestViewModel>();
+    final args = Get.arguments;
+    if (args == 'refresh') {
+      todayViewModel.loadTodayTest();
+    }
     final isCompleted = todayViewModel.todayTestState?.isSolved ?? false;
 
     final mockExams = [
@@ -83,7 +87,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
             onTap: () async {
               await todayViewModel.createTodayTest(1);
               await todayViewModel.loadTodayTest();
-              Get.toNamed(Routes.TODAY);
+              await Get.toNamed(Routes.TODAY);
             },
           ),
           const SizedBox(height: 24),
