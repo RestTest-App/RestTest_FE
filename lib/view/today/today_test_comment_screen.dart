@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,17 +8,17 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:rest_test/utility/static/app_routes.dart';
 import 'package:rest_test/view/base/base_screen.dart';
-import 'package:rest_test/view/test/component/exam_result_item.dart';
-import 'package:rest_test/view/test/widget/comment_select_dialog.dart';
-import 'package:rest_test/viewmodel/test/test_view_model.dart';
+import 'package:rest_test/view/today/component/today_result_item.dart';
+import 'package:rest_test/view/today/widget/today_exam_comment_select_dialog.dart';
+import 'package:rest_test/viewmodel/today/today_test_view_model.dart';
 import '../../utility/system/color_system.dart';
 import '../../utility/system/font_system.dart';
 import '../../widget/appbar/default_close_appbar.dart';
 import '../../widget/button/rounded_rectangle_text_button.dart';
 import '../root/root_screen.dart';
 
-class TestCommentScreen extends BaseScreen<TestViewModel> {
-  const TestCommentScreen({super.key});
+class TodayTestCommentScreen extends BaseScreen<TodayTestViewModel> {
+  const TodayTestCommentScreen({super.key});
 
   @override
   bool get wrapWithInnerSafeArea => true;
@@ -51,8 +50,8 @@ class TestCommentScreen extends BaseScreen<TestViewModel> {
   Widget buildBody(BuildContext context) {
     return Obx (() => Column(
       children: [
-        _buildPaginationIndicator(viewModel.currentIndex, viewModel.correctAnswers.length),
-        Expanded(child: ExamResultItem()),
+        _buildPaginationIndicator(viewModel.currentIndex, viewModel.todayTestState!.questionCount),
+        Expanded(child: TodayResultItem()),
         _buildBottomBar(),
       ],
     ));
@@ -87,7 +86,7 @@ class TestCommentScreen extends BaseScreen<TestViewModel> {
           children: [
             GestureDetector(
               onTap: () {
-                viewModel.prevQuestion();
+                viewModel.prev();
               },
               child: Container(
                 width: 36,
@@ -109,14 +108,14 @@ class TestCommentScreen extends BaseScreen<TestViewModel> {
             ),
             SizedBox(
                 width: 68,
-                child: Text("${viewModel.currentIndex+1} / ${viewModel.questions.length}", style: FontSystem.KR24B,)
+                child: Text("${viewModel.currentIndex+1} / ${viewModel.todayTestState!.questionCount}", style: FontSystem.KR24B,)
             ),
-            viewModel.currentIndex == viewModel.questions.length - 1
+            viewModel.currentIndex == viewModel.todayTestState!.questionCount - 1
                 ? _buildConfirmBtn()
-                : const CommentSelectDialog(),
+                : const TodayExamCommentSelectDialog(),
             GestureDetector(
               onTap: (){
-                viewModel.nextQuestion();
+                viewModel.next();
               },
               child: Container(
                 width: 36,
@@ -152,7 +151,7 @@ class TestCommentScreen extends BaseScreen<TestViewModel> {
           backgroundColor: ColorSystem.blue,
           textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),
           onPressed: () {
-            Get.to(() => const RootScreen());
+            Get.offAllNamed(Routes.ROOT, arguments: 'refresh');
           },
         )
     );

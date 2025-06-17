@@ -10,4 +10,7 @@ abstract class Routes {
   static const String REVIEW = "/review";
   static const String REVIEW_ITEM = "/review/:reviewId";
   static const String UPDATE_NICKNAME = "/update_nickname";
+  static const String TODAY = "/today/info/:todayId";
+  static const String TODAY_EXAM = "/today/exam/:todayId";
+  static const String TODAY_COMMENT = "/today/comment/:todayId";
 }

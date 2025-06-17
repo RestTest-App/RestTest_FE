@@ -1,4 +1,4 @@
-class SectionResult{
+class SectionResult {
   final String name;
   final int correctCount;
   final int totalCount;
@@ -10,4 +10,13 @@ class SectionResult{
     required this.totalCount,
     required this.score,
   });
+
+  factory SectionResult.fromJson(Map<String, dynamic> json) {
+    return SectionResult(
+      name: json['section_name'],
+      correctCount: json['correct_count'],
+      totalCount: json['total_count'],
+      score: json['score'],
+    );
+  }
 }

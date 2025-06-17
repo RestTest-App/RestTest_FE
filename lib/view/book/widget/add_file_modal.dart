@@ -5,6 +5,7 @@ import 'package:rest_test/utility/system/font_system.dart';
 import 'package:rest_test/viewmodel/book/book_view_model.dart';
 import 'package:get/get.dart';
 import 'package:rest_test/view/book/subscribe_screen.dart';
+import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
 
 class AddFileModal extends StatelessWidget {
   final BookViewModel controller;
@@ -35,7 +36,6 @@ class AddFileModal extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.all(16.0),
-            height: 393,
             decoration: BoxDecoration(
               color: ColorSystem.white,
               borderRadius:
@@ -70,64 +70,49 @@ class AddFileModal extends StatelessWidget {
                         FontSystem.KR16M.copyWith(color: ColorSystem.grey[600]),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 174,
-                      height: 60,
-                      child: ElevatedButton(
-                        onPressed: () =>
-                            isLimit ? Navigator.of(context).pop() : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isLimit
-                              ? ColorSystem.grey[200]
-                              : ColorSystem.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          isLimit ? '돌아가기' : 'PDF 업로드',
-                          style: FontSystem.KR16B.copyWith(
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 32),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: RoundedRectangleTextButton(
+                            text: isLimit ? '돌아가기' : 'PDF 업로드',
+                            textStyle: FontSystem.KR16B.copyWith(
                             color: isLimit
-                                ? ColorSystem.grey[400]
-                                : ColorSystem.white,
-                          ),
-                        ),
+                                  ? ColorSystem.grey[400]
+                                      : ColorSystem.white,
+                                  ),
+                            onPressed: () async {
+                              if (isLimit) {
+                                Navigator.of(context).pop();
+                              } else {
+                                Navigator.of(context).pop(); // 먼저 모달 닫고
+                                await controller.uploadPdf(1); // PDF 업로드 + 목록 갱신
+                              }
+                            },
+                            backgroundColor: isLimit
+                              ? ColorSystem.grey[200]
+                                  : ColorSystem.blue,),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    SizedBox(
-                      width: 174,
-                      height: 60,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (isLimit) {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (_) => const SubscribeScreen()),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: ColorSystem.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          isLimit ? '구독제 보러가기' : '촬영하기',
-                          style: FontSystem.KR16B.copyWith(
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: RoundedRectangleTextButton(
+                          text: isLimit ? '구독제 보러가기' : '촬영하기',
+                          textStyle: FontSystem.KR16B.copyWith(
                             color: ColorSystem.white,
                           ),
-                        ),
+                          onPressed: (){if (isLimit) {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).push(
+                            MaterialPageRoute(
+                            builder: (_) => const SubscribeScreen()),
+                            );
+                          }},
+                          backgroundColor: ColorSystem.blue,),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),

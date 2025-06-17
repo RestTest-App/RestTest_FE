@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -51,13 +52,20 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
 
   @override
   Widget buildBody(BuildContext context) {
-    return Obx (() => Column(
-      children: [
-        _buildPaginationIndicator(viewModel.currentIndex,viewModel.questions.length),
-        Expanded(child: ExamItem()),
-        _buildBottomBar(),
-      ],
-    ));
+    return Obx (() {
+      if (viewModel.questions.isEmpty) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      return Column(
+        children: [
+          _buildPaginationIndicator(viewModel.currentIndex, viewModel.questions.length),
+          Expanded(child: ExamItem()),
+          _buildBottomBar(),
+        ],
+      );
+    }
+    );
   }
 
   Widget _buildPaginationIndicator(int step, int total) {
@@ -109,8 +117,8 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
               ),
             ),
             SizedBox(
-                width: 50,
-                child: Text("${viewModel.currentIndex+1} / ${viewModel.questions.length}", style: FontSystem.KR24B,)
+                width: 68,
+                child: Text("${viewModel.currentIndex+1}/${viewModel.questions.length}", style: FontSystem.KR24B,)
             ),
             viewModel.canSubmit
                 ? _buildConfrimBtn()
@@ -152,8 +160,8 @@ class TestExamScreen extends BaseScreen<TestViewModel> {
           padding: EdgeInsets.symmetric(horizontal: 28, vertical: 12),
           backgroundColor: ColorSystem.blue,
           textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),
-          onPressed: () {
-            viewModel.loadResults();
+          onPressed: () async {
+            await viewModel.submitTest(1);
             Get.toNamed(Routes.TEST_RESULT);
           },
         )

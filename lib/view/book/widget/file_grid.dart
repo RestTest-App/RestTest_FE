@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rest_test/utility/system/color_system.dart';
 import 'package:rest_test/utility/system/font_system.dart';
+import 'package:rest_test/view/base/base_widget.dart';
 import 'package:rest_test/viewmodel/book/book_view_model.dart';
 import 'dart:math' as math;
 import 'package:rest_test/view/book/widget/add_file_modal.dart';
 
 // 문제집 그리드
-class FileGrid extends StatelessWidget {
+class FileGrid extends BaseWidget<BookViewModel> {
   final BookViewModel controller;
   const FileGrid({super.key, required this.controller});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildView(BuildContext context) {
     return Obx(() {
       final files = List<Map<String, dynamic>>.from(controller.files);
       files.insert(0, {'isNew': true});

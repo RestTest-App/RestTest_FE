@@ -1,15 +1,25 @@
-class Question{
-  final double answer_rate;
+class Question {
+  final double? answerRate;
   final String seciton;
   final String description;
-  final String? description_image;
+  final String? descriptionImage;
   final List<String> options;
 
   Question({
-    required this.answer_rate,
+    this.answerRate,
     required this.seciton,
     required this.description,
-    this.description_image,
+    this.descriptionImage,
     required this.options,
-});
+  });
+
+  factory Question.fromJson(Map<String, dynamic> json) {
+    return Question(
+      answerRate: json['answer_rate']?.toDouble(),
+      seciton: json['section'],
+      description: json['description'],
+      descriptionImage: json['description_image'],
+      options: List<String>.from(json['options'] ?? []),
+    );
+  }
 }
