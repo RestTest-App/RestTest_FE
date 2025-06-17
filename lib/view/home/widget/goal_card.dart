@@ -3,7 +3,8 @@ import 'package:rest_test/utility/system/color_system.dart';
 import 'package:rest_test/utility/system/font_system.dart';
 
 class GoalCard extends StatelessWidget {
-  const GoalCard({super.key});
+  final String nickname;
+  const GoalCard({super.key, required this.nickname});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class GoalCard extends StatelessWidget {
                     style: FontSystem.KR18B,
                     children: [
                       TextSpan(
-                        text: '쉬엄시험해',
+                        text: nickname.isNotEmpty ? nickname : '쉬엄시험해',
                         style:
                             FontSystem.KR18B.copyWith(color: ColorSystem.blue),
                       ),
@@ -45,7 +46,7 @@ class GoalCard extends StatelessWidget {
                 icon: Icon(Icons.arrow_forward_ios,
                     size: 16, color: ColorSystem.grey[400]),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/mypage');
+                  _showSimpleConfirmDialog(context, '준비중입니다.');
                 },
               ),
             ],
@@ -134,5 +135,59 @@ class GoalCard extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _showSimpleConfirmDialog(BuildContext context, String message) {
+    late OverlayEntry entry;
+    entry = OverlayEntry(
+      builder: (_) => Positioned.fill(
+        child: Material(
+          color: ColorSystem.black.withOpacity(0.5),
+          child: Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: MediaQuery.of(context).size.width - 40,
+              padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+              decoration: BoxDecoration(
+                color: ColorSystem.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    message,
+                    textAlign: TextAlign.center,
+                    style: FontSystem.KR18B,
+                  ),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: 110,
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () => entry.remove(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorSystem.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        '확인',
+                        style: FontSystem.KR16B.copyWith(
+                          color: ColorSystem.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    Navigator.of(context).overlay!.insert(entry);
   }
 }

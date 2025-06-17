@@ -7,11 +7,12 @@ import 'package:rest_test/view/test/test_comment_screen.dart';
 import 'package:rest_test/view/test/test_exam_screen.dart';
 import 'package:rest_test/view/test/test_result_screen.dart';
 import 'package:rest_test/view/test/test_screen.dart';
+import 'package:rest_test/binding/root_binding.dart';
+import 'package:rest_test/view/root/root_screen.dart';
+import 'package:rest_test/utility/static/app_routes.dart';
 import 'package:rest_test/view/today/today_test_comment_screen.dart';
 import 'package:rest_test/view/today/today_test_exam_screen.dart';
 import 'package:rest_test/view/today/today_test_screen.dart';
-import '../../binding/root_binding.dart';
-import '../../view/root/root_screen.dart';
 import 'app_routes.dart';
 
 List<GetPage> appPages = [
@@ -22,7 +23,7 @@ List<GetPage> appPages = [
       binding: OnboardingBinding()),
   GetPage(
     name: Routes.ROOT,
-    page: () => const RootScreen(),
+    page: () => RootScreen(),
     binding: RootBinding(),
     // middlewares: [
     //   LoginMiddleware(),
@@ -50,16 +51,16 @@ List<GetPage> appPages = [
       binding: TestCommentBinding()
   ),
   GetPage(
-      name: Routes.REVIEW_ITEM,
-      page: ()=> ReviewContentScreen(),
-      binding: ReviewContentBinding(),
+    name: Routes.REVIEW_ITEM,
+    page: () => ReviewContentScreen(),
+    binding: ReviewContentBinding(),
   ),
   GetPage(
     name: Routes.REVIEW,
-    page: ()=> ReviewScreen(),
+    page: () => ReviewScreen(),
     binding: ReviewBinding(),
-),
-GetPage(
+  ),
+  GetPage(
     name: Routes.LOGIN,
     page: () => LoginScreen(),
     binding: AuthBinding(),

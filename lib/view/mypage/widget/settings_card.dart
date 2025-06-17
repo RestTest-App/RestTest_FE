@@ -38,6 +38,13 @@ class SettingsSection extends StatelessWidget {
             onTap: () => _showFullWidthLogoutDialog(context),
             child: _buildSettingRow('로그아웃'),
           ),
+          const SizedBox(height: 32),
+
+          // 회원 탈퇴
+          GestureDetector(
+            onTap: () => _showFullWidthWithdrawDialog(context),
+            child: _buildSettingRow('회원 탈퇴'),
+          ),
         ],
       ),
     );
@@ -68,7 +75,7 @@ class SettingsSection extends StatelessWidget {
     entry = OverlayEntry(
       builder: (_) => Positioned.fill(
         child: Material(
-          color: ColorSystem.black.withOpacity(0.5),
+          color: ColorSystem.black.withOpacity(0.25),
           child: Align(
             alignment: Alignment.center,
             child: Container(
@@ -135,12 +142,85 @@ class SettingsSection extends StatelessWidget {
     Navigator.of(context).overlay!.insert(entry);
   }
 
+  void _showFullWidthWithdrawDialog(BuildContext context) {
+    final modalWidth = MediaQuery.of(context).size.width - 40;
+    late OverlayEntry entry;
+    entry = OverlayEntry(
+      builder: (_) => Positioned.fill(
+        child: Material(
+          color: ColorSystem.black.withOpacity(0.25),
+          child: Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: modalWidth,
+              padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+              decoration: BoxDecoration(
+                color: ColorSystem.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    '정말 회원 탈퇴 하시겠습니까?\n탈퇴 시 모든 데이터가 삭제됩니다.',
+                    style: FontSystem.KR18B,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 32),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () async {
+                          entry.remove();
+                          await controller.withdraw();
+                        },
+                        child: Text(
+                          '탈퇴하기',
+                          style: FontSystem.KR16B.copyWith(
+                            color: ColorSystem.red,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      SizedBox(
+                        width: 110,
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: () => entry.remove(),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorSystem.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: Text(
+                            '유지하기',
+                            style: FontSystem.KR16B.copyWith(
+                              color: ColorSystem.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    Navigator.of(context).overlay!.insert(entry);
+  }
+
   void _showSimpleConfirmDialog(BuildContext context, String message) {
     late OverlayEntry entry;
     entry = OverlayEntry(
       builder: (_) => Positioned.fill(
         child: Material(
-          color: ColorSystem.black.withOpacity(0.5),
+          color: ColorSystem.black.withOpacity(0.25),
           child: Align(
             alignment: Alignment.center,
             child: Container(

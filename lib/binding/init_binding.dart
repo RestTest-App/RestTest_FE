@@ -2,6 +2,10 @@ import 'package:get/get.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:rest_test/provider/auth/auth_provider.dart';
 import 'package:rest_test/provider/auth/auth_provider_impl.dart';
+import 'package:rest_test/provider/user/user_provider.dart';
+import 'package:rest_test/provider/user/user_provider_impl.dart';
+import 'package:rest_test/repository/user/user_repository.dart';
+import 'package:rest_test/repository/user/user_repository_impl.dart';
 import 'package:rest_test/provider/book/book_provider.dart';
 import 'package:rest_test/provider/book/book_provider_impl.dart';
 import 'package:rest_test/provider/test/test_provider.dart';
@@ -20,6 +24,7 @@ class InitBinding extends Bindings {
   void dependencies() {
     // Providers
     Get.lazyPut<AuthProvider>(() => AuthProviderImpl());
+    Get.lazyPut<UserProvider>(() => UserProviderImpl());
     Get.lazyPut<TestProvider>(() => TestProviderImpl());
     Get.lazyPut<BookProvider>(()=> BookProviderImpl());
     Get.lazyPut<TodayProvider>(() => TodayProviderImpl());
@@ -27,5 +32,6 @@ class InitBinding extends Bindings {
     Get.lazyPut<TestRepository>(() => TestRepositoryImpl());
     Get.lazyPut<BookRepository>(() => BookRepositoryImpl());
     Get.lazyPut<TodayRepository>(() => TodayRepositoryImpl());
+    Get.lazyPut<UserRepository>(() => UserRepositoryImpl(Get.find<UserProvider>()));
   }
 }

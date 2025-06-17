@@ -1,8 +1,8 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get_connect/connect.dart';
-import '../../app/factory/secure_storage_factory.dart';
-import '../../utility/function/log_util.dart';
-import '../token/token_provider.dart';
+import 'package:rest_test/app/factory/secure_storage_factory.dart';
+import 'package:rest_test/utility/function/log_util.dart';
+import 'package:rest_test/provider/token/token_provider.dart';
 
 abstract class BaseConnect extends GetConnect {
   final TokenProvider tokenProvider = SecureStorageFactory.tokenProvider;
@@ -17,6 +17,11 @@ abstract class BaseConnect extends GetConnect {
         if (tokenProvider.accessToken != null) {
           request.headers['Authorization'] =
               'Bearer ${tokenProvider.accessToken}';
+          LogUtil.info(
+              "🔑 Authorization Token: Bearer ${tokenProvider.accessToken}");
+          LogUtil.info("🔑 Request Headers: ${request.headers}");
+        } else {
+          LogUtil.error("⚠️ No Authorization Token available");
         }
         LogUtil.info("🛫 [${request.method}] ${request.url}");
         return request;
@@ -37,11 +42,12 @@ abstract class BaseConnect extends GetConnect {
           LogUtil.error(
             "🚨 [${request.method}] ${request.url} | FAILED ($code, $message)",
           );
+          LogUtil.error("🚨 Response Body: $body");
         } else {
           LogUtil.info(
             "🛬 [${request.method}] ${request.url} | SUCCESS (${response.statusCode})",
           );
-          LogUtil.info("🛬 BODY ${body}");
+          LogUtil.info("🛬 Response Body: $body");
         }
 
         return response;

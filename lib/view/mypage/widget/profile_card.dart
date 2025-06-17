@@ -23,10 +23,14 @@ class ProfileSection extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const CircleAvatar(
-              radius: 30,
-              backgroundImage: AssetImage('assets/images/profile.png'),
-            ),
+            Obx(() => CircleAvatar(
+                  radius: 30,
+                  backgroundImage:
+                      controller.profileImageUrl.value.startsWith('http')
+                          ? NetworkImage(controller.profileImageUrl.value)
+                          : AssetImage(controller.profileImageUrl.value)
+                              as ImageProvider,
+                )),
             const SizedBox(width: 16),
             Expanded(
               child: Column(

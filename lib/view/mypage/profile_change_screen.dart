@@ -24,13 +24,18 @@ class _ProfileChangeScreenState extends State<ProfileChangeScreen> {
   @override
   void initState() {
     super.initState();
-    _textController.text = controller.currentNickname.value;
-    controller.newNickname.value = _textController.text;
-
     _focusNode.addListener(() {
       setState(() {
         _isFocused = _focusNode.hasFocus;
       });
+    });
+
+    // 닉네임이 로드되면 TextField 업데이트
+    ever(controller.currentNickname, (nickname) {
+      if (nickname.isNotEmpty) {
+        _textController.text = nickname;
+        controller.newNickname.value = nickname;
+      }
     });
   }
 
@@ -66,7 +71,7 @@ class _ProfileChangeScreenState extends State<ProfileChangeScreen> {
                     radius: 60,
                     backgroundImage: controller.profileImage.value != null
                         ? FileImage(controller.profileImage.value!)
-                        : const AssetImage('assets/images/profile.png')
+                        : const AssetImage('assets/images/default_profile.png')
                             as ImageProvider,
                   ),
                 )),
@@ -110,8 +115,9 @@ class _ProfileChangeScreenState extends State<ProfileChangeScreen> {
                   width: screenWidth,
                   height: 60,
                   text: '수정하기',
-                  onPressed:
-                      controller.isChanged ? controller.changeNickname : null,
+                  onPressed: controller.isChanged
+                      ? () async => await controller.changeNickname()
+                      : null,
                   backgroundColor: controller.isChanged
                       ? ColorSystem.blue
                       : ColorSystem.grey[200],

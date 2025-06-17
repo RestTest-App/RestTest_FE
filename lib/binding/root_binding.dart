@@ -4,10 +4,11 @@ import 'package:rest_test/viewmodel/mypage/mypage_view_model.dart';
 import 'package:rest_test/viewmodel/onboarding/onboarding_view_model.dart';
 import 'package:rest_test/viewmodel/review/review_view_model.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
+import 'package:rest_test/viewmodel/book/book_view_model.dart';
+import 'package:rest_test/viewmodel/home/home_view_model.dart';
+import 'package:rest_test/viewmodel/root/root_view_model.dart';
 import 'package:rest_test/viewmodel/today/today_test_view_model.dart';
-import '../viewmodel/book/book_view_model.dart';
-import '../viewmodel/home/home_view_model.dart';
-import '../viewmodel/root/root_view_model.dart';
+
 
 class RootBinding extends Bindings {
   @override
