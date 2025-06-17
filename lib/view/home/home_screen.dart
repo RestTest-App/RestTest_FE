@@ -13,6 +13,7 @@ import 'package:rest_test/model/home/exam_model.dart';
 import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
 
 import '../../utility/static/app_routes.dart';
+import '../../viewmodel/today/today_test_view_model.dart';
 
 class HomeScreen extends BaseScreen<HomeViewModel> {
   const HomeScreen({super.key});
@@ -37,6 +38,13 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
     final isRestMode = true.obs;
     final questionCount = 5.obs;
     final selectedExamType = '정처기'.obs;
+
+    final todayViewModel = Get.find<TodayTestViewModel>();
+    final args = Get.arguments;
+    if (args == 'refresh') {
+      todayViewModel.loadTodayTest();
+    }
+    final isCompleted = todayViewModel.todayTestState?.isSolved ?? false;
 
     final mockExams = [
       Exam(
@@ -74,7 +82,14 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
           const SizedBox(height: 16),
           const GoalCard(),
           const SizedBox(height: 16),
-          const TodayQuestion(),
+          TodayQuestion(
+            isCompleted: isCompleted,
+            onTap: () async {
+              await todayViewModel.createTodayTest(1);
+              await todayViewModel.loadTodayTest();
+              await Get.toNamed(Routes.TODAY);
+            },
+          ),
           const SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),

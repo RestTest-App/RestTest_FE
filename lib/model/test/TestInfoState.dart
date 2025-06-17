@@ -28,4 +28,16 @@ class TestInfoState{
       pass_rate: 0.0,
     );
   }
+
+  factory TestInfoState.fromJson(Map<String, dynamic> json) {
+    return TestInfoState(
+      year: json['year'],
+      month: json['month'],
+      name: json['name'],
+      question_count: json['question_count'],
+      time: json['time'],
+      exam_attempt: json['exam_attempt'],
+      pass_rate: (json['pass_rate'] as num).toDouble(), // double 변환 주의
+    );
+  }
 }

@@ -7,6 +7,9 @@ import 'package:rest_test/view/test/test_comment_screen.dart';
 import 'package:rest_test/view/test/test_exam_screen.dart';
 import 'package:rest_test/view/test/test_result_screen.dart';
 import 'package:rest_test/view/test/test_screen.dart';
+import 'package:rest_test/view/today/today_test_comment_screen.dart';
+import 'package:rest_test/view/today/today_test_exam_screen.dart';
+import 'package:rest_test/view/today/today_test_screen.dart';
 import '../../binding/root_binding.dart';
 import '../../view/root/root_screen.dart';
 import 'app_routes.dart';
@@ -60,5 +63,20 @@ GetPage(
     name: Routes.LOGIN,
     page: () => LoginScreen(),
     binding: AuthBinding(),
-  )
+  ),
+GetPage(
+    name: Routes.TODAY,
+    page: () => TodayTestScreen(),
+    binding: TodayTestBinding(),
+),
+GetPage(
+    name: Routes.TODAY_EXAM,
+    page: () => TodayTestExamScreen(),
+    binding: TodayTestExamBinding(),
+  ),
+GetPage(
+    name: Routes.TODAY_COMMENT,
+    page: () => TodayTestCommentScreen(),
+    binding: TodayTestCommentBinding(),
+  ),
 ];

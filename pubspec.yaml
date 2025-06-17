@@ -68,6 +68,9 @@ dependencies:
   # kakao oauth
   kakao_flutter_sdk: ^1.9.5
 
+  file_picker: ^6.1.1
+  dio: ^5.4.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,25 +1,26 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
-import 'package:rest_test/utility/static/app_routes.dart';
 import 'package:rest_test/view/base/base_screen.dart';
-import 'package:rest_test/view/test/component/exam_result_item.dart';
-import 'package:rest_test/view/test/widget/comment_select_dialog.dart';
+import 'package:rest_test/view/test/widget/exam_select_dialog.dart';
+import 'package:rest_test/view/today/component/today_exam_item.dart';
+import 'package:rest_test/view/today/widget/today_exam_select_dialog.dart';
 import 'package:rest_test/viewmodel/test/test_view_model.dart';
+import 'package:rest_test/viewmodel/today/today_test_view_model.dart';
+import 'package:rest_test/widget/appbar/default_close_appbar.dart';
+
+import '../../utility/static/app_routes.dart';
 import '../../utility/system/color_system.dart';
 import '../../utility/system/font_system.dart';
-import '../../widget/appbar/default_close_appbar.dart';
 import '../../widget/button/rounded_rectangle_text_button.dart';
-import '../root/root_screen.dart';
 
-class TestCommentScreen extends BaseScreen<TestViewModel> {
-  const TestCommentScreen({super.key});
+class TodayTestExamScreen extends BaseScreen<TodayTestViewModel> {
+  const TodayTestExamScreen({super.key});
 
   @override
   bool get wrapWithInnerSafeArea => true;
@@ -41,24 +42,29 @@ class TestCommentScreen extends BaseScreen<TestViewModel> {
           title: '',
           backColor : ColorSystem.white,
           onBackPress: (){
-            Get.toNamed(Routes.ROOT);
+            Get.back();
           },
         ));
   }
 
-
   @override
   Widget buildBody(BuildContext context) {
-    return Obx (() => Column(
-      children: [
-        _buildPaginationIndicator(viewModel.currentIndex, viewModel.correctAnswers.length),
-        Expanded(child: ExamResultItem()),
-        _buildBottomBar(),
-      ],
-    ));
+    return Obx (() {
+      if (viewModel.todayTestState!.questions.isEmpty) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      return Column(
+        children: [
+          _buildPaginationIndicator(viewModel.currentIndex, viewModel.todayTestState!.questionCount),
+          Expanded(child: TodayExamItem()),
+          _buildBottomBar(),
+        ],
+      );
+    }
+    );
   }
 
-  // 인디케이터
   Widget _buildPaginationIndicator(int step, int total) {
     int totalSteps = total; // 총 단계 수
     return LinearProgressBar(
@@ -87,7 +93,7 @@ class TestCommentScreen extends BaseScreen<TestViewModel> {
           children: [
             GestureDetector(
               onTap: () {
-                viewModel.prevQuestion();
+                viewModel.prev();
               },
               child: Container(
                 width: 36,
@@ -109,14 +115,14 @@ class TestCommentScreen extends BaseScreen<TestViewModel> {
             ),
             SizedBox(
                 width: 68,
-                child: Text("${viewModel.currentIndex+1} / ${viewModel.questions.length}", style: FontSystem.KR24B,)
+                child: Text("${viewModel.currentIndex+1}/${viewModel.todayTestState!.questionCount}", style: FontSystem.KR24B,)
             ),
-            viewModel.currentIndex == viewModel.questions.length - 1
-                ? _buildConfirmBtn()
-                : const CommentSelectDialog(),
+            viewModel.canSubmit
+                ? _buildConfrimBtn()
+                : const TodayExamSelectDialog(),
             GestureDetector(
               onTap: (){
-                viewModel.nextQuestion();
+                viewModel.next();
               },
               child: Container(
                 width: 36,
@@ -142,21 +148,21 @@ class TestCommentScreen extends BaseScreen<TestViewModel> {
     ));
   }
 
-  Widget _buildConfirmBtn() {
+  Widget _buildConfrimBtn() {
     return Transform.translate(
         offset: Offset(0, 2),
         child: RoundedRectangleTextButton(
-          text: "종료하기",
+          text: "제출하기",
           height : 48,
           padding: EdgeInsets.symmetric(horizontal: 28, vertical: 12),
           backgroundColor: ColorSystem.blue,
           textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),
-          onPressed: () {
-            Get.to(() => const RootScreen());
+          onPressed: () async {
+            await viewModel.submitTodayTest();
+            Get.toNamed(Routes.TODAY_COMMENT);
           },
         )
     );
   }
-
-
 }
+

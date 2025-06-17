@@ -24,6 +24,7 @@ class ExamResultItem extends BaseWidget<TestViewModel> {
           Padding(
             padding: const EdgeInsets.only(top: 30, bottom: 20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(viewModel.currentQuestion.description, style: FontSystem.KR22B.copyWith(height: 1.3),),
                 _buildStarAndReport(context),
@@ -35,12 +36,12 @@ class ExamResultItem extends BaseWidget<TestViewModel> {
             child: SingleChildScrollView(
               child: Column(
                 children : [
-                  if (viewModel.currentQuestion.description_image != null &&
-                      viewModel.currentQuestion.description_image!.isNotEmpty)
+                  if (viewModel.currentQuestion.descriptionImage != null &&
+                      viewModel.currentQuestion.descriptionImage!.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 20),
                       child: Image.asset(
-                        viewModel.currentQuestion.description_image!,
+                        viewModel.currentQuestion.descriptionImage!,
                         width: double.infinity,
                       ),
                     ),
@@ -313,10 +314,19 @@ class ExamResultItem extends BaseWidget<TestViewModel> {
                                 textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white,),
                                 onPressed: isDisabled
                                   ? null
-                                      : () {
+                                  : () async {
+                                  final questionId = viewModel.currentIndex;
+
+                                  await viewModel.sendReport(1, questionId);
+
                                   Get.back();
-                                  Future.delayed(Duration(milliseconds: 200), () {
-                                  _showConfirmBottomSheet(context);
+                                  // 바텀시트가 닫힌 뒤 다음 프레임에서 모달 띄우기
+                                  Future.microtask(() {
+                                    Future.delayed(Duration(milliseconds: 200), () {
+                                      if (context.mounted) {
+                                        _showConfirmBottomSheet(context);
+                                      }
+                                    });
                                   });
                                 },
                             );
