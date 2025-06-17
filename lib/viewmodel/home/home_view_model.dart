@@ -16,8 +16,10 @@ class HomeViewModel extends GetxController {
   // 학습 문제 수
   final RxInt _questionCount = 5.obs;
 
-  // 예시 시험 목록
+  // 예시 시험 목록 (하나만 남김)
   final RxList<Exam> _mockExams = <Exam>[].obs;
+
+  final RxString _nickname = ''.obs;
 
   /* ------------------------------------------------------ */
   /* ----------------- Public Fields ---------------------- */
@@ -26,11 +28,11 @@ class HomeViewModel extends GetxController {
   RxBool get isRestMode => _isRestMode;
   RxInt get questionCount => _questionCount;
   RxList<Exam> get mockExams => _mockExams;
+  RxString get nickname => _nickname;
 
   @override
   void onInit() {
     super.onInit();
-    // 예: _someRepository = Get.find<SomeRepository>();
     _initExams();
   }
 
@@ -57,9 +59,10 @@ class HomeViewModel extends GetxController {
     }
   }
 
-  // 예시 시험 목록 초기화
+  // 예시 시험 목록 초기화 (하나만 남김)
   void _initExams() {
-    _mockExams.addAll([
+    _mockExams.clear();
+    _mockExams.add(
       Exam(
         examId: '9309281038',
         examName: '2024년 3회 정보처리기사',
@@ -67,13 +70,6 @@ class HomeViewModel extends GetxController {
         examTime: 80,
         passRate: 55.79,
       ),
-      Exam(
-        examId: '92774282362',
-        examName: '2024년 2회 정보처리기사',
-        questionCount: 50,
-        examTime: 80,
-        passRate: 62.82,
-      ),
-    ]);
+    );
   }
 }

@@ -11,8 +11,7 @@ import 'package:rest_test/view/home/widget/goal_card.dart';
 import 'package:rest_test/view/home/widget/exam_type_selector.dart';
 import 'package:rest_test/model/home/exam_model.dart';
 import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
-
-import '../../utility/static/app_routes.dart';
+import 'package:rest_test/utility/static/app_routes.dart';
 
 class HomeScreen extends BaseScreen<HomeViewModel> {
   const HomeScreen({super.key});
@@ -38,30 +37,6 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
     final questionCount = 5.obs;
     final selectedExamType = '정처기'.obs;
 
-    final mockExams = [
-      Exam(
-        examId: '9309281038',
-        examName: '2024년 3회 정보처리기사',
-        questionCount: 50,
-        examTime: 80,
-        passRate: 55.79,
-      ),
-      Exam(
-        examId: '92774282362',
-        examName: '2024년 2회 정보처리기사',
-        questionCount: 50,
-        examTime: 80,
-        passRate: 62.82,
-      ),
-      Exam(
-        examId: '92774282362',
-        examName: '2024년 2회 정보처리기사',
-        questionCount: 50,
-        examTime: 80,
-        passRate: 62.82,
-      ),
-    ];
-
     return Obx(() {
       return ListView(
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -72,7 +47,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
             child: ExamTypeSelector(selectedExamType: selectedExamType),
           ),
           const SizedBox(height: 16),
-          const GoalCard(),
+          Obx(() => GoalCard(nickname: viewModel.nickname.value)),
           const SizedBox(height: 16),
           const TodayQuestion(),
           const SizedBox(height: 24),
@@ -91,7 +66,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
                   const SizedBox(height: 24),
                   isRestMode.value
                       ? _buildRestMode(questionCount)
-                      : _buildExamMode(mockExams),
+                      : _buildExamMode(viewModel.mockExams),
                 ],
               ),
             ),
@@ -217,19 +192,19 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
           ],
         ),
         const SizedBox(height: 36),
-        Container(
+        SizedBox(
+          width: double.infinity,
+          child: RoundedRectangleTextButton(
+            text: '학습 시작',
             width: double.infinity,
-            child: RoundedRectangleTextButton(
-              text: '학습 시작',
-              width: double.infinity,
-              height: 60,
-              backgroundColor: ColorSystem.blue,
-              textStyle: FontSystem.KR16SB.copyWith(color: ColorSystem.white ),
-              onPressed: (){
-                Get.toNamed(Routes.TEST);
-              },
-            ),
+            height: 60,
+            backgroundColor: ColorSystem.blue,
+            textStyle: FontSystem.KR16SB.copyWith(color: ColorSystem.white),
+            onPressed: () {
+              Get.toNamed(Routes.TEST);
+            },
           ),
+        ),
       ],
     );
   }

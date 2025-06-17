@@ -10,4 +10,6 @@ abstract class AuthProvider {
       required String job,
       required List<int> certificates,
       required bool agreeToTerms});
+
+  Future<Map<String, dynamic>?> getUserInfo();
 }

@@ -98,4 +98,18 @@ class AuthProviderImpl extends BaseConnect implements AuthProvider {
 
     return true;
   }
+
+  @override
+  Future<Map<String, dynamic>?> getUserInfo() async {
+    try {
+      final response = await get('/api/v1/user/get-user-info');
+      if (response.status.isOk) {
+        return response.body['data'];
+      }
+      return null;
+    } catch (e) {
+      print('Failed to get user info: $e');
+      return null;
+    }
+  }
 }
