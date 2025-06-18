@@ -1,34 +1,84 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:rest_test/view/base/base_widget.dart';
 import 'package:rest_test/viewmodel/review/review_view_model.dart';
-import '../../../model/review/ReviewDetailModel.dart';
-import '../../../utility/system/color_system.dart';
-import '../../../utility/system/font_system.dart';
+import 'package:rest_test/model/review/ReviewDetailModel.dart';
+import 'package:rest_test/utility/system/color_system.dart';
+import 'package:rest_test/utility/system/font_system.dart';
 
 class ReviewDetailItem extends BaseWidget<ReviewViewModel> {
-
   const ReviewDetailItem({super.key});
-
 
   @override
   Widget buildView(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: [
-          // 질문 헤더 부분
-          _buildQuestionHeader(),
-          // 질문 본문 부분 - Expanded로 감싸서 오버플로우 방지
-          Expanded(
-            child: SingleChildScrollView(
-              child: _buildQuestionBody(),
+      child: Obx(() {
+        // questions가 비어있을 때 안내 메시지 표시
+        if (viewModel.questions.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.quiz_outlined,
+                  size: 64,
+                  color: ColorSystem.grey.shade400,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  '복습할 문제가 없습니다',
+                  style: FontSystem.KR18B.copyWith(
+                    color: ColorSystem.grey.shade600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '다른 복습노트를 선택해주세요',
+                  style: FontSystem.KR14M.copyWith(
+                    color: ColorSystem.grey.shade500,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: ColorSystem.blue,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: TextButton(
+                    onPressed: () => Get.back(),
+                    child: Text(
+                      '복습노트 목록으로',
+                      style: FontSystem.KR14SB.copyWith(
+                        color: ColorSystem.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
+          );
+        }
+
+        return Column(
+          children: [
+            // 질문 헤더 부분
+            _buildQuestionHeader(),
+            // 질문 본문 부분 - Expanded로 감싸서 오버플로우 방지
+            Expanded(
+              child: SingleChildScrollView(
+                child: _buildQuestionBody(),
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 
@@ -40,7 +90,7 @@ class ReviewDetailItem extends BaseWidget<ReviewViewModel> {
       if (q == null) return const SizedBox.shrink();
 
       return Padding(
-        padding: const EdgeInsets.only(top:8, bottom: 20),
+        padding: const EdgeInsets.only(top: 8, bottom: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +136,7 @@ class ReviewDetailItem extends BaseWidget<ReviewViewModel> {
           ...q.options.asMap().entries.map((entry) {
             final index = entry.key;
             return _buildOptionTile(index, q);
-          }).toList(),
+          }),
           // 하단 여백 추가 (버튼과 겹치지 않도록)
           const SizedBox(height: 100),
         ],
@@ -143,10 +193,8 @@ class ReviewDetailItem extends BaseWidget<ReviewViewModel> {
               Expanded(
                 child: Text(
                   option,
-                  style: FontSystem.KR14B.copyWith(
-                      color: textColor,
-                      height: 1.5
-                  ),
+                  style:
+                      FontSystem.KR14B.copyWith(color: textColor, height: 1.5),
                 ),
               ),
               const SizedBox(width: 12),
@@ -154,8 +202,8 @@ class ReviewDetailItem extends BaseWidget<ReviewViewModel> {
                 isSelected && isCorrect || isCorrect
                     ? "assets/icons/test/radioBtnSelectedGreen.svg"
                     : isSelected
-                    ? "assets/icons/test/radioBtnSelectedRed.svg"
-                    : "assets/icons/test/radioBtn.svg",
+                        ? "assets/icons/test/radioBtnSelectedRed.svg"
+                        : "assets/icons/test/radioBtn.svg",
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     width: 24,
@@ -185,18 +233,15 @@ class ReviewDetailItem extends BaseWidget<ReviewViewModel> {
                 children: [
                   Container(
                     margin: const EdgeInsets.only(right: 10),
-                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
                     decoration: BoxDecoration(
                       color: ColorSystem.lightBrown,
                       borderRadius: BorderRadius.circular(2),
                     ),
-                    child: Text(
-                        "해설",
-                        style: FontSystem.KR12SB.copyWith(
-                            color: ColorSystem.brown,
-                            height: 1.2
-                        )
-                    ),
+                    child: Text("해설",
+                        style: FontSystem.KR12SB
+                            .copyWith(color: ColorSystem.brown, height: 1.2)),
                   ),
                   Expanded(
                     child: Text(

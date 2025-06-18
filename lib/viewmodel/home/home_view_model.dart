@@ -66,7 +66,6 @@ class HomeViewModel extends GetxController {
     }
   }
 
-
   // 쉬엄 모드 / 시험 모드 토글
   void toggleMode(bool value) {
     _isRestMode.value = value;

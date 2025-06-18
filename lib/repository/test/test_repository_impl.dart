@@ -55,7 +55,14 @@ class TestRepositoryImpl extends GetxService implements TestRepository {
   }
 
   @override
-  Future<bool> addToReviewNote(List<int> questionIds) async {
-    return await _testProvider.addToReviewNote(questionIds);
+  Future<bool> addToReviewNote(int examId, List<int> questionIds) async {
+    return await _testProvider.addToReviewNote(examId, questionIds);
+  }
+
+  @override
+  Future<bool> addToReviewNoteWithResult(
+      int examId, int resultId, List<int> questionIds) async {
+    return await _testProvider.addToReviewNoteWithResult(
+        examId, resultId, questionIds);
   }
 }

@@ -19,8 +19,8 @@ class ReviewListModel {
 
   factory ReviewListModel.fromJson(Map<String, dynamic> json) {
     return ReviewListModel(
-      reviewNoteId: json['review_note_id'],
-      examId: json['exam_id'],
+      reviewNoteId: json['review_note_id'].toString(),
+      examId: json['exam_id'].toString(),
       name: json['name'],
       isPassed: json['is_passed'],
       certificate: json['certificate'],

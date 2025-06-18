@@ -47,90 +47,92 @@ class ReviewScreen extends BaseScreen<ReviewViewModel> {
     return Column(
       children: [
         _buildCategoryTab(),
-        Obx(() =>
-            _buildInfo(viewModel.filteredReviews.length),
+        Obx(
+          () => _buildInfo(viewModel.filteredReviews.length),
         ),
-        SizedBox(
+        const SizedBox(
           height: 16,
         ),
         Expanded(
           child: Obx(() => ListView.builder(
-            itemCount: viewModel.filteredReviews.length,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemBuilder: (context, index) {
-              final review = viewModel.filteredReviews[index];
-              return ReviewExamItem(review: review);
-            },
-          )),
+                itemCount: viewModel.filteredReviews.length,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                itemBuilder: (context, index) {
+                  final review = viewModel.filteredReviews[index];
+                  return ReviewExamItem(review: review);
+                },
+              )),
         ),
-
       ],
     );
   }
 
   // 카테고리탭 위젯
   Widget _buildCategoryTab() {
-    return Obx(()=> Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          controller: _scrollController,
-          child: Row(
-            children:
-            List.generate(controller.categories.length, (index){
-              final category = controller.categories[index];
-              final selected = controller.selectedCategory == category;
-              _categoryKeys.putIfAbsent(category, () => GlobalKey());
+    return Obx(() => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              controller: _scrollController,
+              child: Row(
+                children: List.generate(controller.categories.length, (index) {
+                  final category = controller.categories[index];
+                  final selected = controller.selectedCategory == category;
+                  _categoryKeys.putIfAbsent(category, () => GlobalKey());
 
-              // margin을 첫 번째만 다르게 주기
-              final isFirst = index == 0;
-              final isFinal = index == 3;
-              final margin = isFirst
-                  ? const EdgeInsets.only(left: 20, right: 4)
-                  : isFinal
-                  ? const EdgeInsets.only(left: 4, right: 20)
-                  : const EdgeInsets.symmetric(horizontal: 4);
+                  // margin을 첫 번째만 다르게 주기
+                  final isFirst = index == 0;
+                  final isFinal = index == 3;
+                  final margin = isFirst
+                      ? const EdgeInsets.only(left: 20, right: 4)
+                      : isFinal
+                          ? const EdgeInsets.only(left: 4, right: 20)
+                          : const EdgeInsets.symmetric(horizontal: 4);
 
-              return GestureDetector(
-                onTap: (){
-                  controller.selectCategory(category);
-                  _scrollToCategory(category); // 위치 이동
-                },
-                child: _buildCategory(
-                    _categoryKeys[category], // key 부여
-                    category,
-                    selected,
-                    margin
-                ),
-              );
-            }).toList(),
-          )
-      ),
-    ));
+                  return GestureDetector(
+                    onTap: () async {
+                      controller.selectCategory(category);
+                      await controller.loadReviewListByCategory(category);
+                      _scrollToCategory(category); // 위치 이동
+                    },
+                    child: _buildCategory(
+                        _categoryKeys[category], // key 부여
+                        category,
+                        selected,
+                        margin),
+                  );
+                }).toList(),
+              )),
+        ));
   }
 
   void _scrollToCategory(String category) {
     final key = _categoryKeys[category];
     if (key != null && key.currentContext != null) {
       final box = key.currentContext!.findRenderObject() as RenderBox;
-      final scrollBox = _scrollController.position.context.storageContext.findRenderObject() as RenderBox;
+      final scrollBox = _scrollController.position.context.storageContext
+          .findRenderObject() as RenderBox;
 
       final boxOffset = box.localToGlobal(Offset.zero, ancestor: scrollBox).dx;
       final scrollViewWidth = scrollBox.size.width;
       final boxWidth = box.size.width;
 
-      final targetOffset = _scrollController.offset + boxOffset - (scrollViewWidth / 2) + (boxWidth / 2);
+      final targetOffset = _scrollController.offset +
+          boxOffset -
+          (scrollViewWidth / 2) +
+          (boxWidth / 2);
 
       _scrollController.animateTo(
         targetOffset.clamp(0, _scrollController.position.maxScrollExtent),
         duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOutCubic, // 훨씬 더 부드럽고 자연스러워짐
+        curve: Curves.easeInOutCubic,
       );
     }
   }
 
   // 카테고리 위젯
-  Widget _buildCategory(Key? key, String exam, bool selected, EdgeInsets margin) {
+  Widget _buildCategory(
+      Key? key, String exam, bool selected, EdgeInsets margin) {
     return Container(
       key: key,
       margin: margin,
@@ -140,7 +142,12 @@ class ReviewScreen extends BaseScreen<ReviewViewModel> {
         color: selected ? ColorSystem.blue : ColorSystem.white,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Center(child: Text(exam, style: FontSystem.KR16SB.copyWith(color: selected ? ColorSystem.white : ColorSystem.grey.shade600),)),
+      child: Center(
+          child: Text(
+        exam,
+        style: FontSystem.KR16SB.copyWith(
+            color: selected ? ColorSystem.white : ColorSystem.grey.shade600),
+      )),
     );
   }
 
@@ -166,8 +173,14 @@ class ReviewScreen extends BaseScreen<ReviewViewModel> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("Total", style: FontSystem.KR10SB.copyWith(color: ColorSystem.grey.shade600),),
-          Text(total.toString(), style: FontSystem.KR10SB.copyWith(color: ColorSystem.deepBlue),),
+          Text(
+            "Total",
+            style: FontSystem.KR10SB.copyWith(color: ColorSystem.grey.shade600),
+          ),
+          Text(
+            total.toString(),
+            style: FontSystem.KR10SB.copyWith(color: ColorSystem.deepBlue),
+          ),
         ],
       ),
     );
@@ -177,15 +190,16 @@ class ReviewScreen extends BaseScreen<ReviewViewModel> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: ColorSystem.white,
-        borderRadius: BorderRadius.circular(4.0)
-      ),
+          color: ColorSystem.white, borderRadius: BorderRadius.circular(4.0)),
       width: 70,
       height: 19,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("최근 응시순", style: FontSystem.KR10SB.copyWith(color: ColorSystem.grey.shade600),),
+          Text(
+            "최근 응시순",
+            style: FontSystem.KR10SB.copyWith(color: ColorSystem.grey.shade600),
+          ),
           SvgPicture.asset(
             "assets/icons/arrowDown.svg",
           )

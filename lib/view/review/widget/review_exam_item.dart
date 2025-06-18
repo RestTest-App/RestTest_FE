@@ -16,7 +16,9 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
   @override
   Widget buildView(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        // 복습노트 상세 데이터 로드
+        await viewModel.loadReviewDetail(int.parse(review.reviewNoteId));
         Get.toNamed(Routes.REVIEW_ITEM);
       },
       child: Container(
@@ -104,15 +106,27 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
             spacing: 4.0,
             children: [
               _buildTag(
-                "${review.passRate}%",
-                review.passRate >= 80.0
+                "${review.passRate > 100 ? (review.passRate / 100).toStringAsFixed(1) : review.passRate.toStringAsFixed(1)}%",
+                (review.passRate > 100
+                            ? review.passRate / 100
+                            : review.passRate) >=
+                        80.0
                     ? ColorSystem.lightBlue
-                    : review.passRate >= 60.0
+                    : (review.passRate > 100
+                                ? review.passRate / 100
+                                : review.passRate) >=
+                            60.0
                         ? ColorSystem.lightGreen
                         : ColorSystem.lightRed,
-                review.passRate >= 80.0
+                (review.passRate > 100
+                            ? review.passRate / 100
+                            : review.passRate) >=
+                        80.0
                     ? ColorSystem.blue
-                    : review.passRate >= 60.0
+                    : (review.passRate > 100
+                                ? review.passRate / 100
+                                : review.passRate) >=
+                            60.0
                         ? ColorSystem.green
                         : ColorSystem.red,
               ),

@@ -11,5 +11,7 @@ abstract class TestRepository {
   Future<TestSubmitResponse> sendTestResult(int examId, List<int> answers);
   Future<void> sendExplanationReport(ReportRequest request);
   Future<List<Exam>> fetchExamListByType(int certificateId);
-  Future<bool> addToReviewNote(List<int> questionIds);
+  Future<bool> addToReviewNote(int examId, List<int> questionIds);
+  Future<bool> addToReviewNoteWithResult(
+      int examId, int resultId, List<int> questionIds);
 }
