@@ -48,7 +48,7 @@ class CertificateStep extends StatelessWidget {
           child: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: isSelected ? ColorSystem.blue[500] : ColorSystem.white,
+              color: isSelected ? ColorSystem.lightBlue : ColorSystem.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 width: 1,
@@ -61,7 +61,7 @@ class CertificateStep extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 color:
-                    isSelected ? ColorSystem.blue[500] : ColorSystem.grey[400],
+                    isSelected ? ColorSystem.blue : ColorSystem.grey[400],
               ),
             ),
           ),
