@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:rest_test/model/test/Question.dart';
 import 'package:rest_test/model/test/SectionResult.dart';
 import 'package:rest_test/model/test/TestInfoState.dart';
+import 'package:rest_test/utility/function/log_util.dart';
 
 import '../../model/test/ReportRequest.dart';
 import '../../model/test/TestSubmitResponse.dart';

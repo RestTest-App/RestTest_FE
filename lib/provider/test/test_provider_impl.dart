@@ -86,22 +86,23 @@ class TestProviderImpl extends BaseConnect implements TestProvider {
   }
 
   @override
-  Future<List<dynamic>> fetchExamListByType(String certificateName) async {
+  Future<List<dynamic>> fetchExamListByType(int certificateId) async {
     try {
-      final response =
-          await get('/api/v1/exam?certificate_name=$certificateName');
+      final response = await get('/api/v1/test/list/$certificateId');
       if (response.statusCode == 200 &&
           response.body != null &&
-          response.body['data'] != null) {
-        return response.body['data'];
+          response.body['data'] != null &&
+          response.body['data']['exams'] != null) {
+        return response.body['data']['exams'];
       } else {
-        throw Exception("Invalid response: \\${response.body}");
+        throw Exception("Invalid response: ${response.body}");
       }
     } catch (e) {
       print('fetchExamListByType error: $e');
       rethrow;
     }
   }
+
 
   @override
   Future<bool> addToReviewNote(List<int> questionIds) async {

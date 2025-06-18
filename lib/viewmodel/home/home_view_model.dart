@@ -22,6 +22,7 @@ class HomeViewModel extends GetxController {
 
   final RxString _nickname = ''.obs;
   final RxString selectedExamType = '정처기'.obs;
+  final RxInt selectedExamTypeInt = 1.obs;
 
   Rx<TestInfoState> testInfo = TestInfoState.empty().obs;
 
@@ -40,6 +41,7 @@ class HomeViewModel extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    ever(selectedExamType, _updateSelectedExamTypeInt); // 이 줄 추가
     loadUserInfo();
     loadExamList();
   }
@@ -47,6 +49,23 @@ class HomeViewModel extends GetxController {
   /* ------------------------------------------------------ */
   /* ------------------- Methods -------------------------- */
   /* ------------------------------------------------------ */
+
+  void _updateSelectedExamTypeInt(String type) {
+    switch (type) {
+      case '정처기':
+        selectedExamTypeInt.value = 1;
+        break;
+      case '컴활':
+        selectedExamTypeInt.value = 2;
+        break;
+      case '한능검':
+        selectedExamTypeInt.value = 3;
+        break;
+      default:
+        selectedExamTypeInt.value = 0; // 예외 처리
+    }
+  }
+
 
   // 쉬엄 모드 / 시험 모드 토글
   void toggleMode(bool value) {
@@ -81,7 +100,7 @@ class HomeViewModel extends GetxController {
   Future<void> loadExamList() async {
     try {
       final exams =
-          await _testRepository.fetchExamListByType(selectedExamType.value);
+          await _testRepository.fetchExamListByType(selectedExamTypeInt.value);
       _filteredExams.assignAll(exams);
     } catch (e) {
       print('시험 목록 로드 실패: $e');

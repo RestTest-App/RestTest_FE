@@ -37,7 +37,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
   Widget buildBody(BuildContext context) {
     final isRestMode = true.obs;
     final questionCount = 5.obs;
-    final selectedExamType = '정처기'.obs;
+    final selectedExamType = 1.obs;
 
     final todayViewModel = Get.find<TodayTestViewModel>();
     final args = Get.arguments;

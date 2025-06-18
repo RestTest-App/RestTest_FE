@@ -10,6 +10,6 @@ abstract class TestRepository {
   Future<List<Question>> readQuestionList(int examId);
   Future<TestSubmitResponse> sendTestResult(int examId, List<int> answers);
   Future<void> sendExplanationReport(ReportRequest request);
-  Future<List<Exam>> fetchExamListByType(String certificateName);
+  Future<List<Exam>> fetchExamListByType(int certificateId);
   Future<bool> addToReviewNote(List<int> questionIds);
 }

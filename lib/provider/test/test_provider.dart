@@ -5,6 +5,6 @@ abstract class TestProvider {
   Future<List<dynamic>> readQuestionList(int examId);
   Future<Map<String, dynamic>> sendTestResult(int examId, List<int> answers);
   Future<void> sendExplanationReport(ReportRequest request);
-  Future<List<dynamic>> fetchExamListByType(String certificateName);
+  Future<List<dynamic>> fetchExamListByType(int certificateId);
   Future<bool> addToReviewNote(List<int> questionIds);
 }

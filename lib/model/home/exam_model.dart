@@ -1,5 +1,5 @@
 class Exam {
-  final String examId;
+  final int examId;
   final String examName;
   final int questionCount;
   final int examTime;
@@ -15,11 +15,12 @@ class Exam {
 
   factory Exam.fromJson(Map<String, dynamic> json) {
     return Exam(
-      examId: json['exam_id'],
-      examName: json['exam_name'],
-      questionCount: json['question_count'],
-      examTime: json['exam_time'],
-      passRate: (json['pass_rate'] as num).toDouble(),
+      examId: json['id'],
+      examName: json['name'] ?? '',
+      questionCount: 0, // 실제 응답에 없음. 필요 시 서버에서 추가 or 임시 0
+      examTime: json['time'] ?? 0,
+      passRate: (json['pass_rate'] as num?)?.toDouble() ?? 0.0,
     );
   }
+
 }

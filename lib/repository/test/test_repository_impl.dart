@@ -48,9 +48,9 @@ class TestRepositoryImpl extends GetxService implements TestRepository {
   }
 
   @override
-  Future<List<Exam>> fetchExamListByType(String certificateName) async {
+  Future<List<Exam>> fetchExamListByType(int certificateId) async {
     final List<dynamic> data =
-        await _testProvider.fetchExamListByType(certificateName);
+        await _testProvider.fetchExamListByType(certificateId);
     return data.map((e) => Exam.fromJson(e)).toList();
   }
 
