@@ -3,3 +3,4 @@ abstract class UserProvider {
   Future<bool> updateUserInfo(Map<String, dynamic> data);
   Future<bool> deleteAccount();
 }
+ 

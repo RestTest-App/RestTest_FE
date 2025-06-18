@@ -52,8 +52,8 @@ class ProfileChangeViewModel extends GetxController {
       print('업데이트 요청 데이터: $data');
       final result = await _userRepository.updateUserInfo(data);
       if (result) {
-        currentNickname.value = newNickname.value;
-        Get.back();
+      currentNickname.value = newNickname.value;
+      Get.back();
         Get.snackbar('성공', '프로필이 수정되었습니다.');
       } else {
         Get.snackbar('실패', '프로필 수정에 실패했습니다.');

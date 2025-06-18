@@ -17,7 +17,7 @@ class ReviewDetailModel {
       createdAt: DateTime.parse(json['created_at']),
       exam: ExamInfomation.fromJson(json['exam']),
       questions: (json['questions'] as List)
-          .map((q) => QuestionInfomation.fromJson(q))
+          .map((e) => QuestionInfomation.fromJson(e))
           .toList(),
     );
   }
@@ -56,7 +56,7 @@ class ExamInfomation {
       month: json['month'],
       trial: json['trial'],
       time: json['time'],
-      passRate: json['pass_rate'],
+      passRate: (json['pass_rate'] as num).toDouble(),
       score: json['score'],
       isPassed: json['is_passed'],
       solvedAt: DateTime.parse(json['solved_at']),
@@ -74,7 +74,7 @@ class QuestionInfomation {
   final List<String> options;
   final List<String> optionExplanations;
   final int answer;
-  final int selectedAnswer;
+  final int? selectedAnswer;
   final bool isCorrect;
 
   QuestionInfomation({
@@ -87,14 +87,14 @@ class QuestionInfomation {
     required this.options,
     required this.optionExplanations,
     required this.answer,
-    required this.selectedAnswer,
+    this.selectedAnswer,
     required this.isCorrect,
   });
 
   factory QuestionInfomation.fromJson(Map<String, dynamic> json) {
     return QuestionInfomation(
       questionId: json['question_id'],
-      answerRate: json['answer_rate'],
+      answerRate: (json['answer_rate'] as num).toDouble(),
       section: json['section'],
       description: json['description'],
       descriptionDetail: json['description_detail'],

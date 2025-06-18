@@ -3,11 +3,11 @@ import 'package:rest_test/model/test/Question.dart';
 import 'package:rest_test/model/test/TestInfoState.dart';
 import 'package:rest_test/provider/test/test_provider.dart';
 import 'package:rest_test/repository/test/test_repository.dart';
+import 'package:rest_test/model/home/exam_model.dart';
+import 'package:rest_test/model/test/ReportRequest.dart';
+import 'package:rest_test/model/test/TestSubmitResponse.dart';
 
-import '../../model/test/ReportRequest.dart';
-import '../../model/test/TestSubmitResponse.dart';
-
-class TestRepositoryImpl extends GetxService implements TestRepository{
+class TestRepositoryImpl extends GetxService implements TestRepository {
   late final TestProvider _testProvider;
 
   @override
@@ -23,13 +23,14 @@ class TestRepositoryImpl extends GetxService implements TestRepository{
   }
 
   @override
-  Future<List<Question>> readQuestionList(int examId) async{
+  Future<List<Question>> readQuestionList(int examId) async {
     List<dynamic> data = await _testProvider.readQuestionList(examId);
     return List<Question>.from(data.map((q) => Question.fromJson(q)));
   }
 
   @override
-  Future<TestSubmitResponse> sendTestResult(int examId, List<int> answers) async {
+  Future<TestSubmitResponse> sendTestResult(
+      int examId, List<int> answers) async {
     final response = await _testProvider.sendTestResult(examId, answers);
     final data = response['data'];
 
@@ -44,5 +45,17 @@ class TestRepositoryImpl extends GetxService implements TestRepository{
   @override
   Future<void> sendExplanationReport(ReportRequest request) async {
     await _testProvider.sendExplanationReport(request);
+  }
+
+  @override
+  Future<List<Exam>> fetchExamListByType(String certificateName) async {
+    final List<dynamic> data =
+        await _testProvider.fetchExamListByType(certificateName);
+    return data.map((e) => Exam.fromJson(e)).toList();
+  }
+
+  @override
+  Future<bool> addToReviewNote(List<int> questionIds) async {
+    return await _testProvider.addToReviewNote(questionIds);
   }
 }
