@@ -98,8 +98,6 @@ class TestScreen extends BaseScreen<TestViewModel>{
         const SizedBox(width: 4),
         CustomTag(text: "${testInfo.time}분", color: ColorSystem.lightBlue, textColor: ColorSystem.blue),
         SizedBox(width: 4),
-        CustomTag(text: "${testInfo.exam_attempt}회독", color: ColorSystem.lightGreen, textColor: ColorSystem.green),
-        SizedBox(width: 4),
         CustomTag(text: "${testInfo.pass_rate}%", color:
         testInfo.pass_rate >= 80.0
             ? ColorSystem.lightBlue
