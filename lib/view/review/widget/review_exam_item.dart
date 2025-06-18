@@ -13,7 +13,6 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
 
   const ReviewExamItem({super.key, required this.review});
 
-
   @override
   Widget buildView(BuildContext context) {
     return GestureDetector(
@@ -21,13 +20,13 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
         Get.toNamed(Routes.REVIEW_ITEM);
       },
       child: Container(
-        margin:const EdgeInsets.only(bottom: 12),
+        margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
             color: ColorSystem.white,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: ColorSystem.grey.shade200, style: BorderStyle.solid)
-        ),
+            border: Border.all(
+                color: ColorSystem.grey.shade200, style: BorderStyle.solid)),
         width: double.infinity,
         child: Column(
           children: [
@@ -35,7 +34,7 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildTitle(review.name),
-                _buildPassTag(review.is_passed),
+                _buildPassTag(review.isPassed),
               ],
             ),
             Row(
@@ -55,7 +54,7 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
     return Text(title, style: FontSystem.KR18B);
   }
 
-  Widget _buildTag(String label, Color color, Color textColor){
+  Widget _buildTag(String label, Color color, Color textColor) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       height: 20,
@@ -63,12 +62,14 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
         color: color,
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Text(label, style: FontSystem.KR12SB.copyWith(height: 1.3, color: textColor),
+      child: Text(
+        label,
+        style: FontSystem.KR12SB.copyWith(height: 1.3, color: textColor),
       ),
     );
   }
 
-  Widget _buildPassTag(bool pass){
+  Widget _buildPassTag(bool pass) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       height: 20,
@@ -76,8 +77,9 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
         color: pass ? ColorSystem.lightBlue : ColorSystem.lightRed,
         borderRadius: BorderRadius.circular(4),
       ),
-      child:  Text(pass ? "합격" : "불합격", style: FontSystem.KR12SB.copyWith(height: 1.3, color: pass ? ColorSystem.blue : ColorSystem.red)
-      ),
+      child: Text(pass ? "합격" : "불합격",
+          style: FontSystem.KR12SB.copyWith(
+              height: 1.3, color: pass ? ColorSystem.blue : ColorSystem.red)),
     );
   }
 
@@ -91,8 +93,10 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
             spacing: 4.0,
             runSpacing: 4.0,
             children: [
-              _buildTag(review.certificate, ColorSystem.lightBlue, ColorSystem.blue),
-              _buildTag("${review.read_count}회독", ColorSystem.lightGreen, ColorSystem.green),
+              _buildTag(
+                  review.certificate, ColorSystem.lightBlue, ColorSystem.blue),
+              _buildTag("${review.readCount}회독", ColorSystem.lightGreen,
+                  ColorSystem.green),
             ],
           ),
           const SizedBox(height: 4), // 간격 조절
@@ -100,17 +104,17 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
             spacing: 4.0,
             children: [
               _buildTag(
-                "${review.pass_rate}%",
-                review.pass_rate >= 80.0
+                "${review.passRate}%",
+                review.passRate >= 80.0
                     ? ColorSystem.lightBlue
-                    : review.pass_rate >= 60.0
-                    ? ColorSystem.lightGreen
-                    : ColorSystem.lightRed,
-                review.pass_rate >= 80.0
+                    : review.passRate >= 60.0
+                        ? ColorSystem.lightGreen
+                        : ColorSystem.lightRed,
+                review.passRate >= 80.0
                     ? ColorSystem.blue
-                    : review.pass_rate >= 60.0
-                    ? ColorSystem.green
-                    : ColorSystem.red,
+                    : review.passRate >= 60.0
+                        ? ColorSystem.green
+                        : ColorSystem.red,
               ),
             ],
           ),
@@ -118,7 +122,4 @@ class ReviewExamItem extends BaseWidget<ReviewViewModel> {
       ),
     );
   }
-
-
 }
-

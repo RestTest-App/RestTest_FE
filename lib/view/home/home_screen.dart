@@ -53,7 +53,8 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
           const SizedBox(height: 12),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ExamTypeSelector(selectedExamType: selectedExamType),
+            child:
+                ExamTypeSelector(selectedExamType: viewModel.selectedExamType),
           ),
           const SizedBox(height: 16),
           Obx(() => GoalCard(nickname: viewModel.nickname.value)),
@@ -82,7 +83,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
                   const SizedBox(height: 24),
                   isRestMode.value
                       ? _buildRestMode(questionCount)
-                      : _buildExamMode(viewModel.mockExams),
+                      : _buildExamMode(viewModel.filteredExams),
                 ],
               ),
             ),

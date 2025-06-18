@@ -1,16 +1,18 @@
 import 'package:rest_test/provider/base/base_connect.dart';
 import 'package:rest_test/provider/test/test_provider.dart';
 
-import '../../model/test/ReportRequest.dart';
-import '../../utility/function/log_util.dart';
+import 'package:rest_test/model/test/ReportRequest.dart';
+import 'package:rest_test/utility/function/log_util.dart';
 
-class TestProviderImpl extends BaseConnect implements TestProvider{
+class TestProviderImpl extends BaseConnect implements TestProvider {
   @override
   Future<Map<String, dynamic>> readTestInfo(int examId) async {
     try {
       final response = await get('/api/v1/test/exam/$examId/info');
 
-      if (response.statusCode == 200 && response.body != null && response.body['data'] != null) {
+      if (response.statusCode == 200 &&
+          response.body != null &&
+          response.body['data'] != null) {
         return response.body['data'];
       } else {
         throw Exception("Invalid response: ${response.body}");
@@ -22,11 +24,13 @@ class TestProviderImpl extends BaseConnect implements TestProvider{
   }
 
   @override
-  Future<List> readQuestionList(int examId) async{
+  Future<List> readQuestionList(int examId) async {
     try {
       final response = await get('/api/v1/test/test-mode/$examId');
 
-      if (response.statusCode == 200 && response.body != null && response.body['data'] != null) {
+      if (response.statusCode == 200 &&
+          response.body != null &&
+          response.body['data'] != null) {
         return response.body['data']['questions'];
       } else {
         throw Exception("Invalid response: ${response.body}");
@@ -38,7 +42,8 @@ class TestProviderImpl extends BaseConnect implements TestProvider{
   }
 
   @override
-  Future<Map<String, dynamic>> sendTestResult(int examId, List<int> answers) async {
+  Future<Map<String, dynamic>> sendTestResult(
+      int examId, List<int> answers) async {
     try {
       LogUtil.debug(answers);
       final response = await post(
@@ -48,7 +53,9 @@ class TestProviderImpl extends BaseConnect implements TestProvider{
         },
       );
 
-      if (response.statusCode == 200 && response.body != null && response.body['data'] != null) {
+      if (response.statusCode == 200 &&
+          response.body != null &&
+          response.body['data'] != null) {
         return response.body;
       } else {
         throw Exception("Invalid response: ${response.body}");
@@ -70,7 +77,7 @@ class TestProviderImpl extends BaseConnect implements TestProvider{
       if (response.statusCode == 200) {
         LogUtil.debug("신고 전송 성공");
       } else {
-        throw Exception("신고 전송 실패: ${response.body}");
+        throw Exception("신고 전송 실패: \\${response.body}");
       }
     } catch (e) {
       print('sendExplanationReport error: $e');
@@ -78,4 +85,33 @@ class TestProviderImpl extends BaseConnect implements TestProvider{
     }
   }
 
+  @override
+  Future<List<dynamic>> fetchExamListByType(String certificateName) async {
+    try {
+      final response =
+          await get('/api/v1/exam?certificate_name=$certificateName');
+      if (response.statusCode == 200 &&
+          response.body != null &&
+          response.body['data'] != null) {
+        return response.body['data'];
+      } else {
+        throw Exception("Invalid response: \\${response.body}");
+      }
+    } catch (e) {
+      print('fetchExamListByType error: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> addToReviewNote(List<int> questionIds) async {
+    try {
+      final response =
+          await post('/api/v1/review/add', {'question_ids': questionIds});
+      return response.statusCode == 200;
+    } catch (e) {
+      print('addToReviewNote error: $e');
+      rethrow;
+    }
+  }
 }

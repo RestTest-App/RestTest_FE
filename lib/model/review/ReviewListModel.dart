@@ -1,19 +1,31 @@
 class ReviewListModel {
-  final String review_note_id;
-  final String exam_id;
+  final String reviewNoteId;
+  final String examId;
   final String name;
-  final bool is_passed;
+  final bool isPassed;
   final String certificate;
-  final int read_count;
-  final double pass_rate;
+  final int readCount;
+  final double passRate;
 
   ReviewListModel({
-    required this.review_note_id,
-    required this.exam_id,
+    required this.reviewNoteId,
+    required this.examId,
     required this.name,
-    required this.is_passed,
+    required this.isPassed,
     required this.certificate,
-    required this.read_count,
-    required this.pass_rate,
+    required this.readCount,
+    required this.passRate,
   });
+
+  factory ReviewListModel.fromJson(Map<String, dynamic> json) {
+    return ReviewListModel(
+      reviewNoteId: json['review_note_id'],
+      examId: json['exam_id'],
+      name: json['name'],
+      isPassed: json['is_passed'],
+      certificate: json['certificate'],
+      readCount: json['read_count'],
+      passRate: (json['pass_rate'] as num).toDouble(),
+    );
+  }
 }
