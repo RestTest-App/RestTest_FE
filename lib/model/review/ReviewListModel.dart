@@ -18,14 +18,22 @@ class ReviewListModel {
   });
 
   factory ReviewListModel.fromJson(Map<String, dynamic> json) {
-    return ReviewListModel(
+    print('🔍 [ReviewListModel] fromJson 시작 - 전체 JSON: $json');
+
+    final certificate = json['certificate']?.toString() ?? '';
+    print('🔍 [ReviewListModel] certificate 파싱: $certificate');
+
+    final result = ReviewListModel(
       reviewNoteId: json['review_note_id'].toString(),
       examId: json['exam_id'].toString(),
       name: json['name'],
       isPassed: json['is_passed'],
-      certificate: json['certificate'],
+      certificate: certificate,
       readCount: json['read_count'],
       passRate: (json['pass_rate'] as num).toDouble(),
     );
+
+    print('🔍 [ReviewListModel] 파싱 완료 - certificate: ${result.certificate}');
+    return result;
   }
 }

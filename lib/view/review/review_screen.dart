@@ -91,8 +91,24 @@ class ReviewScreen extends BaseScreen<ReviewViewModel> {
 
                   return GestureDetector(
                     onTap: () async {
+                      print(
+                          '🔍 [ReviewScreen] 카테고리 탭 클릭 - category: $category');
                       controller.selectCategory(category);
-                      await controller.loadReviewListByCategory(category);
+                      print('🔍 [ReviewScreen] selectCategory 호출 완료');
+
+                      try {
+                        await controller.loadReviewListByCategory(category);
+                        print(
+                            '🔍 [ReviewScreen] loadReviewListByCategory 호출 완료');
+                        print(
+                            '🔍 [ReviewScreen] 현재 filteredReviews 길이: ${controller.filteredReviews.length}');
+                      } catch (e) {
+                        print('❌ [ReviewScreen] 카테고리별 로드 실패: $e');
+                        // 에러가 발생해도 UI는 업데이트됨 (기존 데이터로 필터링)
+                        print(
+                            '🔍 [ReviewScreen] 에러 발생 후 현재 filteredReviews 길이: ${controller.filteredReviews.length}');
+                      }
+
                       _scrollToCategory(category); // 위치 이동
                     },
                     child: _buildCategory(
