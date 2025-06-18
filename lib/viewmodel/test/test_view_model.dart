@@ -36,16 +36,20 @@ class TestViewModel extends GetxController {
 
   // 시험 해설
   final RxList<int> _correctAnswers = <int>[].obs;
-  final RxList<AnswerExplanation> _answerExplanations = <AnswerExplanation>[].obs;
+  final RxList<AnswerExplanation> _answerExplanations =
+      <AnswerExplanation>[].obs;
 
   // 신고
   final RxString selectedReportOption = "".obs;
   final RxString etcText = "".obs;
 
+  // 현재 시험 ID 저장
+  final RxInt _currentExamId = 1.obs;
 
   List<int> get correctAnswers => _correctAnswers;
   List<AnswerExplanation> get answerExplanations => _answerExplanations;
-  AnswerExplanation get currentExplanation => _answerExplanations[_currentIndex.value];
+  AnswerExplanation get currentExplanation =>
+      _answerExplanations[_currentIndex.value];
   int get correctAnswer => _correctAnswers[_currentIndex.value];
 
   // 복습노트 추가
@@ -94,6 +98,7 @@ class TestViewModel extends GetxController {
 
   Future<void> loadQuestions(int examId) async {
     try {
+      _currentExamId.value = examId; // 현재 시험 ID 저장
       final data = await _testRepository.readQuestionList(examId);
       _questions.assignAll(data);
       _selectedOptions.assignAll(List<int?>.filled(data.length, null));
@@ -135,8 +140,36 @@ class TestViewModel extends GetxController {
   }
 
   // 복습노트 추가
-  void toggleStarForQuestion(int index) {
-    starredQuestions[index] = !(starredQuestions[index] ?? false);
+  void toggleStarForQuestion(int index) async {
+    final wasStarred = starredQuestions[index] ?? false;
+    starredQuestions[index] = !wasStarred;
+
+    // API 호출하여 복습노트에 추가/제거
+    try {
+      if (!wasStarred) {
+        // 별을 추가한 경우 - 복습노트에 추가
+        // 시험 결과가 제출된 후에만 복습노트에 추가 가능
+        if (_sectionResults.isEmpty) {
+          Get.snackbar('알림', '시험 완료 후 복습노트에 추가할 수 있습니다.');
+          starredQuestions[index] = wasStarred; // 상태 되돌리기
+          return;
+        }
+
+        // 시험 결과가 있으면 복습노트에 추가
+        final examId = _currentExamId.value;
+        await _testRepository.addToReviewNote(examId, [index]);
+        Get.snackbar('성공', '복습노트에 추가되었습니다.');
+      } else {
+        // 별을 제거한 경우 - 복습노트에서 제거 (API가 있다면)
+        // 현재는 제거 API가 없으므로 로컬에서만 제거
+        Get.snackbar('알림', '복습노트에서 제거되었습니다.');
+      }
+    } catch (e) {
+      // 실패 시 상태 되돌리기
+      starredQuestions[index] = wasStarred;
+      Get.snackbar('오류', '복습노트 저장에 실패했습니다.');
+      print('복습노트 저장 실패: $e');
+    }
   }
 
   bool isStarred(int index) {
@@ -148,7 +181,8 @@ class TestViewModel extends GetxController {
       // null인 항목이 없다고 가정. 만약 있을 경우 0 등으로 기본 처리 가능
       final answers = _selectedOptions.map((e) => (e ?? 0) + 1).toList();
 
-      final TestSubmitResponse response = await _testRepository.sendTestResult(examId, answers);
+      final TestSubmitResponse response =
+          await _testRepository.sendTestResult(examId, answers);
 
       // 시험 결과 반영
       _correctAnswers.assignAll(response.correctAnswers);
@@ -156,8 +190,31 @@ class TestViewModel extends GetxController {
       _sectionResults.assignAll(response.section_info);
       _isPassed.value = response.testLog.isPassed;
       _totalScore.value = response.testLog.correctCount;
+
+      // 시험 결과 제출 후 별표된 문제들을 복습노트에 추가
+      await _addStarredQuestionsToReviewNote(response.testLog.testTrackerId);
     } catch (e) {
       print("시험 제출 실패: $e");
+    }
+  }
+
+  // 별표된 문제들을 복습노트에 추가
+  Future<void> _addStarredQuestionsToReviewNote(int resultId) async {
+    try {
+      final starredQuestionIds = starredQuestions.entries
+          .where((entry) => entry.value == true)
+          .map((entry) => entry.key)
+          .toList();
+
+      if (starredQuestionIds.isNotEmpty) {
+        final examId = _currentExamId.value;
+        await _testRepository.addToReviewNoteWithResult(
+            examId, resultId, starredQuestionIds);
+        Get.snackbar('성공', '별표한 문제들이 복습노트에 추가되었습니다.');
+      }
+    } catch (e) {
+      print('복습노트 추가 실패: $e');
+      Get.snackbar('오류', '복습노트 추가에 실패했습니다.');
     }
   }
 
@@ -180,9 +237,11 @@ class TestViewModel extends GetxController {
         ? etcText.value.trim()
         : selectedReportOption.value;
 
-    final aiExplanation = currentExplanation.optionExplanations.options.entries.map(
+    final aiExplanation = currentExplanation.optionExplanations.options.entries
+        .map(
           (entry) => entry.value,
-    ).toList();
+        )
+        .toList();
 
     final request = ReportRequest(
       testId: testId.toString(),
@@ -192,7 +251,8 @@ class TestViewModel extends GetxController {
     );
 
     try {
-      await _testRepository.sendExplanationReport(request);  // ← Map<String, dynamic>을 넘기도록 정의
+      await _testRepository
+          .sendExplanationReport(request); // ← Map<String, dynamic>을 넘기도록 정의
       print("신고 완료");
     } catch (e) {
       print("신고 실패: $e");

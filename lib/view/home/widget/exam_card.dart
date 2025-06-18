@@ -51,18 +51,31 @@ class ExamCard extends StatelessWidget {
                           text: '${exam.examTime}분',
                           color: ColorSystem.lightBlue,
                           textColor: ColorSystem.blue),
-              _infoBadge(
-                  text: '${exam.passRate.toStringAsFixed(2)}%',
-                  color: exam.passRate >= 80.0
-                      ? ColorSystem.lightBlue
-                      : exam.passRate >= 60.0
-                      ? ColorSystem.lightGreen
-                      : ColorSystem.lightRed,
-                  textColor: exam.passRate >= 80.0
-                      ? ColorSystem.blue
-                      : exam.passRate >= 60.0
-                      ? ColorSystem.green
-                      : ColorSystem.red),
+                      _infoBadge(
+                          text:
+                              '${exam.passRate > 100 ? (exam.passRate / 100).toStringAsFixed(2) : exam.passRate.toStringAsFixed(2)}%',
+                          color: (exam.passRate > 100
+                                      ? exam.passRate / 100
+                                      : exam.passRate) >=
+                                  80.0
+                              ? ColorSystem.lightBlue
+                              : (exam.passRate > 100
+                                          ? exam.passRate / 100
+                                          : exam.passRate) >=
+                                      60.0
+                                  ? ColorSystem.lightGreen
+                                  : ColorSystem.lightRed,
+                          textColor: (exam.passRate > 100
+                                      ? exam.passRate / 100
+                                      : exam.passRate) >=
+                                  80.0
+                              ? ColorSystem.blue
+                              : (exam.passRate > 100
+                                          ? exam.passRate / 100
+                                          : exam.passRate) >=
+                                      60.0
+                                  ? ColorSystem.green
+                                  : ColorSystem.red),
                     ],
                   ),
                 ],
