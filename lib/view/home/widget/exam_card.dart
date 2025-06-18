@@ -53,8 +53,16 @@ class ExamCard extends StatelessWidget {
                           textColor: ColorSystem.blue),
                       _infoBadge(
                           text: '${exam.passRate.toStringAsFixed(2)}%',
-                          color: ColorSystem.lightRed,
-                          textColor: ColorSystem.red),
+                          color: exam.passRate >= 80.0
+                              ? ColorSystem.lightBlue
+                              : exam.passRate >= 60.0
+                                  ? ColorSystem.lightGreen
+                                  : ColorSystem.lightRed,
+                          textColor: exam.passRate >= 80.0
+                              ? ColorSystem.blue
+                              : exam.passRate >= 60.0
+                                  ? ColorSystem.green
+                                  : ColorSystem.red),
                     ],
                   ),
                 ],
