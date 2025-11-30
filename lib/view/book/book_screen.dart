@@ -48,7 +48,7 @@ class BookScreen extends BaseScreen<BookViewModel> {
     return Obx(() {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
-      };
+      }
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
@@ -60,5 +60,5 @@ class BookScreen extends BaseScreen<BookViewModel> {
         ),
       );
     });
-}
+  }
 }
