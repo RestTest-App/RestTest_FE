@@ -3,6 +3,8 @@ import 'package:rest_test/model/home/exam_model.dart';
 import 'package:rest_test/repository/user/user_repository.dart';
 import 'package:rest_test/model/test/TestInfoState.dart';
 import 'package:rest_test/repository/test/test_repository.dart';
+import 'package:rest_test/repository/goal/goal_repository.dart';
+import 'package:rest_test/model/goal/goal_progress.dart';
 
 class HomeViewModel extends GetxController {
   /* ------------------------------------------------------ */
@@ -10,6 +12,7 @@ class HomeViewModel extends GetxController {
   /* ------------------------------------------------------ */
   late final UserRepository _userRepository = Get.find();
   late final TestRepository _testRepository = Get.find();
+  late final GoalRepository _goalRepository = Get.find();
 
   /* ------------------------------------------------------ */
   /* ----------------- Private Fields --------------------- */
@@ -28,6 +31,11 @@ class HomeViewModel extends GetxController {
 
   final RxList<Exam> _filteredExams = <Exam>[].obs;
 
+  // Goal 관련 필드
+  final Rx<GoalProgressResponse?> _goalProgressResponse =
+      Rx<GoalProgressResponse?>(null);
+  final RxBool _isLoadingGoals = false.obs;
+
   /* ------------------------------------------------------ */
   /* ----------------- Public Fields ---------------------- */
   /* ------------------------------------------------------ */
@@ -38,12 +46,20 @@ class HomeViewModel extends GetxController {
 
   List<Exam> get filteredExams => _filteredExams;
 
+  // Goal 관련 getter
+  GoalProgressResponse? get goalProgressResponse => _goalProgressResponse.value;
+  List<GoalProgress> get goals => _goalProgressResponse.value?.goals ?? [];
+  GoalSummary? get goalSummary => _goalProgressResponse.value?.summary;
+  bool get hasGoals => goals.isNotEmpty;
+  bool get isLoadingGoals => _isLoadingGoals.value;
+
   @override
   void onInit() {
     super.onInit();
     ever(selectedExamType, _updateSelectedExamTypeInt); // 이 줄 추가
     loadUserInfo();
     loadExamList();
+    loadAllGoalsProgress();
   }
 
   /* ------------------------------------------------------ */
@@ -116,6 +132,19 @@ class HomeViewModel extends GetxController {
     } catch (e) {
       print('시험 목록 로드 실패: $e');
       Get.snackbar('오류', '시험 목록을 불러오는데 실패했습니다.');
+    }
+  }
+
+  Future<void> loadAllGoalsProgress() async {
+    try {
+      _isLoadingGoals.value = true;
+      final response = await _goalRepository.fetchAllGoalsProgress();
+      _goalProgressResponse.value = response;
+    } catch (e) {
+      print('⚠️ 목표 진행도 로드 실패: $e');
+      _goalProgressResponse.value = null;
+    } finally {
+      _isLoadingGoals.value = false;
     }
   }
 }

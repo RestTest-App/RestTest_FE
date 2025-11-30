@@ -57,7 +57,7 @@ class HomeScreen extends BaseScreen<HomeViewModel> {
                 ExamTypeSelector(selectedExamType: viewModel.selectedExamType),
           ),
           const SizedBox(height: 16),
-          Obx(() => GoalCard(nickname: viewModel.nickname.value)),
+          const GoalCard(),
           const SizedBox(height: 16),
           TodayQuestion(
             isCompleted: isCompleted,

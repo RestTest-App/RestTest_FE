@@ -13,6 +13,7 @@ import 'package:rest_test/utility/static/app_routes.dart';
 import 'package:rest_test/view/today/today_test_comment_screen.dart';
 import 'package:rest_test/view/today/today_test_exam_screen.dart';
 import 'package:rest_test/view/today/today_test_screen.dart';
+import 'package:rest_test/view/goal/goal_setting_screen.dart';
 import 'app_routes.dart';
 
 List<GetPage> appPages = [
@@ -23,7 +24,7 @@ List<GetPage> appPages = [
       binding: OnboardingBinding()),
   GetPage(
     name: Routes.ROOT,
-    page: () => RootScreen(),
+    page: () => const RootScreen(),
     binding: RootBinding(),
     // middlewares: [
     //   LoginMiddleware(),
@@ -32,27 +33,23 @@ List<GetPage> appPages = [
   ),
   GetPage(
       name: Routes.TEST,
-      page: () => TestScreen(),
-      binding: TestBinding()
-  ),
+      page: () => const TestScreen(),
+      binding: TestBinding()),
   GetPage(
       name: Routes.TEST_EXAM,
-      page: () => TestExamScreen(),
-      binding: TestExamBinding()
-  ),
+      page: () => const TestExamScreen(),
+      binding: TestExamBinding()),
   GetPage(
       name: Routes.TEST_RESULT,
-      page: () => TestResultScreen(),
-      binding: TestResultBinding()
-  ),
+      page: () => const TestResultScreen(),
+      binding: TestResultBinding()),
   GetPage(
       name: Routes.TEST_COMMENT,
-      page: () => TestCommentScreen(),
-      binding: TestCommentBinding()
-  ),
+      page: () => const TestCommentScreen(),
+      binding: TestCommentBinding()),
   GetPage(
     name: Routes.REVIEW_ITEM,
-    page: () => ReviewContentScreen(),
+    page: () => const ReviewContentScreen(),
     binding: ReviewContentBinding(),
   ),
   GetPage(
@@ -65,19 +62,24 @@ List<GetPage> appPages = [
     page: () => LoginScreen(),
     binding: AuthBinding(),
   ),
-GetPage(
+  GetPage(
     name: Routes.TODAY,
-    page: () => TodayTestScreen(),
+    page: () => const TodayTestScreen(),
     binding: TodayTestBinding(),
-),
-GetPage(
+  ),
+  GetPage(
     name: Routes.TODAY_EXAM,
-    page: () => TodayTestExamScreen(),
+    page: () => const TodayTestExamScreen(),
     binding: TodayTestExamBinding(),
   ),
-GetPage(
+  GetPage(
     name: Routes.TODAY_COMMENT,
-    page: () => TodayTestCommentScreen(),
+    page: () => const TodayTestCommentScreen(),
     binding: TodayTestCommentBinding(),
+  ),
+  GetPage(
+    name: Routes.GOAL_SETTING,
+    page: () => const GoalSettingScreen(),
+    binding: GoalSettingBinding(),
   ),
 ];
