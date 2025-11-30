@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rest_test/utility/system/color_system.dart';
 import 'package:rest_test/utility/system/font_system.dart';
 import 'package:rest_test/view/mypage/profile_change_screen.dart';
@@ -23,14 +24,28 @@ class ProfileSection extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Obx(() => CircleAvatar(
-                  radius: 30,
-                  backgroundImage:
-                      controller.profileImageUrl.value.startsWith('http')
-                          ? NetworkImage(controller.profileImageUrl.value)
-                          : AssetImage(controller.profileImageUrl.value)
-                              as ImageProvider,
-                )),
+            Obx(() {
+              final imageUrl = controller.profileImageUrl.value;
+              ImageProvider backgroundImage;
+
+              if (imageUrl.startsWith('http')) {
+                // 절대 URL (http/https)
+                backgroundImage = NetworkImage(imageUrl);
+              } else if (imageUrl.startsWith('/uploads')) {
+                // 상대 경로 (서버 경로)
+                final baseUrl =
+                    "${dotenv.env['SERVER_HOST']}:${dotenv.env['SERVER_PORT']}";
+                backgroundImage = NetworkImage('$baseUrl$imageUrl');
+              } else {
+                // Asset 이미지 또는 기본값
+                backgroundImage = const AssetImage('assets/images/default_profile.png');
+              }
+
+              return CircleAvatar(
+                radius: 30,
+                backgroundImage: backgroundImage,
+              );
+            }),
             const SizedBox(width: 16),
             Expanded(
               child: Column(

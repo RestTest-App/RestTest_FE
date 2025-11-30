@@ -7,6 +7,7 @@ import 'package:rest_test/view/base/base_widget.dart';
 import 'package:rest_test/viewmodel/book/book_view_model.dart';
 import 'dart:math' as math;
 import 'package:rest_test/view/book/book_onboarding_screen.dart';
+import 'package:rest_test/view/book/book_detail_screen.dart';
 // import 'package:rest_test/view/book/widget/add_file_modal.dart'; // 기존 모달
 
 // 문제집 그리드
@@ -125,52 +126,76 @@ class AddNewFileTile extends StatelessWidget {
 }
 
 // 문제집 타일
-class FileTile extends StatelessWidget {
+class FileTile extends StatefulWidget {
   final Map<String, dynamic> file;
   const FileTile({super.key, required this.file});
 
   @override
+  State<FileTile> createState() => _FileTileState();
+}
+
+class _FileTileState extends State<FileTile> {
+  @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 89,
-      height: 120,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 89,
-            height: 100,
-            decoration: BoxDecoration(
-              color: ColorSystem.back,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: EdgeInsets.zero,
-            child: Center(
-              child: Image.asset(
-                'assets/images/book_file.png',
-                fit: BoxFit.contain,
+    return GestureDetector(
+      onTap: () => _navigateToDetail(context),
+      child: SizedBox(
+        width: 89,
+        height: 120,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 89,
+              height: 95,
+              decoration: BoxDecoration(
+                color: ColorSystem.back,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: EdgeInsets.zero,
+              child: Center(
+                child: Image.asset(
+                  'assets/images/book_file.png',
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            file['name'] ?? '',
-            style: FontSystem.KR12SB,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 2),
-          Text(
-            file['date'] ?? '',
-            style: FontSystem.KR10SB.copyWith(
-              color: ColorSystem.grey[400],
+            const SizedBox(height: 4),
+            Text(
+              widget.file['name'] ?? '',
+              style: FontSystem.KR10SB,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              textAlign: TextAlign.center,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-          ),
-        ],
+            const SizedBox(height: 1),
+            Text(
+              widget.file['date'] ?? '',
+              style: FontSystem.KR10SB.copyWith(
+                color: ColorSystem.grey[400],
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _navigateToDetail(BuildContext context) {
+    final studybookId = widget.file['id'] as int;
+    final studybookName = widget.file['name'] as String;
+    final createdDate = widget.file['date'] as String;
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BookDetailScreen(
+          studybookId: studybookId,
+          studybookName: studybookName,
+          createdDate: createdDate,
+        ),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:rest_test/provider/user/user_provider.dart';
 import 'user_repository.dart';
 
@@ -14,6 +15,19 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<bool> updateUserInfo(Map<String, dynamic> data) {
     return _userProvider.updateUserInfo(data);
+  }
+
+  @override
+  Future<Map<String, dynamic>?> updateUserProfile({
+    String? nickname,
+    File? profileImage,
+    bool? deleteImage,
+  }) {
+    return _userProvider.updateUserProfile(
+      nickname: nickname,
+      profileImage: profileImage,
+      deleteImage: deleteImage,
+    );
   }
 
   @override
