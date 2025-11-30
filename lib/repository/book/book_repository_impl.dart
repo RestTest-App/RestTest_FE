@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rest_test/provider/book/book_provider.dart';
 import 'package:rest_test/repository/book/book_repository.dart';
 
@@ -31,5 +32,30 @@ class BookRepositoryImpl extends GetxService implements BookRepository{
   // }
   Future<void> uploadStudyBook(int id) async {
     await _bookProvider.uploadStudyBook(id);
+  }
+
+  @override
+  Future<bool> deleteStudyBook(int studybookId) async {
+    return await _bookProvider.deleteStudyBook(studybookId);
+  }
+
+  @override
+  Future<void> createStudyBook({
+    required XFile file,
+    required String studyBookName,
+    required List<Map<String, dynamic>> answers,
+    int? questionCount,
+  }) async {
+    await _bookProvider.createStudyBook(
+      file: file,
+      studyBookName: studyBookName,
+      answers: answers,
+      questionCount: questionCount,
+    );
+  }
+
+  @override
+  Future<Map<String, dynamic>> fetchStudyBookDetail(int studybookId) async {
+    return await _bookProvider.fetchStudyBookDetail(studybookId);
   }
 }

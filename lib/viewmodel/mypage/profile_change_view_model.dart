@@ -10,6 +10,7 @@ class ProfileChangeViewModel extends GetxController {
   var newNickname = ''.obs;
   var profileImageUrl = ''.obs;
   var profileImage = Rxn<File>();
+  var isLoading = false.obs;
 
   @override
   void onInit() {
@@ -28,10 +29,10 @@ class ProfileChangeViewModel extends GetxController {
         }
         final img = userInfo['profile_image'];
         if (img != null && img.toString().isNotEmpty) {
+          // 서버에서 받은 프로필 이미지 URL (상대 경로)
           profileImageUrl.value = img;
-        } else {
-          profileImageUrl.value = 'assets/images/default_profile.png';
         }
+        // img가 없으면 profileImageUrl은 빈 문자열로 유지 (화면에서 기본 이미지 표시)
       }
     } catch (e) {
       Get.snackbar('오류', '사용자 정보를 불러오는데 실패했습니다.');
@@ -43,21 +44,35 @@ class ProfileChangeViewModel extends GetxController {
           newNickname.value.isNotEmpty) ||
       profileImage.value != null;
 
-  Future<void> changeNickname() async {
-    if (isChanged) {
-      final data = <String, dynamic>{
-        'nickname': newNickname.value,
-        // 'profile_image': ... // 이미지 업로드는 별도 처리 필요
-      };
-      print('업데이트 요청 데이터: $data');
-      final result = await _userRepository.updateUserInfo(data);
-      if (result) {
-      currentNickname.value = newNickname.value;
-      Get.back();
+  Future<void> updateProfile() async {
+    if (!isChanged) {
+      Get.snackbar('알림', '변경된 내용이 없습니다.');
+      return;
+    }
+
+    try {
+      isLoading.value = true;
+
+      // 닉네임 또는 이미지 변경
+      final result = await _userRepository.updateUserProfile(
+        nickname: newNickname.value != currentNickname.value
+            ? newNickname.value
+            : null,
+        profileImage: profileImage.value,
+      );
+
+      if (result != null) {
+        currentNickname.value = newNickname.value;
+        profileImage.value = null;
+        Get.back();
         Get.snackbar('성공', '프로필이 수정되었습니다.');
       } else {
         Get.snackbar('실패', '프로필 수정에 실패했습니다.');
       }
+    } catch (e) {
+      Get.snackbar('오류', '프로필 수정 중 오류가 발생했습니다.');
+    } finally {
+      isLoading.value = false;
     }
   }
 

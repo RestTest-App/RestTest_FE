@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rest_test/utility/system/color_system.dart';
 import 'package:rest_test/utility/system/font_system.dart';
 import 'package:rest_test/viewmodel/mypage/profile_change_view_model.dart';
@@ -65,16 +65,24 @@ class _ProfileChangeScreenState extends State<ProfileChangeScreen> {
         child: Column(
           children: [
             const SizedBox(height: 24),
-            Obx(() => GestureDetector(
-                  onTap: controller.pickImage,
-                  child: CircleAvatar(
-                    radius: 60,
-                    backgroundImage: controller.profileImage.value != null
-                        ? FileImage(controller.profileImage.value!)
-                        : const AssetImage('assets/images/default_profile.png')
-                            as ImageProvider,
-                  ),
-                )),
+            Obx(() {
+              final profileImageUrl = controller.profileImageUrl.value;
+              final selectedImage = controller.profileImage.value;
+
+              return GestureDetector(
+                onTap: controller.pickImage,
+                child: CircleAvatar(
+                  radius: 60,
+                  backgroundImage: selectedImage != null
+                      ? FileImage(selectedImage)
+                      : profileImageUrl.isNotEmpty &&
+                              profileImageUrl.startsWith('/uploads')
+                          ? NetworkImage(
+                              "${dotenv.env['SERVER_HOST']}:${dotenv.env['SERVER_PORT']}$profileImageUrl")
+                          : const AssetImage('assets/images/default_profile.png'),
+                ),
+              );
+            }),
             const SizedBox(height: 36),
             Align(
               alignment: Alignment.centerLeft,
@@ -114,18 +122,20 @@ class _ProfileChangeScreenState extends State<ProfileChangeScreen> {
             Obx(() => RoundedRectangleTextButton(
                   width: screenWidth,
                   height: 60,
-                  text: '수정하기',
-                  onPressed: controller.isChanged
-                      ? () async => await controller.changeNickname()
+                  text: controller.isLoading.value ? '처리 중...' : '수정하기',
+                  onPressed: (controller.isChanged && !controller.isLoading.value)
+                      ? () async => await controller.updateProfile()
                       : null,
-                  backgroundColor: controller.isChanged
+                  backgroundColor: (controller.isChanged &&
+                          !controller.isLoading.value)
                       ? ColorSystem.blue
                       : ColorSystem.grey[200],
-                  foregroundColor: controller.isChanged
+                  foregroundColor: (controller.isChanged &&
+                          !controller.isLoading.value)
                       ? ColorSystem.white
                       : ColorSystem.grey[400],
                   textStyle: FontSystem.KR16SB.copyWith(
-                    color: controller.isChanged
+                    color: (controller.isChanged && !controller.isLoading.value)
                         ? ColorSystem.white
                         : ColorSystem.grey[400],
                   ),

@@ -6,7 +6,13 @@ import 'package:rest_test/viewmodel/home/home_view_model.dart';
 import 'package:rest_test/utility/static/app_routes.dart';
 
 class AuthViewModel extends GetxController {
-  late final AuthProvider _authProvider = Get.find();
+  late final AuthProvider _authProvider;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _authProvider = Get.find<AuthProvider>();
+  }
 
   /* ------------------------------------------------------ */
   /* -------------------- DI Fields ----------------------- */
@@ -20,7 +26,16 @@ class AuthViewModel extends GetxController {
   Future<bool> loginWithKakao() async {
     late OAuthToken token;
 
-    if (await isKakaoTalkInstalled()) {
+    bool isKakaoTalkAvailable = false;
+    try {
+      isKakaoTalkAvailable = await isKakaoTalkInstalled();
+    } catch (e) {
+      // macOS 등 Kakao SDK를 지원하지 않는 플랫폼에서는 false로 처리
+      print("카카오톡 확인 불가: $e");
+      isKakaoTalkAvailable = false;
+    }
+
+    if (isKakaoTalkAvailable) {
       try {
         // 카카오톡 앱으로 로그인
         token = await UserApi.instance.loginWithKakaoTalk();
