@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rest_test/utility/system/color_system.dart';
 import 'package:rest_test/utility/system/font_system.dart';
 import 'package:rest_test/viewmodel/book/book_view_model.dart';
 import 'package:get/get.dart';
 import 'package:rest_test/view/book/subscribe_screen.dart';
+import 'package:rest_test/view/book/book_creation_complete_screen.dart';
 import 'package:rest_test/widget/button/rounded_rectangle_text_button.dart';
 
 class AddFileModal extends StatefulWidget {
@@ -18,6 +20,11 @@ class AddFileModal extends StatefulWidget {
 class _AddFileModalState extends State<AddFileModal> {
   late BuildContext _loadingDialogContext;
   bool _isLoadingDialogShown = false;
+
+  /// 선택된 파일들 (XFile 그대로 사용)
+  final List<Map<String, dynamic>> _selectedFiles = [];
+
+  bool get _hasFile => _selectedFiles.isNotEmpty;
 
   @override
   void initState() {
@@ -68,6 +75,93 @@ class _AddFileModalState extends State<AddFileModal> {
     });
   }
 
+  Future<void> _selectFileFromGallery(BuildContext context) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (image != null && mounted) {
+      setState(() {
+        _selectedFiles.add({
+          'name': image.name,
+          'file': image,
+        });
+      });
+    }
+  }
+
+  Future<void> _takePhoto(BuildContext context) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(
+      source: ImageSource.camera,
+    );
+
+    if (image != null && mounted) {
+      setState(() {
+        _selectedFiles.add({
+          'name': image.name,
+          'file': image,
+        });
+      });
+    }
+  }
+
+  Future<void> _createStudyBook() async {
+    if (_selectedFiles.isEmpty) {
+      Get.snackbar('오류', '파일을 선택해주세요.');
+      return;
+    }
+
+    final bookName = widget.controller.getStudyBookName();
+    if (bookName == null || bookName.trim().isEmpty) {
+      Get.snackbar('오류', '문제집 이름을 입력해주세요.');
+      return;
+    }
+
+    // 마지막 선택된 파일로 문제집 생성
+    widget.controller.setSelectedFile(_selectedFiles.last['file']);
+    final success = await widget.controller.createStudyBook(
+      studyBookName: bookName,
+      answers: [],
+    );
+
+    if (success && mounted) {
+      Navigator.of(context).pop(); // 모달 닫기
+
+      // 가장 최근에 생성된 문제집 찾기
+      await widget.controller.fetchBooks();
+      final books = widget.controller.files;
+      int? studybookId;
+      String? createdDate;
+
+      if (books.isNotEmpty) {
+        // 이름이 일치하는 가장 최근 문제집 찾기
+        final matchingBooks = books
+            .where((book) => (book['name'] as String?) == bookName)
+            .toList();
+
+        if (matchingBooks.isNotEmpty) {
+          // 가장 최근 것 (첫 번째) 선택
+          final latestBook = matchingBooks.first;
+          studybookId = latestBook['id'] as int?;
+          createdDate = latestBook['date'] as String?;
+        }
+      }
+
+      // 완료 화면으로 이동
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => BookCreationCompleteScreen(
+            bookName: bookName,
+            studybookId: studybookId,
+            createdDate: createdDate,
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -103,32 +197,90 @@ class _AddFileModalState extends State<AddFileModal> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 28.0),
-                  child: SvgPicture.asset('assets/images/logo_blue.svg',
-                      height: 60, fit: BoxFit.cover),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
-                  child: Text(
-                    isLimit
-                        ? '이번달 문제 만들기를 모두 사용하셨어요!'
-                        : '이번달 문제 만들기 ${widget.controller.remainingCount.value}회 남았습니다',
-                    style: FontSystem.KR20B,
-                    textAlign: TextAlign.center,
+                if (!_hasFile) ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 28.0),
+                    child: SvgPicture.asset(
+                      'assets/images/logo_blue.svg',
+                      height: 60,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 38.0),
-                  child: Text(
-                    isLimit
-                        ? '구독제를 결제하시거나\n다음달까지 기다려주세요^0^'
-                        : '이미지 업로드나 문제를 촬영하시면\n나의 문제집에 문제가 저장됩니다!',
-                    textAlign: TextAlign.center,
-                    style:
-                        FontSystem.KR16M.copyWith(color: ColorSystem.grey[600]),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
+                    child: Text(
+                      isLimit
+                          ? '이번달 문제 만들기를 모두 사용하셨어요!'
+                          : '이번달 문제 만들기 ${widget.controller.remainingCount.value}회 남았습니다',
+                      style: FontSystem.KR20B,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 24.0),
+                    child: Text(
+                      isLimit
+                          ? '구독제를 결제하시거나\n다음달까지 기다려주세요^0^'
+                          : '이미지 업로드나 문제를 촬영하시면\n나의 문제집에 문제가 저장됩니다!',
+                      textAlign: TextAlign.center,
+                      style: FontSystem.KR16M.copyWith(
+                        color: ColorSystem.grey[600],
+                      ),
+                    ),
+                  ),
+                ],
+                if (_hasFile) ...[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '선택된 파일: ${_selectedFiles.length}개',
+                      style: FontSystem.KR14M.copyWith(
+                        color: ColorSystem.grey[600],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: ColorSystem.grey[300]!),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ListView.builder(
+                      itemCount: _selectedFiles.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  _selectedFiles[index]['name'],
+                                  style: FontSystem.KR12M,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _selectedFiles.removeAt(index);
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.close,
+                                  size: 20,
+                                  color: ColorSystem.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
                 Padding(
                   padding: const EdgeInsets.only(bottom: 32),
                   child: Row(
@@ -136,42 +288,63 @@ class _AddFileModalState extends State<AddFileModal> {
                     children: [
                       Expanded(
                         child: RoundedRectangleTextButton(
-                          text: isLimit ? '돌아가기' : '파일 선택',
+                          text: _hasFile
+                              ? '파일 추가'
+                              : (isLimit ? '돌아가기' : '파일 업로드'),
                           textStyle: FontSystem.KR16B.copyWith(
-                            color: isLimit
-                                ? ColorSystem.grey[400]
-                                : ColorSystem.white,
+                            color: _hasFile
+                                ? ColorSystem.white
+                                : isLimit
+                                    ? ColorSystem.grey[400]
+                                    : ColorSystem.white,
                           ),
                           onPressed: widget.controller.isLoading.value
                               ? null
                               : () {
-                                  if (isLimit) {
-                                    Navigator.of(context).pop();
+                                  if (_hasFile) {
+                                    // 추가 파일 선택 (갤러리)
+                                    _selectFileFromGallery(context);
                                   } else {
-                                    _showFileSelectionDialog(context);
+                                    if (isLimit) {
+                                      Navigator.of(context).pop();
+                                    } else {
+                                      _selectFileFromGallery(context);
+                                    }
                                   }
                                 },
-                          backgroundColor: isLimit
-                              ? ColorSystem.grey[200]
-                              : ColorSystem.blue,
+                          backgroundColor: _hasFile
+                              ? ColorSystem.blue
+                              : isLimit
+                                  ? ColorSystem.grey[200]
+                                  : ColorSystem.blue,
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: RoundedRectangleTextButton(
-                          text: isLimit ? '구독제 보러가기' : '촬영하기',
+                          text: _hasFile
+                              ? '문제집 생성'
+                              : (isLimit ? '구독제 보러가기' : '촬영하기'),
                           textStyle: FontSystem.KR16B.copyWith(
                             color: ColorSystem.white,
                           ),
                           onPressed: widget.controller.isLoading.value
                               ? null
                               : () {
-                                  if (isLimit) {
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (_) => const SubscribeScreen()),
-                                    );
+                                  if (_hasFile) {
+                                    _createStudyBook();
+                                  } else {
+                                    if (isLimit) {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              const SubscribeScreen(),
+                                        ),
+                                      );
+                                    } else {
+                                      _takePhoto(context);
+                                    }
                                   }
                                 },
                           backgroundColor: ColorSystem.blue,
@@ -186,236 +359,5 @@ class _AddFileModalState extends State<AddFileModal> {
         ],
       );
     });
-  }
-
-  void _showFileSelectionDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return _FileSelectionDialog(controller: widget.controller);
-      },
-    );
-  }
-}
-
-class _FileSelectionDialog extends StatefulWidget {
-  final BookViewModel controller;
-  const _FileSelectionDialog({required this.controller});
-
-  @override
-  State<_FileSelectionDialog> createState() => _FileSelectionDialogState();
-}
-
-class _FileSelectionDialogState extends State<_FileSelectionDialog> {
-  late TextEditingController _nameController;
-  List<Map<String, dynamic>> _selectedFiles = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _addFile() async {
-    final file = await widget.controller.selectImage();
-    if (file && mounted) {
-      final selectedFile = widget.controller.getSelectedImage();
-      if (selectedFile != null) {
-        setState(() {
-          _selectedFiles.add({
-            'name': selectedFile.name,
-            'file': selectedFile,
-          });
-        });
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: ColorSystem.white,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '문제집 설정',
-              textAlign: TextAlign.center,
-              style: FontSystem.KR18B.copyWith(color: ColorSystem.black),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                hintText: '문제집 이름',
-                hintStyle: FontSystem.KR14M.copyWith(
-                  color: ColorSystem.grey[400],
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: ColorSystem.grey[300]!,
-                  ),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-              ),
-              style: FontSystem.KR14M,
-              maxLength: 50,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              '선택된 파일: ${_selectedFiles.length}개',
-              style: FontSystem.KR14M.copyWith(color: ColorSystem.grey[600]),
-            ),
-            if (_selectedFiles.isNotEmpty)
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                height: 100,
-                decoration: BoxDecoration(
-                  border: Border.all(color: ColorSystem.grey[300]!),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: ListView.builder(
-                  itemCount: _selectedFiles.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              _selectedFiles[index]['name'],
-                              style: FontSystem.KR12M,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _selectedFiles.removeAt(index);
-                              });
-                            },
-                            child: Icon(
-                              Icons.close,
-                              size: 20,
-                              color: ColorSystem.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _addFile,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ColorSystem.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  '파일 추가',
-                  style: FontSystem.KR14M.copyWith(color: ColorSystem.white),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: ColorSystem.back,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: ColorSystem.grey[300]!,
-                          width: 1,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '취소',
-                          style: FontSystem.KR16M.copyWith(
-                            color: ColorSystem.grey[600],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () async {
-                      final name = _nameController.text.trim();
-                      if (name.isEmpty) {
-                        Get.snackbar('오류', '문제집 이름을 입력해주세요.');
-                        return;
-                      }
-                      if (_selectedFiles.isEmpty) {
-                        Get.snackbar('오류', '파일을 선택해주세요.');
-                        return;
-                      }
-
-                      Navigator.of(context).pop();
-
-                      // 마지막 선택된 파일로 문제집 생성
-                      widget.controller.setSelectedFile(_selectedFiles.last['file']);
-                      await widget.controller.createStudyBook(
-                        studyBookName: name,
-                        answers: [],
-                      );
-                    },
-                    child: Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: ColorSystem.blue,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '생성',
-                          style: FontSystem.KR16M.copyWith(
-                            color: ColorSystem.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

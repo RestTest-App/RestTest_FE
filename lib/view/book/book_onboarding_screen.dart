@@ -4,6 +4,7 @@ import 'package:rest_test/utility/system/color_system.dart';
 import 'package:rest_test/utility/system/font_system.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rest_test/view/book/book_onboarding_steps/add_answers_step.dart';
+import 'package:rest_test/view/book/book_onboarding_steps/book_name_step.dart';
 import 'package:rest_test/view/book/book_onboarding_steps/has_image_step.dart';
 import 'package:rest_test/view/book/book_onboarding_steps/has_solution_step.dart';
 import 'package:rest_test/view/book/book_onboarding_steps/intro_step.dart';
@@ -19,17 +20,25 @@ class CreateMyProblemSetPage extends StatefulWidget {
   State<CreateMyProblemSetPage> createState() => _CreateMyProblemSetPageState();
 }
 
-enum _CreateStep { intro, hasImage, questionType, hasSolution, addAnswers }
+enum _CreateStep {
+  intro,
+  hasImage,
+  questionType,
+  hasSolution,
+  addAnswers,
+  bookName
+}
 
 class _CreateMyProblemSetPageState extends State<CreateMyProblemSetPage> {
   int _stepIndex = 0;
 
+  String? _bookName;
   bool? _hasImage;
   QuestionType? _questionType;
   bool? _hasSolution;
   bool _addAnswersValid = true;
 
-  bool get _isLastStep => _stepIndex == _CreateStep.values.length - 1;
+  bool get _isLastStep => _step == _CreateStep.bookName;
 
   _CreateStep get _step => _CreateStep.values[_stepIndex];
 
@@ -105,6 +114,15 @@ class _CreateMyProblemSetPageState extends State<CreateMyProblemSetPage> {
           onValidationChanged: (isValid) {
             setState(() {
               _addAnswersValid = isValid;
+            });
+          },
+        );
+      case _CreateStep.bookName:
+        return BookNameStep(
+          initialName: _bookName,
+          onNameChanged: (name) {
+            setState(() {
+              _bookName = name;
             });
           },
         );
@@ -206,8 +224,7 @@ class _CreateMyProblemSetPageState extends State<CreateMyProblemSetPage> {
 
   Widget _buildBottomButtons() {
     final canGoNext = _canGoNext();
-    final isLast = _isLastStep ||
-        (_step == _CreateStep.hasSolution && _hasSolution == false);
+    final isLast = _isLastStep;
     final buttons = <Widget>[];
 
     if (_stepIndex > 0) {
@@ -253,6 +270,22 @@ class _CreateMyProblemSetPageState extends State<CreateMyProblemSetPage> {
     );
   }
 
+  void _showAddFileModal(BuildContext context) {
+    try {
+      final bookViewModel = Get.find<BookViewModel>();
+      // 문제집 이름 저장
+      bookViewModel.setStudyBookName(_bookName ?? '');
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (_) => AddFileModal(controller: bookViewModel),
+      );
+    } catch (e) {
+      Navigator.of(context).maybePop();
+    }
+  }
+
   bool _canGoNext() {
     switch (_step) {
       case _CreateStep.intro:
@@ -263,16 +296,23 @@ class _CreateMyProblemSetPageState extends State<CreateMyProblemSetPage> {
         if (_questionType == null) return false;
         return _questionType == QuestionType.multipleChoice;
       case _CreateStep.hasSolution:
-        return _hasSolution != null;
+        return _hasSolution != null; // 네 또는 아니요 선택 시 활성화
       case _CreateStep.addAnswers:
         return _addAnswersValid;
+      case _CreateStep.bookName:
+        return _bookName != null && _bookName!.trim().isNotEmpty;
     }
   }
 
   void _goNext() {
     if (_stepIndex < _CreateStep.values.length - 1) {
       setState(() {
-        _stepIndex++;
+        // hasSolution에서 "아니요"를 선택했으면 addAnswers를 건너뛰고 bookName으로 이동
+        if (_step == _CreateStep.hasSolution && _hasSolution == false) {
+          _stepIndex = _CreateStep.values.indexOf(_CreateStep.bookName);
+        } else {
+          _stepIndex++;
+        }
       });
     }
   }
@@ -280,22 +320,21 @@ class _CreateMyProblemSetPageState extends State<CreateMyProblemSetPage> {
   void _goPrev() {
     if (_stepIndex > 0) {
       setState(() {
-        _stepIndex--;
+        // bookName에서 이전을 누르면:
+        // - hasSolution에서 "네"를 선택했으면 addAnswers로
+        // - hasSolution에서 "아니요"를 선택했으면 hasSolution으로
+        if (_step == _CreateStep.bookName) {
+          if (_hasSolution == true) {
+            _stepIndex = _CreateStep.values.indexOf(_CreateStep.addAnswers);
+          } else if (_hasSolution == false) {
+            _stepIndex = _CreateStep.values.indexOf(_CreateStep.hasSolution);
+          } else {
+            _stepIndex--;
+          }
+        } else {
+          _stepIndex--;
+        }
       });
-    }
-  }
-
-  void _showAddFileModal(BuildContext context) {
-    try {
-      final bookViewModel = Get.find<BookViewModel>();
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (_) => AddFileModal(controller: bookViewModel),
-      );
-    } catch (e) {
-      Navigator.of(context).maybePop();
     }
   }
 }
