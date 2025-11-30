@@ -30,9 +30,7 @@ class TodayTestViewModel extends GetxController {
   bool get isLastQuestion => _currentIndex.value == _questions.length - 1;
   List<int> get correctAnswers => _questions.map((q) => q.answer).toList();
 
-
   bool get canSubmit => isLastQuestion && allAnswered;
-
 
   @override
   void onInit() {
@@ -51,8 +49,8 @@ class TodayTestViewModel extends GetxController {
       _todayTestState.value = result;
 
       _questions.assignAll(result.questions); // 문제 할당
-      _selectedOptions.assignAll(List<int?>.filled(result.questions.length, null));
-
+      _selectedOptions
+          .assignAll(List<int?>.filled(result.questions.length, null));
     } catch (e) {
       print("오늘의 문제 로딩 실패: $e");
     }
@@ -84,7 +82,6 @@ class TodayTestViewModel extends GetxController {
   bool isAnswered(int index) {
     return _selectedOptions[index] != null;
   }
-
 
   Future<void> submitTodayTest() async {
     try {

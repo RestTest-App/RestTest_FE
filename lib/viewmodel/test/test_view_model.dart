@@ -179,7 +179,7 @@ class TestViewModel extends GetxController {
   Future<void> submitTest(int examId) async {
     try {
       // null인 항목이 없다고 가정. 만약 있을 경우 0 등으로 기본 처리 가능
-      final answers = _selectedOptions.map((e) => (e ?? 0) + 1).toList();
+      final answers = _selectedOptions.map((e) => (e ?? 0)).toList();
 
       final TestSubmitResponse response =
           await _testRepository.sendTestResult(examId, answers);

@@ -24,8 +24,29 @@ class TestRepositoryImpl extends GetxService implements TestRepository {
 
   @override
   Future<List<Question>> readQuestionList(int examId) async {
-    List<dynamic> data = await _testProvider.readQuestionList(examId);
-    return List<Question>.from(data.map((q) => Question.fromJson(q)));
+    // 1. [핵심] 타입을 dynamic으로 받아서 컴파일 에러를 회피합니다.
+    final dynamic responseData = await _testProvider.readQuestionList(examId);
+
+    // 디버깅용 로그 (실제 뭐가 들어오는지 콘솔에서 확인 가능)
+    print("데이터 타입: ${responseData.runtimeType}");
+
+    List<dynamic> list = [];
+
+    // 2. 데이터 타입에 따라 다르게 처리 (안전장치)
+    if (responseData is Map<String, dynamic>) {
+      // 아까 로그처럼 Map으로 온 경우 (pass_rate, questions가 섞여있음)
+      list = responseData['questions'] ?? [];
+    } else if (responseData is List) {
+      // 혹시라도 Provider가 진짜 리스트만 꺼내서 줬을 경우
+      list = responseData;
+    } else {
+      // 데이터가 이상하면 빈 리스트 반환
+      print("데이터 형식이 올바르지 않습니다: $responseData");
+      return [];
+    }
+
+    // 3. Question 객체로 변환
+    return List<Question>.from(list.map((q) => Question.fromJson(q)));
   }
 
   @override
