@@ -31,23 +31,26 @@ class InitBinding extends Bindings {
   @override
   void dependencies() {
     // Providers
-    Get.lazyPut<AuthProvider>(() => AuthProviderImpl());
-    Get.lazyPut<UserProvider>(() => UserProviderImpl());
-    Get.lazyPut<TestProvider>(() => TestProviderImpl());
-    Get.lazyPut<BookProvider>(() => BookProviderImpl());
-    Get.lazyPut<TodayProvider>(() => TodayProviderImpl());
-    Get.lazyPut<ReviewProvider>(() => ReviewProviderImpl());
-    Get.lazyPut<GoalProvider>(() => GoalProviderImpl());
+    Get.lazyPut<AuthProvider>(() => AuthProviderImpl(), fenix: true);
+    Get.lazyPut<UserProvider>(() => UserProviderImpl(), fenix: true);
+    Get.lazyPut<TestProvider>(() => TestProviderImpl(), fenix: true);
+    Get.lazyPut<BookProvider>(() => BookProviderImpl(), fenix: true);
+    Get.lazyPut<TodayProvider>(() => TodayProviderImpl(), fenix: true);
+    Get.lazyPut<ReviewProvider>(() => ReviewProviderImpl(), fenix: true);
+    Get.lazyPut<GoalProvider>(() => GoalProviderImpl(), fenix: true);
 
     // Repositories
-    Get.lazyPut<TestRepository>(() => TestRepositoryImpl());
-    Get.lazyPut<BookRepository>(() => BookRepositoryImpl());
-    Get.lazyPut<TodayRepository>(() => TodayRepositoryImpl());
+    Get.lazyPut<TestRepository>(() => TestRepositoryImpl(), fenix: true);
+    Get.lazyPut<BookRepository>(() => BookRepositoryImpl(), fenix: true);
+    Get.lazyPut<TodayRepository>(() => TodayRepositoryImpl(), fenix: true);
     Get.lazyPut<UserRepository>(
-        () => UserRepositoryImpl(Get.find<UserProvider>()));
+        () => UserRepositoryImpl(Get.find<UserProvider>()),
+        fenix: true);
     Get.lazyPut<ReviewRepository>(
-        () => ReviewRepositoryImpl(Get.find<ReviewProvider>()));
+        () => ReviewRepositoryImpl(Get.find<ReviewProvider>()),
+        fenix: true);
     Get.lazyPut<GoalRepository>(
-        () => GoalRepositoryImpl(Get.find<GoalProvider>()));
+        () => GoalRepositoryImpl(Get.find<GoalProvider>()),
+        fenix: true);
   }
 }

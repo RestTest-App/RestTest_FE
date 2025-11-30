@@ -155,9 +155,7 @@ class UserInfoStep extends StatelessWidget {
             // 직업 입력
             Text(
               "직업",
-              style: FontSystem.KR28B.copyWith(
-                color: ColorSystem.grey[600],
-              ),
+              style: FontSystem.KR28B.copyWith(),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -166,11 +164,21 @@ class UserInfoStep extends StatelessWidget {
               ),
               decoration: InputDecoration(
                 hintText: "직업을 적어주세요 (ex - 학생, 무직, 공시생 등)",
-                border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(12)),
-                    borderSide: BorderSide(color: ColorSystem.grey[400]!)),
-              ),
-              onChanged: (val) => controller.job.value = val,
+                enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Color(0xFFE0E0E0), // ColorSystem에 없음
+                            width: 1,
+                          ),
+                        ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: ColorSystem.grey[400]!,
+                    width: 1,
+                        ),
+                      ),
+                    ),
             ),
           ],
         );

@@ -25,7 +25,7 @@ class NicknameStep extends StatelessWidget {
           const SizedBox(height: 8),
           TextField(
             onChanged: controller.validateNickname,
-            style: TextStyle(
+            style: FontSystem.KR16M.copyWith(
               color: hasError ? ColorSystem.red : ColorSystem.black,
             ),
             decoration: InputDecoration(

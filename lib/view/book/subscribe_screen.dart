@@ -33,7 +33,9 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                   Text(
                     message,
                     textAlign: TextAlign.center,
-                    style: FontSystem.KR18B,
+                    style: FontSystem.KR16M.copyWith(
+                      color: ColorSystem.grey[800],
+                    ),
                   ),
                   const SizedBox(height: 32),
                   SizedBox(
@@ -192,7 +194,8 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
             child: ElevatedButton(
               onPressed: isChecked
                   ? () {
-                      _showSimpleConfirmDialog(context, '구독은 준비 중입니다!');
+                      _showSimpleConfirmDialog(context,
+                          '농협 351-1066-0725-33 예금주 이가흔\n 당신의 따뜻한 배려로 오늘도 개발자 한명은 밥을 먹을 수 있습니다..');
                     }
                   : null,
               style: ElevatedButton.styleFrom(

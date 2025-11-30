@@ -8,6 +8,7 @@ class ProfileChangeViewModel extends GetxController {
 
   var currentNickname = ''.obs;
   var newNickname = ''.obs;
+  var nickNameError = ''.obs;
   var profileImageUrl = ''.obs;
   var profileImage = Rxn<File>();
   var isLoading = false.obs;
@@ -39,10 +40,33 @@ class ProfileChangeViewModel extends GetxController {
     }
   }
 
+  void validateNickname(String value) {
+    newNickname.value = value.trim();
+
+    // 특수문자 포함 검사
+    final regex = RegExp(r'^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]+$');
+    if (!regex.hasMatch(newNickname.value)) {
+      nickNameError.value = '특수문자를 사용할 수 없습니다.';
+      return;
+    }
+
+    // 최소 문자 수 검사
+    if (newNickname.value.runes.length < 2) {
+      nickNameError.value = '닉네임은 두 글자 이상이어야 해요.';
+      return;
+    }
+
+    nickNameError.value = '';
+  }
+
+  bool get isNickNameValid =>
+      newNickname.value.isNotEmpty && nickNameError.value.isEmpty;
+
   bool get isChanged =>
-      (newNickname.value != currentNickname.value &&
-          newNickname.value.isNotEmpty) ||
-      profileImage.value != null;
+      ((newNickname.value != currentNickname.value &&
+              newNickname.value.isNotEmpty) ||
+          profileImage.value != null) &&
+      isNickNameValid;
 
   Future<void> updateProfile() async {
     if (!isChanged) {

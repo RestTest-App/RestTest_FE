@@ -47,35 +47,35 @@ class GoalSettingScreen extends BaseScreen<GoalSettingViewModel> {
       children: [
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 8),
-                Text(
-                  '학습 목표를 설정해보세요',
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
+            Text(
+              '학습 목표를 설정해보세요',
                   style:
                       FontSystem.KR20B.copyWith(color: ColorSystem.grey[800]),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '목표가 있으면 공부가 더 쉬워져요',
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '목표가 있으면 공부가 더 쉬워져요',
                   style:
                       FontSystem.KR16M.copyWith(color: ColorSystem.grey[600]),
-                ),
-                const SizedBox(height: 32),
+            ),
+            const SizedBox(height: 32),
                 const GoalTypeCard(
                   type: GoalType.dailyProblem,
                   title: '일일 문제 풀기',
                   description: '하루에 몇 문제를 풀지 목표를 설정하세요',
-                ),
-                const SizedBox(height: 16),
+            ),
+            const SizedBox(height: 16),
                 const GoalTypeCard(
                   type: GoalType.dailyAccuracy,
                   title: '정답률 목표',
                   description: '하루 정답률 목표를 설정하세요',
-                ),
-                const SizedBox(height: 16),
+            ),
+            const SizedBox(height: 16),
                 const GoalTypeCard(
                   type: GoalType.consecutiveStudyDays,
                   title: '연속 학습',
@@ -95,7 +95,7 @@ class GoalSettingScreen extends BaseScreen<GoalSettingViewModel> {
     if (viewModel.hasChanges && viewModel.selectedGoals.isNotEmpty) {
       _showSaveConfirmDialog(context);
     } else {
-      Get.back();
+                        Get.back();
     }
   }
 
@@ -107,29 +107,29 @@ class GoalSettingScreen extends BaseScreen<GoalSettingViewModel> {
         return Dialog(
           backgroundColor: Colors.transparent,
           insetPadding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Container(
+        child: Container(
             padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: ColorSystem.white,
+          decoration: BoxDecoration(
+            color: ColorSystem.white,
               borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
+          ),
+          child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
+            children: [
                 Text(
                   '목표를 저장하시겠어요?',
                   textAlign: TextAlign.center,
                   style: FontSystem.KR16B.copyWith(color: ColorSystem.black),
                 ),
                 const SizedBox(height: 28),
-                Row(
-                  children: [
-                    Expanded(
+              Row(
+                children: [
+                  Expanded(
                       child: RoundedRectangleTextButton(
                         text: '취소',
                         textStyle: FontSystem.KR16M.copyWith(
                           color: ColorSystem.grey[600],
-                        ),
+                          ),
                         backgroundColor: ColorSystem.back,
                         borderSide: BorderSide(
                           color: ColorSystem.grey[300]!,
@@ -139,7 +139,7 @@ class GoalSettingScreen extends BaseScreen<GoalSettingViewModel> {
                           Get.back(); // 다이얼로그 닫기
                           Get.back(); // 목표 설정 화면 닫기
                         },
-                      ),
+                    ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -156,13 +156,13 @@ class GoalSettingScreen extends BaseScreen<GoalSettingViewModel> {
                           Get.back(); // 다이얼로그 닫기
                           Get.back(); // 목표 설정 화면 닫기
                         },
+                        ),
                       ),
-                    ),
                   ],
                 )
-              ],
-            ),
-          ),
+                    ],
+                  ),
+                ),
         );
       },
     );

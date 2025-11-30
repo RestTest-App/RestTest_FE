@@ -19,16 +19,9 @@ class _ProfileChangeScreenState extends State<ProfileChangeScreen> {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _textController = TextEditingController();
 
-  bool _isFocused = false;
-
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(() {
-      setState(() {
-        _isFocused = _focusNode.hasFocus;
-      });
-    });
 
     // 닉네임이 로드되면 TextField 업데이트
     ever(controller.currentNickname, (nickname) {
@@ -79,7 +72,8 @@ class _ProfileChangeScreenState extends State<ProfileChangeScreen> {
                               profileImageUrl.startsWith('/uploads')
                           ? NetworkImage(
                               "${dotenv.env['SERVER_HOST']}:${dotenv.env['SERVER_PORT']}$profileImageUrl")
-                          : const AssetImage('assets/images/default_profile.png'),
+                          : const AssetImage(
+                              'assets/images/default_profile.png'),
                 ),
               );
             }),
@@ -92,48 +86,81 @@ class _ProfileChangeScreenState extends State<ProfileChangeScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            Obx(() => TextField(
-                  controller: _textController,
-                  focusNode: _focusNode,
-                  onChanged: (value) => controller.newNickname.value = value,
-                  style: FontSystem.KR16M.copyWith(color: ColorSystem.black),
-                  decoration: InputDecoration(
-                    hintText: '닉네임 입력',
-                    filled: true,
-                    fillColor:
-                        _isFocused ? ColorSystem.lightBlue : ColorSystem.back,
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 20),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                          color: controller.isChanged
-                              ? ColorSystem.blue
-                              : ColorSystem.grey[300]!),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide:
-                          BorderSide(color: ColorSystem.blue, width: 1.5),
+            Obx(() {
+              final hasError = controller.nickNameError.value.isNotEmpty;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 65,
+                    child: TextField(
+                      controller: _textController,
+                      focusNode: _focusNode,
+                      onChanged: controller.validateNickname,
+                      style: FontSystem.KR16M.copyWith(
+                        color: hasError ? ColorSystem.red : ColorSystem.black,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: '닉네임 입력',
+                        filled: hasError,
+                        fillColor: hasError
+                            ? const Color(0xFFFFF0F0)
+                            : null, // ColorSystem에 없음
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 20,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: hasError
+                                ? ColorSystem.red
+                                : const Color(0xFFE0E0E0), // ColorSystem에 없음
+                            width: 1,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: hasError
+                                ? ColorSystem.red
+                                : ColorSystem.grey[400]!,
+                            width: 1,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                )),
+                  if (hasError) ...[
+                    const SizedBox(height: 6),
+                    Text(
+                      controller.nickNameError.value,
+                      style: TextStyle(
+                        color: ColorSystem.red,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ],
+              );
+            }),
             const Spacer(),
             Obx(() => RoundedRectangleTextButton(
                   width: screenWidth,
                   height: 60,
                   text: controller.isLoading.value ? '처리 중...' : '수정하기',
-                  onPressed: (controller.isChanged && !controller.isLoading.value)
-                      ? () async => await controller.updateProfile()
-                      : null,
-                  backgroundColor: (controller.isChanged &&
-                          !controller.isLoading.value)
-                      ? ColorSystem.blue
-                      : ColorSystem.grey[200],
-                  foregroundColor: (controller.isChanged &&
-                          !controller.isLoading.value)
-                      ? ColorSystem.white
-                      : ColorSystem.grey[400],
+                  onPressed:
+                      (controller.isChanged && !controller.isLoading.value)
+                          ? () async => await controller.updateProfile()
+                          : null,
+                  backgroundColor:
+                      (controller.isChanged && !controller.isLoading.value)
+                          ? ColorSystem.blue
+                          : ColorSystem.grey[200],
+                  foregroundColor:
+                      (controller.isChanged && !controller.isLoading.value)
+                          ? ColorSystem.white
+                          : ColorSystem.grey[400],
                   textStyle: FontSystem.KR16SB.copyWith(
                     color: (controller.isChanged && !controller.isLoading.value)
                         ? ColorSystem.white
