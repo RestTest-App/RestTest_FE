@@ -169,7 +169,7 @@ class BookDetailScreen extends BaseScreen<BookViewModel> {
     final explanation = question['explanation'] ?? '';
 
     // 상태 관리 변수 추가
-    final RxInt step = 0.obs; // 0: 초기 상태, 1: 정답 공개, 2: 해설 공개
+    final RxBool showAnswer = false.obs; // true: 정답 공개됨
 
     return Obx(() => Container(
           margin: const EdgeInsets.only(bottom: 16),
@@ -186,6 +186,7 @@ class BookDetailScreen extends BaseScreen<BookViewModel> {
             children: [
               // 문제 번호
               Container(
+                width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                 decoration: BoxDecoration(
                   color: ColorSystem.blue,
@@ -227,7 +228,7 @@ class BookDetailScreen extends BaseScreen<BookViewModel> {
                                   height: 28,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: step.value >= 1 && i + 1 == answer
+                                    color: showAnswer.value && i + 1 == answer
                                         ? ColorSystem.blue
                                         : ColorSystem.grey[200],
                                   ),
@@ -235,7 +236,7 @@ class BookDetailScreen extends BaseScreen<BookViewModel> {
                                     child: Text(
                                       '${i + 1}',
                                       style: FontSystem.KR12B.copyWith(
-                                        color: step.value >= 1 && i + 1 == answer
+                                        color: showAnswer.value && i + 1 == answer
                                             ? ColorSystem.white
                                             : ColorSystem.grey[600],
                                       ),
@@ -249,9 +250,7 @@ class BookDetailScreen extends BaseScreen<BookViewModel> {
                                     child: Text(
                                       options[i],
                                       style: FontSystem.KR12M.copyWith(
-                                        color: step.value >= 1 && i + 1 == answer
-                                            ? ColorSystem.blue
-                                            : ColorSystem.black,
+                                        color: ColorSystem.black,
                                       ),
                                     ),
                                   ),
@@ -265,15 +264,7 @@ class BookDetailScreen extends BaseScreen<BookViewModel> {
                   ],
                 ),
               ),
-              // 해설 및 버튼
-              if (step.value == 2)
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    explanation,
-                    style: FontSystem.KR12M.copyWith(color: ColorSystem.grey[800]),
-                  ),
-                ),
+              // 버튼
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -284,28 +275,26 @@ class BookDetailScreen extends BaseScreen<BookViewModel> {
                     ),
                   ),
                 ),
-                child: TextButton(
-                  onPressed: () {
-                    if (step.value == 0) {
-                      step.value = 1; // 정답 공개
-                    } else if (step.value == 1) {
-                      step.value = 2; // 해설 공개
-                    } else {
-                      step.value = 0; // 초기 상태로
-                    }
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: ColorSystem.blue,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  child: Text(
-                    step.value == 0
-                        ? '정답 보기'
-                        : step.value == 1
-                            ? '해설 보기'
-                            : '해설 접기',
-                    style: FontSystem.KR12B.copyWith(
-                      color: ColorSystem.blue,
+                child: Builder(
+                  builder: (context) => TextButton(
+                    onPressed: () {
+                      if (!showAnswer.value) {
+                        // 정답 보기 클릭
+                        showAnswer.value = true;
+                      } else {
+                        // 해설 보기 클릭
+                        _showExplanation(context, description, explanation);
+                      }
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: ColorSystem.blue,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: Text(
+                      showAnswer.value ? '해설 보기' : '정답 보기',
+                      style: FontSystem.KR12B.copyWith(
+                        color: ColorSystem.blue,
+                      ),
                     ),
                   ),
                 ),
@@ -313,6 +302,79 @@ class BookDetailScreen extends BaseScreen<BookViewModel> {
             ],
           ),
         ));
+  }
+
+  void _showExplanation(BuildContext context, String description, String explanation) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: ColorSystem.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                '해설',
+                style: FontSystem.KR18B,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                '문제',
+                style: FontSystem.KR14B.copyWith(
+                  color: ColorSystem.grey[800],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                description,
+                style: FontSystem.KR14M,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                '해설',
+                style: FontSystem.KR14B.copyWith(
+                  color: ColorSystem.grey[800],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                explanation,
+                style: FontSystem.KR14M,
+              ),
+              const SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(dialogContext),
+                  child: Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: ColorSystem.blue,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '닫기',
+                        style: FontSystem.KR16M.copyWith(
+                          color: ColorSystem.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _showMoreOptions(BuildContext context) {
