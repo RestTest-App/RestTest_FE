@@ -18,15 +18,17 @@ class ExamSelectDialog extends BaseWidget<TestViewModel> {
         offset: Offset(0, 2),
         child: RoundedRectangleTextButton(
           text: "문제 선택",
-          height : 48,
+          height: 48,
           padding: EdgeInsets.symmetric(horizontal: 28, vertical: 12),
           backgroundColor: ColorSystem.blue,
-          textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white, height: 1.2, ),
+          textStyle: FontSystem.KR16B.copyWith(
+            color: ColorSystem.white,
+            height: 1.2,
+          ),
           onPressed: () {
             _showExamSelectDialog(context);
           },
-        )
-    );
+        ));
   }
 
   void _showExamSelectDialog(BuildContext context) {
@@ -34,72 +36,84 @@ class ExamSelectDialog extends BaseWidget<TestViewModel> {
     late OverlayEntry entry;
 
     entry = OverlayEntry(
-        builder: (_) => Positioned.fill(
-          child: Material(
+      builder: (_) => Positioned.fill(
+        child: Material(
             color: ColorSystem.black.withOpacity(0.3),
             child: Align(
               alignment: Alignment.center,
               child: Material(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(30),
-            child: Container(
-                width: modalWidth,
-                padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
-                decoration: BoxDecoration(
-                  color: ColorSystem.white,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text("문제 전체 보기", style: FontSystem.KR24B.copyWith(color: ColorSystem.grey.shade800),),
-                    SizedBox(height: 8,),
-                    Text("문제 번호를 누르면 해당 문제로 이동합니다.", style: FontSystem.KR12M.copyWith(color: ColorSystem.grey.shade400),),
-                    SizedBox(height: 24,),
-                    _buildexamList(entry),
-                  ],
+                child: Container(
+                  width: modalWidth,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: ColorSystem.white,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "문제 전체 보기",
+                        style: FontSystem.KR24B
+                            .copyWith(color: ColorSystem.grey.shade800),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        "문제 번호를 누르면 해당 문제로 이동합니다.",
+                        style: FontSystem.KR12M
+                            .copyWith(color: ColorSystem.grey.shade400),
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      _buildexamList(entry),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )
-        ),
-        ),
+            )),
+      ),
     );
 
     Navigator.of(context).overlay!.insert(entry);
   }
 
   Widget _buildexamList(OverlayEntry entry) {
-    return Obx(() => Container(
-      width: double.infinity,
-      height: 320,
-      child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(), // 스크롤 비활성화
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 5, // 한 줄에 5개
-          mainAxisSpacing: 16,
-          crossAxisSpacing: 16,
-          childAspectRatio: 1,
-        ),
-        itemCount: viewModel.questions.length, // 예: 총 문제 수
-        itemBuilder: (context, index) {
-          final isAnswered = viewModel.isAnswered(index);
-          final bgColor = isAnswered
-              ? ColorSystem.blue
-              : ColorSystem.white;
-          final textColor = isAnswered ? ColorSystem.white : ColorSystem.grey.shade400;
+    return Obx(
+      () => Container(
+          width: double.infinity,
+          height: 320,
+          child: GridView.builder(
+            physics: const NeverScrollableScrollPhysics(), // 스크롤 비활성화
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 5, // 한 줄에 5개
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              childAspectRatio: 1,
+            ),
+            itemCount: viewModel.questions.length, // 예: 총 문제 수
+            itemBuilder: (context, index) {
+              final isAnswered = viewModel.isAnswered(index);
+              final bgColor = isAnswered ? ColorSystem.blue : ColorSystem.white;
+              final textColor =
+                  isAnswered ? ColorSystem.white : ColorSystem.grey.shade400;
 
-          return GestureDetector(
-            onTap: () {
-              viewModel.goToQuestion(index);
-              entry.remove();
+              return GestureDetector(
+                onTap: () {
+                  viewModel.goToQuestion(index);
+                  entry.remove();
+                },
+                child: _buildExamNumber(index + 1, bgColor, textColor),
+              );
             },
-            child: _buildExamNumber(index + 1, bgColor, textColor),
-          );
-        },
-    )
-    ),);
+          )),
+    );
   }
 
   Widget _buildExamNumber(int number, Color color, Color textColor) {
@@ -111,8 +125,14 @@ class ExamSelectDialog extends BaseWidget<TestViewModel> {
         color: color,
         border: Border.all(color: textColor),
       ),
-      child: Center(child: Text(number.toString(), style: FontSystem.KR24B.copyWith(color: textColor, height: 1.3, ),)),
+      child: Center(
+          child: Text(
+        number.toString(),
+        style: FontSystem.KR24B.copyWith(
+          color: textColor,
+          height: 1.3,
+        ),
+      )),
     );
   }
-
 }
