@@ -53,7 +53,7 @@ class ReviewViewModel extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    loadReviewList();
+    loadReviewList().catchError((error) {});
   }
 
   Future<void> loadReviewList({int? category}) async {

@@ -1,8 +1,10 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 import 'package:get/get_connect/connect.dart';
 import 'package:rest_test/app/factory/secure_storage_factory.dart';
 import 'package:rest_test/utility/function/log_util.dart';
 import 'package:rest_test/provider/token/token_provider.dart';
+import 'package:rest_test/utility/static/app_routes.dart';
 
 abstract class BaseConnect extends GetConnect {
   final TokenProvider tokenProvider = SecureStorageFactory.tokenProvider;
@@ -37,6 +39,23 @@ abstract class BaseConnect extends GetConnect {
             final err = body['error'] as Map;
             code = err['code']?.toString() ?? code;
             message = err['message']?.toString() ?? message;
+          }
+
+          // 401 오류 시 토큰 만료 처리
+          if (response.statusCode == 401) {
+            // 토큰 클리어
+            tokenProvider.clearTokens();
+            // 로그인 화면으로 리다이렉트 (한 번만 실행되도록 체크)
+            Future.microtask(() {
+              try {
+                if (Get.currentRoute != Routes.LOGIN) {
+                  Get.offAllNamed(Routes.LOGIN);
+                }
+              } catch (e) {
+                // 이미 리다이렉트 중이면 무시
+              }
+            });
+            return response;
           }
 
           LogUtil.error(

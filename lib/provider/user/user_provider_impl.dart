@@ -4,11 +4,21 @@ import 'user_provider.dart';
 class UserProviderImpl extends BaseConnect implements UserProvider {
   @override
   Future<Map<String, dynamic>?> getUserInfo() async {
-    final response = await get('/api/v1/user/get-user-info');
-    if (response.status.isOk) {
-      return response.body['data'];
+    try {
+      final response = await get('/api/v1/user/get-user-info');
+      if (response.status.isOk) {
+        return response.body['data'];
+      }
+      // 500 오류 등 서버 오류는 조용히 처리
+      if (response.statusCode != null && response.statusCode! >= 500) {
+        print('⚠️ 사용자 정보 API 서버 오류 (${response.statusCode})');
+        return null;
+      }
+      return null;
+    } catch (e) {
+      print('⚠️ 사용자 정보 조회 실패: $e');
+      return null;
     }
-    return null;
   }
 
   @override

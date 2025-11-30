@@ -86,9 +86,21 @@ class HomeViewModel extends GetxController {
   }
 
   Future<void> loadUserInfo() async {
-    final userInfo = await _userRepository.fetchUserInfo();
-    if (userInfo != null) {
-      _nickname.value = userInfo['nickname'] ?? '';
+    try {
+      final userInfo = await _userRepository.fetchUserInfo();
+      if (userInfo != null && userInfo['nickname'] != null) {
+        final nickname = userInfo['nickname'] as String;
+        if (nickname.isNotEmpty) {
+          _nickname.value = nickname;
+          print('✅ 사용자 닉네임 로드 성공: $nickname');
+        } else {
+          print('⚠️ 닉네임이 비어있습니다.');
+        }
+      } else {
+        print('⚠️ 사용자 정보를 불러올 수 없습니다. (서버 오류 가능)');
+      }
+    } catch (e) {
+      print('⚠️ 사용자 정보 로드 실패: $e');
     }
   }
 

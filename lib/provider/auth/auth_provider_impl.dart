@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:get/get_connect/http/src/status/http_status.dart';
 import 'package:rest_test/app/factory/secure_storage_factory.dart';
 import 'package:rest_test/provider/auth/auth_provider.dart';
 import 'package:rest_test/provider/base/base_connect.dart';
@@ -12,6 +12,7 @@ class AuthProviderImpl extends BaseConnect implements AuthProvider {
   @override
   Future<bool> signInWithKakao(String kakaoToken) async {
     try {
+      print('로그인 요청 - kakaoToken: ${kakaoToken.substring(0, 10)}...');
       final response = await post(
         "/api/v1/auth/sign-in",
         {"kakao_token": kakaoToken},
@@ -24,6 +25,10 @@ class AuthProviderImpl extends BaseConnect implements AuthProvider {
 
       if (response.status.hasError) {
         final code = response.statusCode?.toString();
+        print('로그인 실패 - Status: $code, Body: ${response.body}');
+        if (response.statusCode != null && response.statusCode! >= 500) {
+          return false;
+        }
         throw Exception("로그인 실패 (status: $code)");
       }
 
@@ -66,37 +71,75 @@ class AuthProviderImpl extends BaseConnect implements AuthProvider {
       required String job,
       required List<int> certificates,
       required bool agreeToTerms}) async {
-    final body = {
-      'kakao_token': kakaoToken,
-      'email': email,
-      'nickname': nickname,
-      'gender': gender,
-      'birthday': birthday,
-      'job': job,
-      'certificates': certificates,
-      'agree_to_terms': agreeToTerms,
-    };
+    try {
+      // birthday 형식 변환: "YYYY.MM.DD" -> "YYYY-MM-DD" (ISO 8601)
+      String formattedBirthday = birthday;
+      if (birthday.contains('.')) {
+        formattedBirthday = birthday.replaceAll('.', '-');
+      }
 
-    final response =
-        await post<Map<String, dynamic>>("/api/v1/auth/sign-up", body);
+      final body = {
+        'kakao_token': kakaoToken,
+        'email': email,
+        'nickname': nickname,
+        'gender': gender,
+        'birthday': formattedBirthday,
+        'job': job,
+        'certificates': certificates,
+        'agree_to_terms': agreeToTerms,
+      };
 
-    if (response.status.hasError) {
+      print('회원가입 요청 데이터: ${body.toString().replaceAll(kakaoToken, '***')}');
+
+      final response = await post("/api/v1/auth/sign-up", body);
+
+      if (response.status.hasError) {
+        print(
+            '회원가입 실패 - Status: ${response.statusCode}, Body: ${response.body}');
+        return false;
+      }
+
+      // 응답 body 처리 - String 또는 Map 모두 처리
+      dynamic resBody = response.body;
+
+      // body가 String인 경우 JSON으로 파싱 시도
+      if (resBody is String) {
+        try {
+          resBody = jsonDecode(resBody);
+        } catch (e) {
+          print('회원가입 응답 파싱 실패: $e');
+          return false;
+        }
+      }
+
+      if (resBody is! Map<String, dynamic>) {
+        print('회원가입 응답 형식 오류: ${resBody.runtimeType}');
+        return false;
+      }
+
+      print('회원가입 응답 구조: $resBody');
+
+      final tokenMap = resBody["data"] as Map<String, dynamic>?;
+      if (tokenMap == null) {
+        print('회원가입 응답에 data 필드가 없습니다. 전체 응답: $resBody');
+        return false;
+      }
+
+      final access = tokenMap["access_token"] as String?;
+      final refresh = tokenMap["refresh_token"] as String?;
+      if (access == null || refresh == null) {
+        print('회원가입 응답에 토큰이 없습니다. tokenMap: $tokenMap');
+        return false;
+      }
+
+      await _tokenProvider.setAccessToken(access);
+      await _tokenProvider.setRefreshToken(refresh);
+
+      return true;
+    } catch (e) {
+      print('회원가입 오류: $e');
       return false;
     }
-
-    final Map<String, dynamic> resBody = response.body!;
-
-    final tokenMap = resBody["data"] as Map<String, dynamic>?;
-    if (tokenMap == null) return false;
-
-    final access = tokenMap["access_token"] as String?;
-    final refresh = tokenMap["refresh_token"] as String?;
-    if (access == null || refresh == null) return false;
-
-    await _tokenProvider.setAccessToken(access);
-    await _tokenProvider.setRefreshToken(refresh);
-
-    return true;
   }
 
   @override

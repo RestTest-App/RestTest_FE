@@ -33,7 +33,7 @@ class BookViewModel extends GetxController {
     super.onInit();
     _rootViewModel = Get.find<RootViewModel>();
     _bookRepository = Get.find<BookRepository>();
-    fetchBooks();
+    fetchBooks().catchError((error) {});
   }
 
   // 드롭다운 값 업데이트
@@ -50,15 +50,21 @@ class BookViewModel extends GetxController {
   }
 
   Future<void> fetchBooks() async {
-    final books = await _bookRepository.fetchStudyBooks();
-    files.value = books
-        .map((e) => {
-              'name': e.name,
-              'date': e.CreatedAt.toIso8601String().split('T').first,
-              'color': e.FileColor,
-            })
-        .toList();
-    total.value = books.length;
+    try {
+      final books = await _bookRepository.fetchStudyBooks();
+      files.value = books
+          .map((e) => {
+                'name': e.name,
+                'date': e.CreatedAt.toIso8601String().split('T').first,
+                'color': e.FileColor,
+              })
+          .toList();
+      total.value = books.length;
+    } catch (e) {
+      // 토큰 만료나 네트워크 오류 시 빈 리스트로 처리
+      files.value = [];
+      total.value = 0;
+    }
   }
 
   Future<void> uploadPdf(int id) async {
@@ -73,6 +79,9 @@ class BookViewModel extends GetxController {
         await _bookRepository.uploadStudyBook(id);
         await Future.delayed(const Duration(seconds: 1));
         await fetchBooks();
+      } catch (e) {
+        // 업로드 실패 시 에러 처리
+        rethrow;
       } finally {
         isLoading.value = false;
       }
