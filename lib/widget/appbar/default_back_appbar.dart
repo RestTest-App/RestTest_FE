@@ -14,6 +14,8 @@ class DefaultBackAppBar extends StatelessWidget {
     this.showBackButton = true, // 기본값을 true로 설정
     this.centerTitle = false,
     this.backColor,
+    this.titleStyle,
+    this.backIconColor,
   });
 
   final String title;
@@ -22,14 +24,19 @@ class DefaultBackAppBar extends StatelessWidget {
   final bool showBackButton;
   final bool centerTitle;
   final Color? backColor;
+  final TextStyle? titleStyle;
+  final Color? backIconColor;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: Padding(
         padding: const EdgeInsets.only(right: 16),
-        child: Text(title,
-            style: FontSystem.KR16M.copyWith(color: ColorSystem.grey.shade600)),
+        child: Text(
+          title,
+          style: titleStyle ??
+              FontSystem.KR16M.copyWith(color: ColorSystem.grey.shade600),
+        ),
       ),
       centerTitle: centerTitle,
       surfaceTintColor: backColor,
@@ -49,6 +56,9 @@ class DefaultBackAppBar extends StatelessWidget {
           "assets/icons/appbar/arrow_back.svg",
           width: 38,
           height: 38,
+          colorFilter: backIconColor != null
+              ? ColorFilter.mode(backIconColor!, BlendMode.srcIn)
+              : null,
         ),
         onPressed: onBackPress,
       ),

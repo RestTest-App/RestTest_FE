@@ -13,4 +13,5 @@ abstract class Routes {
   static const String TODAY = "/today/info/:todayId";
   static const String TODAY_EXAM = "/today/exam/:todayId";
   static const String TODAY_COMMENT = "/today/comment/:todayId";
+  static const String GOAL_SETTING = "/goal/setting";
 }

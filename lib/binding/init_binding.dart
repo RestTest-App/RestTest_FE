@@ -14,6 +14,8 @@ import 'package:rest_test/provider/today/today_provider.dart';
 import 'package:rest_test/provider/today/today_provider_impl.dart';
 import 'package:rest_test/provider/review/review_provider.dart';
 import 'package:rest_test/provider/review/review_provider_impl.dart';
+import 'package:rest_test/provider/goal/goal_provider.dart';
+import 'package:rest_test/provider/goal/goal_provider_impl.dart';
 import 'package:rest_test/repository/book/book_repository.dart';
 import 'package:rest_test/repository/book/book_repository_impl.dart';
 import 'package:rest_test/repository/test/test_repository.dart';
@@ -22,6 +24,8 @@ import 'package:rest_test/repository/today/today_repository.dart';
 import 'package:rest_test/repository/today/today_repository_impl.dart';
 import 'package:rest_test/repository/review/review_repository.dart';
 import 'package:rest_test/repository/review/review_repository_impl.dart';
+import 'package:rest_test/repository/goal/goal_repository.dart';
+import 'package:rest_test/repository/goal/goal_repository_impl.dart';
 
 class InitBinding extends Bindings {
   @override
@@ -33,6 +37,7 @@ class InitBinding extends Bindings {
     Get.lazyPut<BookProvider>(() => BookProviderImpl());
     Get.lazyPut<TodayProvider>(() => TodayProviderImpl());
     Get.lazyPut<ReviewProvider>(() => ReviewProviderImpl());
+    Get.lazyPut<GoalProvider>(() => GoalProviderImpl());
 
     // Repositories
     Get.lazyPut<TestRepository>(() => TestRepositoryImpl());
@@ -42,5 +47,7 @@ class InitBinding extends Bindings {
         () => UserRepositoryImpl(Get.find<UserProvider>()));
     Get.lazyPut<ReviewRepository>(
         () => ReviewRepositoryImpl(Get.find<ReviewProvider>()));
+    Get.lazyPut<GoalRepository>(
+        () => GoalRepositoryImpl(Get.find<GoalProvider>()));
   }
 }

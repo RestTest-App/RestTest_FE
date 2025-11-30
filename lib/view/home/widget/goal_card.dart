@@ -1,68 +1,149 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:rest_test/utility/system/color_system.dart';
 import 'package:rest_test/utility/system/font_system.dart';
+import 'package:rest_test/viewmodel/home/home_view_model.dart';
+import 'package:rest_test/model/goal/goal_progress.dart';
+import 'package:rest_test/utility/static/app_routes.dart';
 
 class GoalCard extends StatelessWidget {
-  final String nickname;
-  const GoalCard({super.key, required this.nickname});
+  const GoalCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: ColorSystem.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: RichText(
-                  text: TextSpan(
-                    style: FontSystem.KR18B,
-                    children: [
-                      TextSpan(
-                        text: nickname.isNotEmpty ? nickname : '쉬엄시험해',
-                        style:
-                            FontSystem.KR18B.copyWith(color: ColorSystem.blue),
-                      ),
-                      TextSpan(
-                        text: '님의 목표',
-                        style: FontSystem.KR18B
-                            .copyWith(color: ColorSystem.grey[800]),
-                      ),
-                    ],
-                  ),
+    final viewModel = Get.find<HomeViewModel>();
+
+    return Obx(() {
+      final hasGoals = viewModel.hasGoals;
+      final goals = viewModel.goals;
+      final isLoading = viewModel.isLoadingGoals;
+
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: ColorSystem.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: isLoading
+            ? const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(24.0),
+                  child: CircularProgressIndicator(),
                 ),
+              )
+            : hasGoals
+                ? _buildGoalsList(context, goals, viewModel)
+                : _buildEmptyState(context),
+      );
+    });
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(Routes.GOAL_SETTING);
+      },
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 120),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/images/logo_blue.svg',
+              width: 31,
+              height: 31,
+              colorFilter: ColorFilter.mode(
+                ColorSystem.grey[400]!,
+                BlendMode.srcIn,
               ),
-              IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                icon: Icon(Icons.arrow_forward_ios,
-                    size: 16, color: ColorSystem.grey[400]),
-                onPressed: () {
-                  _showSimpleConfirmDialog(context, '준비중입니다.');
-                },
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '목표가 있으면 공부가 더 쉬워져요.\n함께 학습 목표를 설정해볼까요?',
+              textAlign: TextAlign.center,
+              style: FontSystem.KR14M.copyWith(
+                color: ColorSystem.grey[600],
+                height: 1.5,
               ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          _buildGoalRow('목표1', '일주일에 모의고사 4회 풀기', 0.6, context),
-          const SizedBox(height: 24),
-          _buildGoalRow('목표2', '일주일에 100문제 풀기', 0.9, context),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
+  Widget _buildGoalsList(
+      BuildContext context, List<GoalProgress> goals, HomeViewModel viewModel) {
+    final nickname = viewModel.nickname.value;
+    final displayName =
+        nickname.isNotEmpty && nickname.trim().isNotEmpty ? nickname : '쉬엄시험해';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: RichText(
+                text: TextSpan(
+                  style: FontSystem.KR18B,
+                  children: [
+                    TextSpan(
+                      text: displayName,
+                      style: FontSystem.KR18B.copyWith(color: ColorSystem.blue),
+                    ),
+                    TextSpan(
+                      text: '님의 목표',
+                      style: FontSystem.KR18B
+                          .copyWith(color: ColorSystem.grey[800]),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            IconButton(
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              icon: Icon(Icons.arrow_forward_ios,
+                  size: 16, color: ColorSystem.grey[400]),
+              onPressed: () {
+                Get.toNamed(Routes.GOAL_SETTING);
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        ...goals.asMap().entries.map((entry) {
+          final index = entry.key;
+          final goal = entry.value;
+          return Column(
+            children: [
+              if (index > 0) const SizedBox(height: 24),
+              _buildGoalRow(goal, context, index + 1),
+            ],
+          );
+        }),
+      ],
+    );
+  }
+
   Widget _buildGoalRow(
-      String label, String goalText, double progress, BuildContext context) {
+      GoalProgress goal, BuildContext context, int goalNumber) {
     final double barWidth = MediaQuery.of(context).size.width - 32;
+    final progress = (goal.achievementRate / 100.0).clamp(0.0, 1.0);
+
+    // 목표 텍스트 생성
+    String goalText = goal.name;
+    if (goal.type == GoalType.dailyProblem) {
+      goalText = '하루에 ${goal.targetValue.toInt()}문제';
+    } else if (goal.type == GoalType.dailyAccuracy) {
+      goalText = '하루 정답률 ${goal.targetValue.toInt()}% 이상';
+    } else if (goal.type == GoalType.consecutiveStudyDays) {
+      goalText = '연속 ${goal.targetValue.toInt()}일 학습';
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +157,7 @@ class GoalCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
-                label,
+                '목표$goalNumber',
                 style: FontSystem.KR10SB.copyWith(color: ColorSystem.grey[600]),
               ),
             ),
@@ -124,70 +205,18 @@ class GoalCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('0%',
-                  style:
-                      FontSystem.KR10M.copyWith(color: ColorSystem.grey[400])),
-              Text('100%',
-                  style:
-                      FontSystem.KR10M.copyWith(color: ColorSystem.grey[400])),
+              Text(
+                '0%',
+                style: FontSystem.KR10M.copyWith(color: ColorSystem.grey[400]),
+              ),
+              Text(
+                '100%',
+                style: FontSystem.KR10M.copyWith(color: ColorSystem.grey[400]),
+              ),
             ],
           ),
         ),
       ],
     );
-  }
-
-  void _showSimpleConfirmDialog(BuildContext context, String message) {
-    late OverlayEntry entry;
-    entry = OverlayEntry(
-      builder: (_) => Positioned.fill(
-        child: Material(
-          color: ColorSystem.black.withOpacity(0.5),
-          child: Align(
-            alignment: Alignment.center,
-            child: Container(
-              width: MediaQuery.of(context).size.width - 40,
-              padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
-              decoration: BoxDecoration(
-                color: ColorSystem.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    message,
-                    textAlign: TextAlign.center,
-                    style: FontSystem.KR18B,
-                  ),
-                  const SizedBox(height: 32),
-                  SizedBox(
-                    width: 110,
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: () => entry.remove(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorSystem.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: Text(
-                        '확인',
-                        style: FontSystem.KR16B.copyWith(
-                          color: ColorSystem.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    Navigator.of(context).overlay!.insert(entry);
   }
 }
