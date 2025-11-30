@@ -6,10 +6,12 @@ import 'package:rest_test/utility/system/font_system.dart';
 import 'package:rest_test/view/base/base_widget.dart';
 import 'package:rest_test/viewmodel/book/book_view_model.dart';
 import 'dart:math' as math;
-import 'package:rest_test/view/book/widget/add_file_modal.dart';
+import 'package:rest_test/view/book/book_onboarding_screen.dart';
+// import 'package:rest_test/view/book/widget/add_file_modal.dart'; // 기존 모달
 
 // 문제집 그리드
 class FileGrid extends BaseWidget<BookViewModel> {
+  @override
   final BookViewModel controller;
   const FileGrid({super.key, required this.controller});
 
@@ -45,7 +47,8 @@ class AddNewFileTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _showAddModal(context),
+      onTap: () => _openCreateProblemPage(context),
+      // onTap: () => _showAddModal(context), // 기존 모달 유지 메모
       child: SizedBox(
         width: 89,
         height: 120,
@@ -98,6 +101,15 @@ class AddNewFileTile extends StatelessWidget {
     );
   }
 
+  void _openCreateProblemPage(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const CreateMyProblemSetPage(),
+      ),
+    );
+  }
+
+  /*
   void _showAddModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -109,6 +121,7 @@ class AddNewFileTile extends StatelessWidget {
       builder: (_) => AddFileModal(controller: controller),
     );
   }
+  */
 }
 
 // 문제집 타일

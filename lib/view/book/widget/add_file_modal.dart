@@ -19,16 +19,6 @@ class AddFileModal extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 8),
-          Center(
-            child: Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: ColorSystem.grey[300],
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () => Navigator.of(context).pop(),
@@ -44,6 +34,17 @@ class AddFileModal extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: ColorSystem.grey[300],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 28.0),
                   child: SvgPicture.asset('assets/images/logo_blue.svg',
@@ -64,7 +65,7 @@ class AddFileModal extends StatelessWidget {
                   child: Text(
                     isLimit
                         ? '구독제를 결제하시거나\n다음달까지 기다려주세요^0^'
-                        : 'pdf 업로드나 문제를 촬영하시면\n나의 문제집에 문제가 저장됩니다!',
+                        : '이미지 업로드나 문제를 촬영하시면\n나의 문제집에 문제가 저장됩니다!',
                     textAlign: TextAlign.center,
                     style:
                         FontSystem.KR16M.copyWith(color: ColorSystem.grey[600]),
@@ -77,23 +78,24 @@ class AddFileModal extends StatelessWidget {
                     children: [
                       Expanded(
                         child: RoundedRectangleTextButton(
-                            text: isLimit ? '돌아가기' : 'PDF 업로드',
-                            textStyle: FontSystem.KR16B.copyWith(
+                          text: isLimit ? '돌아가기' : '이미지 업로드',
+                          textStyle: FontSystem.KR16B.copyWith(
                             color: isLimit
-                                  ? ColorSystem.grey[400]
-                                      : ColorSystem.white,
-                                  ),
-                            onPressed: () async {
-                              if (isLimit) {
-                                Navigator.of(context).pop();
-                              } else {
-                                Navigator.of(context).pop(); // 먼저 모달 닫고
-                                await controller.uploadPdf(1); // PDF 업로드 + 목록 갱신
-                              }
-                            },
-                            backgroundColor: isLimit
+                                ? ColorSystem.grey[400]
+                                : ColorSystem.white,
+                          ),
+                          onPressed: () async {
+                            if (isLimit) {
+                              Navigator.of(context).pop();
+                            } else {
+                              Navigator.of(context).pop(); // 먼저 모달 닫고
+                              await controller.uploadPdf(1); // 이미지 업로드 + 목록 갱신
+                            }
+                          },
+                          backgroundColor: isLimit
                               ? ColorSystem.grey[200]
-                                  : ColorSystem.blue,),
+                              : ColorSystem.blue,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -102,14 +104,17 @@ class AddFileModal extends StatelessWidget {
                           textStyle: FontSystem.KR16B.copyWith(
                             color: ColorSystem.white,
                           ),
-                          onPressed: (){if (isLimit) {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).push(
-                            MaterialPageRoute(
-                            builder: (_) => const SubscribeScreen()),
-                            );
-                          }},
-                          backgroundColor: ColorSystem.blue,),
+                          onPressed: () {
+                            if (isLimit) {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (_) => const SubscribeScreen()),
+                              );
+                            }
+                          },
+                          backgroundColor: ColorSystem.blue,
+                        ),
                       ),
                     ],
                   ),

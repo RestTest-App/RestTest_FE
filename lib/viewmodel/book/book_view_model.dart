@@ -1,6 +1,5 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
-import 'package:dio/dio.dart' as dio;
+import 'package:image_picker/image_picker.dart';
 import '../../repository/book/book_repository.dart';
 import '../root/root_view_model.dart';
 
@@ -37,7 +36,6 @@ class BookViewModel extends GetxController {
     fetchBooks();
   }
 
-
   // 드롭다운 값 업데이트
   void updateSelectedValue(String? newValue) {
     if (newValue != null) {
@@ -53,38 +51,31 @@ class BookViewModel extends GetxController {
 
   Future<void> fetchBooks() async {
     final books = await _bookRepository.fetchStudyBooks();
-    files.value = books.map((e) => {
-      'name': e.name,
-      'date': e.CreatedAt.toIso8601String().split('T').first,
-      'color': e.FileColor,
-    }).toList();
+    files.value = books
+        .map((e) => {
+              'name': e.name,
+              'date': e.CreatedAt.toIso8601String().split('T').first,
+              'color': e.FileColor,
+            })
+        .toList();
     total.value = books.length;
   }
 
   Future<void> uploadPdf(int id) async {
-    // final result = await FilePicker.platform.pickFiles(
-    //   type: FileType.custom,
-    //   allowedExtensions: ['pdf'],
-    // );
-    //
-    // if (result != null && result.files.single.path != null) {
-    //   final file = result.files.single;
-    //
-    //   final formData = dio.FormData.fromMap({
-    //     'file': await dio.MultipartFile.fromFile(file.path!, filename: file.name),
-    //   });
-    //
-    //   await _bookRepository.uploadStudyBook(formData);
-    //   await fetchBooks(); // 업로드 성공 후 문제집 목록 갱신
-    // }
-    isLoading.value = true;
-    try {
-      await _bookRepository.uploadStudyBook(id);
-      await Future.delayed(const Duration(seconds: 1));
-      await fetchBooks();
-    } finally {
-      isLoading.value = false;
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (image != null) {
+      isLoading.value = true;
+      try {
+        await _bookRepository.uploadStudyBook(id);
+        await Future.delayed(const Duration(seconds: 1));
+        await fetchBooks();
+      } finally {
+        isLoading.value = false;
+      }
     }
   }
-
 }
