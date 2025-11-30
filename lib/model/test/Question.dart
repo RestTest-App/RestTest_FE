@@ -3,7 +3,7 @@ class Question {
   final String seciton;
   final String description;
   final String? descriptionImage;
-  final List<String> options;
+  final Map<String, dynamic> options;
 
   Question({
     this.answerRate,
@@ -19,7 +19,7 @@ class Question {
       seciton: json['section'],
       description: json['description'],
       descriptionImage: json['description_image'],
-      options: List<String>.from(json['options'] ?? []),
+      options: json['options'] as Map<String, dynamic>,
     );
   }
 }
