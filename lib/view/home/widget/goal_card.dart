@@ -134,15 +134,16 @@ class GoalCard extends StatelessWidget {
       GoalProgress goal, BuildContext context, int goalNumber) {
     final double barWidth = MediaQuery.of(context).size.width - 32;
     final progress = (goal.achievementRate / 100.0).clamp(0.0, 1.0);
+    final goalText = _getDefaultGoalText(goal);
+    final targetValue = goal.targetValue.toInt();
 
-    // 목표 텍스트 생성
-    String goalText = goal.name;
+    String progressText = '';
     if (goal.type == GoalType.dailyProblem) {
-      goalText = '하루에 ${goal.targetValue.toInt()}문제';
+      progressText = '${goal.currentValue.toInt()}/$targetValue 문제';
     } else if (goal.type == GoalType.dailyAccuracy) {
-      goalText = '하루 정답률 ${goal.targetValue.toInt()}% 이상';
+      progressText = '${goal.currentValue.toStringAsFixed(1)}% / $targetValue%';
     } else if (goal.type == GoalType.consecutiveStudyDays) {
-      goalText = '연속 ${goal.targetValue.toInt()}일 학습';
+      progressText = '${goal.currentValue.toInt()}/$targetValue일';
     }
 
     return Column(
@@ -206,17 +207,34 @@ class GoalCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '0%',
-                style: FontSystem.KR10M.copyWith(color: ColorSystem.grey[400]),
+                progressText,
+                style: FontSystem.KR10M.copyWith(color: ColorSystem.grey[600]),
               ),
               Text(
-                '100%',
-                style: FontSystem.KR10M.copyWith(color: ColorSystem.grey[400]),
+                '${goal.achievementRate.toStringAsFixed(1)}%',
+                style: FontSystem.KR10M.copyWith(
+                  color: goal.status == GoalStatus.achieved
+                      ? ColorSystem.blue
+                      : ColorSystem.grey[400],
+                ),
               ),
             ],
           ),
         ),
       ],
     );
+  }
+
+  String _getDefaultGoalText(GoalProgress goal) {
+    final displayValue = goal.targetValue.toInt();
+
+    if (goal.type == GoalType.dailyProblem) {
+      return '하루에 $displayValue문제';
+    } else if (goal.type == GoalType.dailyAccuracy) {
+      return '정답률 $displayValue% 이상';
+    } else if (goal.type == GoalType.consecutiveStudyDays) {
+      return '연속 $displayValue일 학습';
+    }
+    return goal.name;
   }
 }

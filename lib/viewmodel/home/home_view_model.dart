@@ -139,7 +139,13 @@ class HomeViewModel extends GetxController {
     try {
       _isLoadingGoals.value = true;
       final response = await _goalRepository.fetchAllGoalsProgress();
-      _goalProgressResponse.value = response;
+      if (response != null) {
+        _goalProgressResponse.value = response;
+        print('✅ 목표 진행도 로드 성공: ${response.goals.length}개 목표');
+      } else {
+        _goalProgressResponse.value = null;
+        print('⚠️ 목표 진행도 응답이 null입니다.');
+      }
     } catch (e) {
       print('⚠️ 목표 진행도 로드 실패: $e');
       _goalProgressResponse.value = null;

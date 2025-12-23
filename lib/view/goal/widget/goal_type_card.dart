@@ -82,7 +82,7 @@ class GoalTypeCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: ColorSystem.lightBlue,
+                    color: const Color(0xFFF5EBEB),
                     borderRadius: BorderRadius.circular(7.5),
                   ),
                   child: Row(
@@ -96,7 +96,7 @@ class GoalTypeCard extends StatelessWidget {
                       const Spacer(),
                       GestureDetector(
                         onTap: () {
-                          viewModel.removeGoal(type);
+                          viewModel.removeGoalByType(type);
                         },
                         child: Icon(
                           Icons.close,
