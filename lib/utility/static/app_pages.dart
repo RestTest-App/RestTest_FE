@@ -14,7 +14,7 @@ import 'package:rest_test/view/today/today_test_comment_screen.dart';
 import 'package:rest_test/view/today/today_test_exam_screen.dart';
 import 'package:rest_test/view/today/today_test_screen.dart';
 import 'package:rest_test/view/goal/goal_setting_screen.dart';
-import 'app_routes.dart';
+import 'package:rest_test/view/goal/add_goal_screen.dart';
 
 List<GetPage> appPages = [
   // TODO(ALL) : (홈/복습/문제집/마이페이지 메인 화면 제외) 페이지 추가하기 전에 GetPage 설정하기
@@ -80,6 +80,11 @@ List<GetPage> appPages = [
   GetPage(
     name: Routes.GOAL_SETTING,
     page: () => const GoalSettingScreen(),
+    binding: GoalSettingBinding(),
+  ),
+  GetPage(
+    name: Routes.ADD_GOAL,
+    page: () => const AddGoalScreen(),
     binding: GoalSettingBinding(),
   ),
 ];
